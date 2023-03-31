@@ -1,0 +1,4 @@
+ModuleNotFoundError in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 5:
+No module named 'pandas'
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/snakefile.smk", line 1, in <module>
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 5, in <module>

@@ -1,0 +1,15 @@
+Fatal error: cannot open file 'workflow/rules/create_training_sets.R': No such file or directory
+[['FOXA1', 'Breast'], ['FOXA1', 'Prostate'], ['AR', 'Breast']]
+Wildcards(tfs=['FOXA1', 'FOXA1', 'AR'], motif_files=['foxa1.lncap', 'foxa1.mcf7', 'ar-half'])
+{'FOXA1': ['foxa1.lncap', 'foxa1.mcf7'], 'AR': ['ar-half']}
+{'FOXA1': ['Breast', 'Prostate'], 'AR': ['Breast']}
+Fatal error: cannot open file 'workflow/rules/create_training_sets.R': No such file or directory
+[['FOXA1', 'Breast'], ['FOXA1', 'Prostate'], ['AR', 'Breast']]
+Wildcards(tfs=['FOXA1', 'FOXA1', 'AR'], motif_files=['foxa1.lncap', 'foxa1.mcf7', 'ar-half'])
+{'FOXA1': ['foxa1.lncap', 'foxa1.mcf7'], 'AR': ['ar-half']}
+{'FOXA1': ['Breast', 'Prostate'], 'AR': ['Breast']}
+Fatal error: cannot open file 'workflow/rules/create_training_sets.R': No such file or directory
+[['FOXA1', 'Breast'], ['FOXA1', 'Prostate'], ['AR', 'Breast']]
+Wildcards(tfs=['FOXA1', 'FOXA1', 'AR'], motif_files=['foxa1.lncap', 'foxa1.mcf7', 'ar-half'])
+{'FOXA1': ['foxa1.lncap', 'foxa1.mcf7'], 'AR': ['ar-half']}
+{'FOXA1': ['Breast', 'Prostate'], 'AR': ['Breast']}

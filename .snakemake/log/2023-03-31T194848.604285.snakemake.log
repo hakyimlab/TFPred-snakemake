@@ -1,0 +1,43 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cluster nodes: 50
+Job stats:
+job                    count    min threads    max threads
+-------------------  -------  -------------  -------------
+all                        1              1              1
+create_training_set        3              1              1
+find_homer_motifs          3              1              1
+merge_homer_motifs         2              1              1
+total                      9              1              1
+
+Select jobs to execute...
+
+[Fri Mar 31 19:48:50 2023]
+Job 8: working on TF=AR,tissue=Breast
+Reason: Missing output files: data/predictor_files/AR_Breast_predictors.txt
+
+
+        /lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/rules/create_training_sets.R AR Breast data/ data/predictor_files/AR_Breast_predictors.txt
+        
+Submitted job 8 with external jobid '10132062'.
+
+[Fri Mar 31 19:48:52 2023]
+Job 1: working on motif_file=foxa1.lncap,tf=FOXA1
+Reason: Missing output files: data/homer_files/FOXA1/scanMotifsGenomeWide_foxa1.lncap.txt
+
+
+        perl /lus/grand/projects/covid-ct/imlab/users/temi/software/homer/bin/scanMotifsGenome.pl data/homer_files/FOXA1/foxa1.lncap.motif /lus/grand/projects/covid-ct/imlab/users/temi/software/homer/data/genomes/hg38 > data/homer_files/FOXA1/scanMotifsGenomeWide_foxa1.lncap.txt
+        
+Error submitting jobscript (exit code 1):
+
+
+[Fri Mar 31 19:48:54 2023]
+Job 7: working on TF=FOXA1,tissue=Prostate
+Reason: Missing output files: data/predictor_files/FOXA1_Prostate_predictors.txt
+
+
+        /lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/rules/create_training_sets.R FOXA1 Prostate data/ data/predictor_files/FOXA1_Prostate_predictors.txt
+        
+Terminating processes on user request, this might take some time.
+No --cluster-cancel given. Will exit after finishing currently running jobs.
+Cancelling snakemake on user request.

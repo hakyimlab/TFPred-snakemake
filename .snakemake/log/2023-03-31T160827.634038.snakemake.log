@@ -1,0 +1,42 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                   count    min threads    max threads
+------------------  -------  -------------  -------------
+all                       1              1              1
+merge_homer_motifs        2              1              1
+total                     3              1              1
+
+Select jobs to execute...
+
+[Fri Mar 31 16:08:30 2023]
+Job 5: working on tf=FOXA1 data/homer_files/FOXA1/scanMotifsGenomeWide_foxa1.lncap.txt data/homer_files/FOXA1/scanMotifsGenomeWide_foxa1.mcf7.txt
+Reason: Missing output files: data/homer_files/FOXA1/merged_motif_file.txt; Set of input files has changed since last execution
+
+[Fri Mar 31 16:08:32 2023]
+Finished job 5.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Fri Mar 31 16:08:32 2023]
+Job 4: working on tf=AR data/homer_files/AR/scanMotifsGenomeWide_ar-half.txt
+Reason: Missing output files: data/homer_files/AR/merged_motif_file.txt; Set of input files has changed since last execution
+
+[Fri Mar 31 16:08:34 2023]
+Finished job 4.
+2 of 3 steps (67%) done
+Select jobs to execute...
+
+[Fri Mar 31 16:08:34 2023]
+localrule all:
+    input: data/homer_files/FOXA1/foxa1.lncap.motif, data/homer_files/FOXA1/foxa1.mcf7.motif, data/homer_files/AR/ar-half.motif, data/homer_files/FOXA1/scanMotifsGenomeWide_foxa1.lncap.txt, data/homer_files/FOXA1/scanMotifsGenomeWide_foxa1.mcf7.txt, data/homer_files/AR/scanMotifsGenomeWide_ar-half.txt, data/homer_files/AR/merged_motif_file.txt, data/homer_files/FOXA1/merged_motif_file.txt
+    jobid: 0
+    reason: Input files updated by another job: data/homer_files/AR/merged_motif_file.txt, data/homer_files/FOXA1/merged_motif_file.txt
+    resources: tmpdir=/tmp
+
+[Fri Mar 31 16:08:34 2023]
+Finished job 0.
+3 of 3 steps (100%) done
+Complete log: .snakemake/log/2023-03-31T160827.634038.snakemake.log

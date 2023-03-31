@@ -1,0 +1,29 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                 count    min threads    max threads
+----------------  -------  -------------  -------------
+all                     1              1              1
+gather_bed_files        3              1              1
+total                   4              1              1
+
+Select jobs to execute...
+
+[Wed Mar 29 20:39:19 2023]
+Job 3: working on AR and Breast data/bed_files/AR_Breast
+Reason: Missing output files: data/bed_files/{tf_bed_dir} (dynamic)
+
+Subsequent jobs will be added dynamically depending on the output of this job
+ImproperOutputException in rule gather_bed_files in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 42:
+Outputs of incorrect type (directories when expecting files or vice versa). Output directories must be flagged with directory(). for rule gather_bed_files:
+    output: data/bed_files/AR_Breast
+    wildcards: tf_bed_dir=AR_Breast
+    affected files:
+        data/bed_files/AR_Breast
+Removing output files of failed job gather_bed_files since they might be corrupted:
+data/bed_files/AR_Breast
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2023-03-29T203918.804683.snakemake.log

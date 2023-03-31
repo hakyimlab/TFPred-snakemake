@@ -1,0 +1,7 @@
+Building DAG of jobs...
+MissingInputException in rule find_homer_motifs in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 138:
+Missing input files for rule find_homer_motifs:
+    output: data/homer_files/FOXA1/scanMotifsGenomeWide_ar-half.txt
+    wildcards: tf=FOXA1, motif_file=ar-half
+    affected files:
+        data/homer_files/FOXA1/ar-half.motif

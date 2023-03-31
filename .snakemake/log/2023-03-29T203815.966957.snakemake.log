@@ -1,0 +1,3 @@
+WildcardError in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 40:
+No values given for wildcard 'bedfiles'.
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 40, in <module>

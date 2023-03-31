@@ -1,0 +1,9 @@
+Building DAG of jobs...
+InputFunctionException in rule merge_homer_motifs in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 154:
+Error:
+  WildcardError:
+    No values given for wildcard 'tf'.
+Wildcards:
+  tf=FOXA1
+Traceback:
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 156, in <lambda>

@@ -1,0 +1,11 @@
+KeyboardInterrupt in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 49.
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 90, in <module>
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 90, in <listcomp>
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 55, in link_cistrome_bedfiles
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 49, in return_cistrome_bedfiles
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 49, in <listcomp>
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/glob.py", line 28, in glob
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/glob.py", line 97, in _iglob
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/glob.py", line 106, in _glob1
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/glob.py", line 177, in _listdir
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/glob.py", line 166, in _iterdir

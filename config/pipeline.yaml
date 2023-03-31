@@ -1,0 +1,18 @@
+
+
+# directories
+base_dir: '/lus/grand/projects/covid-ct/imlab'
+data_dir: '/lus/grand/projects/covid-ct/imlab/data/cistrome/raw/human_factor'
+project_dir: '/lus/grand/projects/covid-ct/imlab/users/temi/projects/TFXcan/TFPred_pipeline'
+dataset: 'cistrome' # change this variable name 
+date: null
+TF_table: '/lus/grand/projects/covid-ct/imlab/data/cistrome/raw/human_factor_full_QC.txt' 
+
+metadata: "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/metadata/metadata.txt"
+
+homer:
+  dir: '/lus/grand/projects/covid-ct/imlab/users/temi/software/homer'
+  scanMotifsGenome: '/lus/grand/projects/covid-ct/imlab/users/temi/software/homer/bin/scanMotifsGenome.pl'
+  genome: '/lus/grand/projects/covid-ct/imlab/users/temi/software/homer/data/genomes/hg38'
+
+rscript: "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript"

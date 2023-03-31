@@ -1,0 +1,9 @@
+TypeError in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 42:
+Cannot perform 'rand_' with a dtyped [object] array and scalar of type [bool]
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 44, in <module>
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 42, in return_cistrome_ids
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/site-packages/pandas/core/ops/common.py", line 72, in new_method
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/site-packages/pandas/core/arraylike.py", line 76, in __rand__
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/site-packages/pandas/core/series.py", line 6254, in _logical_method
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/site-packages/pandas/core/ops/array_ops.py", line 395, in logical_op
+  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/lib/python3.11/site-packages/pandas/core/ops/array_ops.py", line 328, in na_logical_op

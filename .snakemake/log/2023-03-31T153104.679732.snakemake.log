@@ -1,0 +1,16 @@
+Building DAG of jobs...
+MissingInputException in rule merge_homer_motifs in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 152:
+Missing input files for rule merge_homer_motifs:
+    output: data/homer_files/FOXA1/merged_motif_file.txt
+    wildcards: tf=FOXA1
+    affected files:
+        data/homer_files/1/scanMotifsGenomeWide_Prostate.txt
+        data/homer_files/O/scanMotifsGenomeWide_Breast.txt
+        data/homer_files/A/scanMotifsGenomeWide_Breast.txt
+        data/homer_files/1/scanMotifsGenomeWide_Breast.txt
+        data/homer_files/A/scanMotifsGenomeWide_Prostate.txt
+        data/homer_files/F/scanMotifsGenomeWide_Prostate.txt
+        data/homer_files/X/scanMotifsGenomeWide_Prostate.txt
+        data/homer_files/X/scanMotifsGenomeWide_Breast.txt
+        data/homer_files/O/scanMotifsGenomeWide_Prostate.txt
+        data/homer_files/F/scanMotifsGenomeWide_Breast.txt

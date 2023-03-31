@@ -1,0 +1,2 @@
+SyntaxError in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 65:
+f-string: invalid syntax

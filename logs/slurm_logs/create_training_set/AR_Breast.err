@@ -2,77 +2,127 @@ Building DAG of jobs...
 Using shell: /usr/bin/bash
 Provided cores: 32
 Rules claiming more threads will be scaled down.
-Provided resources: mem_mb=10000, mem_mib=9537, disk_mb=1000, disk_mib=954, nodes=1
+Provided resources: mem_mb=20000, mem_mib=19074, disk_mb=1221, disk_mib=1165
 Select jobs to execute...
 
-[Fri Mar 31 14:49:28 2023]
-Job 0: working on TF=AR,tissue=Breast
-Reason: Missing output files: data/predictor_files/AR_Breast_predictors.txt
+[Wed Apr  5 10:47:35 2023]
+Job 0: working on tf=AR,tissue=Breast, data/homer_files/AR/merged_motif_file.txt, config/pipeline.yaml
+Reason: Missing output files: data/predictor_files/AR_Breast_predictors.txt, data/predictor_files/AR_Breast_predictor_regions.txt, metadata/enformer_config/enformer_parameters_cistrome_AR_Breast.json, data/predictor_files/AR_Breast_ground_truth.txt
 
 
-        /lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/rules/create_training_sets.R AR Breast data/ data/predictor_files/AR_Breast_predictors.txt
+        /project2/haky/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/scripts/create_training_sets.R AR Breast data/homer_files/AR/merged_motif_file.txt data/ data/predictor_files/AR_Breast_predictor_regions.txt config/pipeline.yaml
         
-[Fri Mar 31 14:49:30 2023]
-Error in rule create_training_set:
-    jobid: 0
-    output: data/predictor_files/AR_Breast_predictors.txt
-    shell:
-        
-        /lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/rules/create_training_sets.R AR Breast data/ data/predictor_files/AR_Breast_predictors.txt
-        
-        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+Warning: ‘timedatectl’ indicates the non-existent timezone name ‘n/a’
+unable to deduce timezone name from ‘America/Chicago’
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.1     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::between()     masks data.table::between()
+✖ dplyr::filter()      masks stats::filter()
+✖ dplyr::first()       masks data.table::first()
+✖ lubridate::hour()    masks data.table::hour()
+✖ lubridate::isoweek() masks data.table::isoweek()
+✖ dplyr::lag()         masks stats::lag()
+✖ dplyr::last()        masks data.table::last()
+✖ lubridate::mday()    masks data.table::mday()
+✖ lubridate::minute()  masks data.table::minute()
+✖ lubridate::month()   masks data.table::month()
+✖ lubridate::quarter() masks data.table::quarter()
+✖ lubridate::second()  masks data.table::second()
+✖ purrr::transpose()   masks data.table::transpose()
+✖ lubridate::wday()    masks data.table::wday()
+✖ lubridate::week()    masks data.table::week()
+✖ lubridate::yday()    masks data.table::yday()
+✖ lubridate::year()    masks data.table::year()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+Loading required package: stats4
+Loading required package: BiocGenerics
 
-Shutting down, this might take some time.
-Exiting because a job execution failed. Look above for error message
-Building DAG of jobs...
-Using shell: /usr/bin/bash
-Provided cores: 32
-Rules claiming more threads will be scaled down.
-Provided resources: mem_mb=10000, mem_mib=9537, disk_mb=1000, disk_mib=954, nodes=1
-Select jobs to execute...
+Attaching package: ‘BiocGenerics’
 
-[Fri Mar 31 14:53:16 2023]
-Job 0: working on TF=AR,tissue=Breast
-Reason: Missing output files: data/predictor_files/AR_Breast_predictors.txt
+The following objects are masked from ‘package:lubridate’:
 
+    intersect, setdiff, union
 
-        /lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/rules/create_training_sets.R AR Breast data/ data/predictor_files/AR_Breast_predictors.txt
-        
-[Fri Mar 31 14:53:17 2023]
-Error in rule create_training_set:
-    jobid: 0
-    output: data/predictor_files/AR_Breast_predictors.txt
-    shell:
-        
-        /lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/rules/create_training_sets.R AR Breast data/ data/predictor_files/AR_Breast_predictors.txt
-        
-        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+The following objects are masked from ‘package:dplyr’:
 
-Shutting down, this might take some time.
-Exiting because a job execution failed. Look above for error message
-Building DAG of jobs...
-Using shell: /usr/bin/bash
-Provided cores: 32
-Rules claiming more threads will be scaled down.
-Provided resources: mem_mb=10000, mem_mib=9537, disk_mb=1000, disk_mib=954, nodes=1
-Select jobs to execute...
+    combine, intersect, setdiff, union
 
-[Fri Mar 31 14:54:06 2023]
-Job 0: working on TF=AR,tissue=Breast
-Reason: Missing output files: data/predictor_files/AR_Breast_predictors.txt
+The following objects are masked from ‘package:stats’:
 
+    IQR, mad, sd, var, xtabs
 
-        /lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/rules/create_training_sets.R AR Breast data/ data/predictor_files/AR_Breast_predictors.txt
-        
-[Fri Mar 31 14:54:07 2023]
-Error in rule create_training_set:
-    jobid: 0
-    output: data/predictor_files/AR_Breast_predictors.txt
-    shell:
-        
-        /lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript workflow/rules/create_training_sets.R AR Breast data/ data/predictor_files/AR_Breast_predictors.txt
-        
-        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+The following objects are masked from ‘package:base’:
 
-Shutting down, this might take some time.
-Exiting because a job execution failed. Look above for error message
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
+    table, tapply, union, unique, unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:lubridate’:
+
+    second, second<-
+
+The following objects are masked from ‘package:dplyr’:
+
+    first, rename
+
+The following object is masked from ‘package:tidyr’:
+
+    expand
+
+The following objects are masked from ‘package:data.table’:
+
+    first, second
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+Loading required package: IRanges
+
+Attaching package: ‘IRanges’
+
+The following object is masked from ‘package:lubridate’:
+
+    %within%
+
+The following objects are masked from ‘package:dplyr’:
+
+    collapse, desc, slice
+
+The following object is masked from ‘package:purrr’:
+
+    reduce
+
+The following object is masked from ‘package:glue’:
+
+    trim
+
+The following object is masked from ‘package:data.table’:
+
+    shift
+
+Loading required package: GenomeInfoDb
+ ■■■■■                             13% |  ETA: 14s
+ ■■■■■■■■■                         27% |  ETA: 12s
+ ■■■■■■■■■■■■■■■                   47% |  ETA:  9s
+ ■■■■■■■■■■■■■■■■■■■■■             67% |  ETA:  5s
+ ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% |  ETA:  2s
+Warning message:
+In .merge_two_Seqinfo_objects(x, y) :
+  Each of the 2 combined objects has sequence levels not in the other:
+  - in 'x': chrMT
+  - in 'y': chrX
+  Make sure to always combine/compare objects based on the same reference
+  genome (use suppressWarnings() to suppress this warning).

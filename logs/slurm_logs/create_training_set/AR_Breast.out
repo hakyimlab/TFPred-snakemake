@@ -1,15 +1,4 @@
-Fatal error: cannot open file 'workflow/rules/create_training_sets.R': No such file or directory
-[['FOXA1', 'Breast'], ['FOXA1', 'Prostate'], ['AR', 'Breast']]
-Wildcards(tfs=['FOXA1', 'FOXA1', 'AR'], motif_files=['foxa1.lncap', 'foxa1.mcf7', 'ar-half'])
-{'FOXA1': ['foxa1.lncap', 'foxa1.mcf7'], 'AR': ['ar-half']}
-{'FOXA1': ['Breast', 'Prostate'], 'AR': ['Breast']}
-Fatal error: cannot open file 'workflow/rules/create_training_sets.R': No such file or directory
-[['FOXA1', 'Breast'], ['FOXA1', 'Prostate'], ['AR', 'Breast']]
-Wildcards(tfs=['FOXA1', 'FOXA1', 'AR'], motif_files=['foxa1.lncap', 'foxa1.mcf7', 'ar-half'])
-{'FOXA1': ['foxa1.lncap', 'foxa1.mcf7'], 'AR': ['ar-half']}
-{'FOXA1': ['Breast', 'Prostate'], 'AR': ['Breast']}
-Fatal error: cannot open file 'workflow/rules/create_training_sets.R': No such file or directory
-[['FOXA1', 'Breast'], ['FOXA1', 'Prostate'], ['AR', 'Breast']]
-Wildcards(tfs=['FOXA1', 'FOXA1', 'AR'], motif_files=['foxa1.lncap', 'foxa1.mcf7', 'ar-half'])
-{'FOXA1': ['foxa1.lncap', 'foxa1.mcf7'], 'AR': ['ar-half']}
-{'FOXA1': ['Breast', 'Prostate'], 'AR': ['Breast']}
+[1] "config/pipeline.yaml"
+TF: AR, tissue: Breast, predicted_motif_file: data/homer_files/AR/merged_motif_file.txt, data_dir: data/, output_file: data/predictor_files/AR_Breast_predictor_regions.txt
+[1] "/project2/haky/temi/projects/TFPred-snakemake"
+[1] TRUE

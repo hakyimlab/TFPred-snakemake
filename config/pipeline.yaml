@@ -1,18 +1,57 @@
 
-
+---
 # directories
 base_dir: '/lus/grand/projects/covid-ct/imlab'
-data_dir: '/lus/grand/projects/covid-ct/imlab/data/cistrome/raw/human_factor'
-project_dir: '/lus/grand/projects/covid-ct/imlab/users/temi/projects/TFXcan/TFPred_pipeline'
+cistrome_data_dir: '/project2/haky/Data/TFXcan/cistrome/raw/human_factor'
+pipeline_dir: '/project2/haky/temi/projects/TFPred-snakemake'
 dataset: 'cistrome' # change this variable name 
 date: null
-TF_table: '/lus/grand/projects/covid-ct/imlab/data/cistrome/raw/human_factor_full_QC.txt' 
-
-metadata: "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/metadata/metadata.txt"
+TF_table: '/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt' 
+metadata: "/project2/haky/temi/projects/TFPred-snakemake/metadata/metadata.txt"
 
 homer:
-  dir: '/lus/grand/projects/covid-ct/imlab/users/temi/software/homer'
-  scanMotifsGenome: '/lus/grand/projects/covid-ct/imlab/users/temi/software/homer/bin/scanMotifsGenome.pl'
-  genome: '/lus/grand/projects/covid-ct/imlab/users/temi/software/homer/data/genomes/hg38'
+  dir: '/project2/haky/temi/software/homer'
+  scanMotifsGenome: '/project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl'
+  genome: '/project2/haky/temi/software/homer/data/genomes/hg38'
 
-rscript: "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/software/conda_envs/TFXcan-tools/bin/Rscript"
+rscript: "/project2/haky/temi/software/conda_envs/TFXcan-tools/bin/Rscript"
+
+enformer:
+  prediction_directives: 
+    project_dir: 'data'
+    metadata_dir: "/project2/haky/temi/projects/TFPred-snakemake/metadata/enformer_config"
+    sub_dir: True
+    model_path: "/project2/haky/Data/enformer/raw"
+    fasta_file: "/project2/haky/Data/hg_sequences/hg38/Homo_sapiens_assembly38.fasta"
+    output_dir: "enformer_predictions"
+    reverse_complement: false
+    sequence_source: 'reference'
+    exclude_regions: False
+    predictions_log_dir: "predictions_log"
+    tracks_to_save: -1
+    bins_to_save: "447,448,449"
+    n_regions: 100
+    batch_regions: 40
+    use_parsl: True
+    write_log:
+      logdir: "job_logs"
+      logtypes:
+        memory: False
+        error: True
+        time: False
+        cache: False
+    parsl_parameters:
+      num_of_full_nodes: 2
+      walltime: "00:30:00"
+      init_blocks: 1
+      min_num_blocks: 0
+      max_num_blocks: 2
+      queue:
+      hpc: "beagle3"
+      provider: "local"
+      worker_init: "source ~/.bashrc; conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib"
+
+vcfs:
+  dir: null
+
+...

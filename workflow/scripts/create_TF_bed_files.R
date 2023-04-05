@@ -22,7 +22,8 @@ library(glue)
 suppressMessages(library(tidyverse, quietly=TRUE, warn.conflicts = TRUE))
 
 #setwd('/lus/grand/projects/covid-ct/imlab/users/temi/projects/TFXcan/TFPred_pipeline/pipelines')
-directives <- yaml::yaml.load_file(config_file)
+cfile <- '/project2/haky/temi/projects/TFPred-snakemake/config/pipeline.yaml'
+directives <- yaml::yaml.load_file(cfile)
 tf_db <- data.table::fread(directives$TF_table)
 # tf_db %>% dplyr::filter(Factor == TF) %>% dplyr::group_by(Cell_line) %>% summarise(n_files=n()) %>% arrange(desc(n_files))
 

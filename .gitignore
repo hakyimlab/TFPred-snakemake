@@ -1,0 +1,4 @@
+.snakemake/*
+data/predictions_folder/*
+data/homer_files/*
+logs/*

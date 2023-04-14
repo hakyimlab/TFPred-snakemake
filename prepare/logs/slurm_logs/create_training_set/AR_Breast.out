@@ -1,0 +1,142 @@
+[1] "config/pipeline.yaml"
+TF: AR, tissue: Breast, predicted_motif_file: data/homer_files/AR/merged_motif_file.txt, data_dir: data/, output_file: data/predictor_files/AR_Breast_predictor_regions.txt
+[1] "/project2/haky/temi/projects/TFPred-snakemake"
+[1] TRUE
+$base_dir
+[1] "/lus/grand/projects/covid-ct/imlab"
+
+$cistrome_data_dir
+[1] "/project2/haky/Data/TFXcan/cistrome/raw/human_factor"
+
+$pipeline_dir
+[1] "/project2/haky/temi/projects/TFPred-snakemake"
+
+$dataset
+[1] "cistrome"
+
+$date
+NULL
+
+$TF_table
+[1] "/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt"
+
+$metadata
+[1] "/project2/haky/temi/projects/TFPred-snakemake/metadata/metadata.txt"
+
+$homer
+$homer$dir
+[1] "/project2/haky/temi/software/homer"
+
+$homer$scanMotifsGenome
+[1] "/project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl"
+
+$homer$genome
+[1] "/project2/haky/temi/software/homer/data/genomes/hg38"
+
+
+$rscript
+[1] "/project2/haky/temi/software/conda_envs/TFXcan-tools/bin/Rscript"
+
+$enformer
+$enformer$prediction_directives
+$enformer$prediction_directives$project_dir
+[1] "data"
+
+$enformer$prediction_directives$metadata_dir
+[1] "/project2/haky/temi/projects/TFPred-snakemake/metadata/enformer_config"
+
+$enformer$prediction_directives$sub_dir
+[1] TRUE
+
+$enformer$prediction_directives$model_path
+[1] "/project2/haky/Data/enformer/raw"
+
+$enformer$prediction_directives$fasta_file
+[1] "/project2/haky/Data/hg_sequences/hg38/Homo_sapiens_assembly38.fasta"
+
+$enformer$prediction_directives$output_dir
+[1] "enformer_predictions"
+
+$enformer$prediction_directives$reverse_complement
+[1] FALSE
+
+$enformer$prediction_directives$sequence_source
+[1] "reference"
+
+$enformer$prediction_directives$exclude_regions
+[1] FALSE
+
+$enformer$prediction_directives$predictions_log_dir
+[1] "predictions_log"
+
+$enformer$prediction_directives$tracks_to_save
+[1] -1
+
+$enformer$prediction_directives$bins_to_save
+[1] "447,448,449"
+
+$enformer$prediction_directives$n_regions
+[1] 100
+
+$enformer$prediction_directives$batch_regions
+[1] 40
+
+$enformer$prediction_directives$use_parsl
+[1] TRUE
+
+$enformer$prediction_directives$write_log
+$enformer$prediction_directives$write_log$logdir
+[1] "job_logs"
+
+$enformer$prediction_directives$write_log$logtypes
+$enformer$prediction_directives$write_log$logtypes$memory
+[1] FALSE
+
+$enformer$prediction_directives$write_log$logtypes$error
+[1] TRUE
+
+$enformer$prediction_directives$write_log$logtypes$time
+[1] FALSE
+
+$enformer$prediction_directives$write_log$logtypes$cache
+[1] FALSE
+
+
+
+$enformer$prediction_directives$parsl_parameters
+$enformer$prediction_directives$parsl_parameters$num_of_full_nodes
+[1] 2
+
+$enformer$prediction_directives$parsl_parameters$walltime
+[1] "00:30:00"
+
+$enformer$prediction_directives$parsl_parameters$init_blocks
+[1] 1
+
+$enformer$prediction_directives$parsl_parameters$min_num_blocks
+[1] 0
+
+$enformer$prediction_directives$parsl_parameters$max_num_blocks
+[1] 2
+
+$enformer$prediction_directives$parsl_parameters$queue
+NULL
+
+$enformer$prediction_directives$parsl_parameters$hpc
+[1] "beagle3"
+
+$enformer$prediction_directives$parsl_parameters$provider
+[1] "local"
+
+$enformer$prediction_directives$parsl_parameters$worker_init
+[1] "source ~/.bashrc; conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib"
+
+
+
+
+$vcfs
+$vcfs$dir
+NULL
+
+
+[['AR', 'Breast']]

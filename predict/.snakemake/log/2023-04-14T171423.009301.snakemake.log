@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                      count    min threads    max threads
+---------------------  -------  -------------  -------------
+all                          1              1              1
+predict_with_enformer        1              1              1
+total                        2              1              1
+
+Select jobs to execute...
+
+[Fri Apr 14 17:14:23 2023]
+Job 1: working on AR_Breast
+Reason: Missing output files: metadata/enformer_config/aggregation_config_cistrome_AR_Breast.json
+
+[Fri Apr 14 17:15:20 2023]
+Error in rule predict_with_enformer:
+    jobid: 1
+    input: ../prepare/data/predictor_files/AR_Breast_predictors.txt
+    output: metadata/enformer_config/aggregation_config_cistrome_AR_Breast.json
+    shell:
+        
+            echo `which python3`
+            # source ~/.bashrc
+            # conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools
+            # export LD_LIBRARY_PATH=/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib:$LD_LIBRARY_PATH
+            # export PATH=$PATH:/project2/haky/temi/software/homer/bin
+
+            python3 workflow/scripts/parallel_enformer/enformer_predict.py --param_config ../metadata/enformer_config/enformer_parameters_cistrome_AR_Breast.json
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2023-04-14T171423.009301.snakemake.log

@@ -1,0 +1,46 @@
+[['AR', 'Breast']]
+Building DAG of jobs...
+Job stats:
+job                      count    min threads    max threads
+---------------------  -------  -------------  -------------
+all                          1              1              1
+predict_with_enformer        1              1              1
+total                        2              1              1
+
+
+[Fri Apr 14 15:03:49 2023]
+Job 1: working on AR_Breast
+Reason: Missing output files: metadata/enformer_config/aggregation_config_cistrome_AR_Breast.json
+
+
+            echo `which python3`
+            # source ~/.bashrc
+            # conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools
+            # export LD_LIBRARY_PATH=/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib:$LD_LIBRARY_PATH
+            # export PATH=$PATH:/project2/haky/temi/software/homer/bin
+
+            python3 workflow/scripts/parallel_enformer/enformer_predict.py --param_config ../prepare/data/predictor_files/AR_Breast_predictors.txt
+        
+
+[Fri Apr 14 15:03:49 2023]
+localrule all:
+    input: ../prepare/data/predictor_files/AR_Breast_predictor_regions.txt, ../prepare/data/predictor_files/AR_Breast_predictors.txt, ../prepare/data/predictor_files/AR_Breast_ground_truth.txt, metadata/enformer_config/aggregation_config_cistrome_AR_Breast.json
+    jobid: 0
+    reason: Input files updated by another job: metadata/enformer_config/aggregation_config_cistrome_AR_Breast.json
+    resources: tmpdir=/home/temi
+
+Job stats:
+job                      count    min threads    max threads
+---------------------  -------  -------------  -------------
+all                          1              1              1
+predict_with_enformer        1              1              1
+total                        2              1              1
+
+Reasons:
+    (check individual jobs above for details)
+    input files updated by another job:
+        all
+    missing output files:
+        predict_with_enformer
+
+This was a dry-run (flag -n). The order of jobs does not reflect the order of execution.

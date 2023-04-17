@@ -256,10 +256,6 @@ if (__name__ == '__main__') or (__name__ == 'enformer_predict'):
     job_runtime = job_end - job_start
     print(f'INFO - Completed job in {job_runtime} seconds.')
 
-    
-
-
-
 # if create_hdf5_file == True:
 #         print(f'[INFO] Creating HDF5 database(s)')
 #         finished_predictions = pd.read_csv(logfile_csv)

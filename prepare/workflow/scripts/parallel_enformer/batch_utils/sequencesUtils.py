@@ -376,11 +376,7 @@ def create_input_for_enformer(query_region, samples, path_to_vcf, fasta_func, ha
             loggerUtils.write_logger(log_msg_type = 'time', logfile = TIME_USAGE_FILE, message = time_msg)
         return({'sequence': {'haplotype0': one_hot_encode(generate_random_sequence_inputs())}, 'metadata': {'sequence_source':'random', 'region':query_region}})
     else:
-        try:
-            reference_sequence = extract_reference_sequence(region=query_region, fasta_func=fasta_func, resize_for_enformer=resize_for_enformer, write_log=write_log, resize_length=resize_length)
-        except KeyError as ke:
-            print(f'ERROR - Key error at {query_region}')
-            return(None)
+        reference_sequence = extract_reference_sequence(region=query_region, fasta_func=fasta_func, resize_for_enformer=resize_for_enformer, write_log=write_log, resize_length=resize_length)
         #print(f'Region {region} sequences successfully created within create input function')
         if np.all(reference_sequence['sequence'] == 0.25): # check if all the sequence are "NNNNNNNNNNN..."
             error_folder = os.path.join(write_log['logdir'], 'invalid_queries.csv')

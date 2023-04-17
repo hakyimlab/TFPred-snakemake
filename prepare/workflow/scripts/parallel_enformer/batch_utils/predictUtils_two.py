@@ -11,8 +11,6 @@ from datetime import date
 
 global module_path, write_log, sequence_source, grow_memory
 
-os.environ['CUDA_VISIBLE_DEVICES'] = "0"
-
 # read in the config_file
 whereis_script = os.path.dirname(__file__) #os.path.dirname(sys.argv[0]) # or os.path.dirname(__file__)
 #module_path = os.path.abspath(whereis_script)

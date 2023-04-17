@@ -221,7 +221,7 @@ def beagle3_htParslConfig(params):
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
 
-    scheduler_options = [f"#SBATCH --gres=gpu:2", 
+    scheduler_options = [f"#SBATCH --gres=gpu:4", 
             "#SBATCH --partition=beagle3"
     ]
     scheduler_options = '\n'.join(scheduler_options)

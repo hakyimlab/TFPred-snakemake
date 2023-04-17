@@ -1,4 +1,5 @@
 .snakemake/*
+data/*
 predict/data/predictions_folder/*
 prepare/data/predictions_folder/*
 predict/data/predictor_files/*

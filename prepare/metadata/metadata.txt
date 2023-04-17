@@ -1,2 +1,0 @@
-transcription_factor,tissue
-AR,Breast

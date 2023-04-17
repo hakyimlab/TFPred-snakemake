@@ -41,14 +41,14 @@ enformer:
         time: False
         cache: False
     parsl_parameters:
-      num_of_full_nodes: 4
+      num_of_full_nodes: 2
       walltime: "00:30:00"
       init_blocks: 1
       min_num_blocks: 0
       max_num_blocks: 2
       queue:
       hpc: "beagle3"
-      provider: "local"
+      provider: "highthroughput"
       worker_init: "source ~/.bashrc; conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib"
 
 vcfs:

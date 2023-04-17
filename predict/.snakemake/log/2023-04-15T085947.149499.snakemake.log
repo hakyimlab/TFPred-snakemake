@@ -1,0 +1,3 @@
+WorkflowError in file /project2/haky/temi/projects/TFPred-snakemake/predict/workflow/rules/common.smk, line 17:
+Config file is not valid JSON or YAML. In case of YAML, make sure to not mix whitespace and tab indentation.
+  File "/project2/haky/temi/projects/TFPred-snakemake/predict/workflow/rules/common.smk", line 17, in <module>

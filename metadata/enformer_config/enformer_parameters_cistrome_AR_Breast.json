@@ -7,7 +7,7 @@
   "output_dir": "enformer_predictions",
   "reverse_complement": false,
   "sequence_source": "reference",
-  "exclude_regions": false,
+  "exclude_regions": true,
   "predictions_log_dir": "predictions_log",
   "tracks_to_save": -1,
   "bins_to_save": "447,448,449",
@@ -24,18 +24,18 @@
     }
   },
   "parsl_parameters": {
-    "num_of_full_nodes": 1,
+    "num_of_full_nodes": 2,
     "walltime": "00:30:00",
     "init_blocks": 1,
     "min_num_blocks": 0,
-    "max_num_blocks": 1,
+    "max_num_blocks": 4,
     "queue": {},
     "hpc": "beagle3",
     "provider": "highthroughput",
-    "worker_init": "source ~/.bashrc; conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib; echo `nvidia-smi`; echo $SLURM_MEM_PER_CPU; echo $SLURM_MEM_PER_GPU; echo $SLURM_MEM_PER_NODE"
+    "worker_init": "source ~/.bashrc; conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib; module load cudnn/11.2; pwd; echo `nvidia-smi`"
   },
   "prediction_data_name": "cistrome",
   "prediction_id": "AR_Breast",
-  "date": "2023-04-05",
+  "date": "2023-04-15",
   "interval_list_file": "data/predictor_files/AR_Breast_predictors.txt"
 }

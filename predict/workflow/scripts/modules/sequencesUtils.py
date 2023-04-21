@@ -59,8 +59,12 @@ def one_hot_encode(sequence):
     if not isinstance(sequence, str):
         raise Exception(f'[ERROR] Input to be one-hot encoded must be a str type. You provided a {type(sequence_encoded).__name__} type.')
 
-    #try:
-    sequence_encoded = kipoiseq.transforms.functional.one_hot_dna(sequence).astype(np.float32)[np.newaxis]
+    try:
+        sequence_encoded = kipoiseq.transforms.functional.one_hot_dna(sequence).astype(np.float32)[np.newaxis]
+    except KeyError:
+        print(f'ERROR - Input sequence contains invalid characters.')
+        return(None)
+        #raise Exception(f'[ERROR] Input sequence contains invalid characters.')
     return(sequence_encoded)
 
 
@@ -376,22 +380,15 @@ def create_input_for_enformer(query_region, samples, path_to_vcf, fasta_func, ha
             loggerUtils.write_logger(log_msg_type = 'time', logfile = TIME_USAGE_FILE, message = time_msg)
         return({'sequence': {'haplotype0': one_hot_encode(generate_random_sequence_inputs())}, 'metadata': {'sequence_source':'random', 'region':query_region}})
     else:
-        try:
-            reference_sequence = extract_reference_sequence(region=query_region, fasta_func=fasta_func, resize_for_enformer=resize_for_enformer, write_log=write_log, resize_length=resize_length)
-        except KeyError as ke:
-            print(f'ERROR - Key error at {query_region}')
-            return(None)
+        reference_sequence = extract_reference_sequence(region=query_region, fasta_func=fasta_func, resize_for_enformer=resize_for_enformer, write_log=write_log, resize_length=resize_length)
         #print(f'Region {region} sequences successfully created within create input function')
         if np.all(reference_sequence['sequence'] == 0.25): # check if all the sequence are "NNNNNNNNNNN..."
             error_folder = os.path.join(write_log['logdir'], 'invalid_queries.csv')
             loggerUtils.log_error_sequences(error_folder=error_folder, what_to_write=[query_region, 'NNN* sequences'])
-
-            # err_msg = f'[INPUT] {query_region} is invalid; all nucleotides are N.'
-            # if (write_log is not None) and (write_log['logtypes']['error']):
-            #     MEMORY_ERROR_FILE = os.path.join(write_log['logdir'], 'error_details.log')
-            #     loggerUtils.write_logger(log_msg_type = 'error', logfile = MEMORY_ERROR_FILE, message = err_msg)
-            # else:
-            #     print(err_msg)
+            return(None)
+        elif reference_sequence['sequence'] is None:
+            error_folder = os.path.join(write_log['logdir'], 'invalid_queries.csv')
+            loggerUtils.log_error_sequences(error_folder=error_folder, what_to_write=[query_region, 'R in sequence'])
             return(None)
         else:
             if sequence_source == 'reference':

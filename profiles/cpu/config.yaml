@@ -7,7 +7,7 @@ cluster:
     --job-name=smk-{rule}-{params.jobname}
     --output=logs/slurm_logs/{rule}/{params.jobname}.out
     --error=logs/slurm_logs/{rule}/{params.jobname}.err
-    --exclusive
+    # --exclusive
 default-resources:
   - partition=caslake
   - time="00:30:00"

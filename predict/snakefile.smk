@@ -148,6 +148,6 @@ rule predict_with_enformer:
     shell:
         """
             echo `which python3`
-            python3 predict/workflow/scripts/parallel_enformer/enformer_predict.py --param_config {params.cf}
+            python3 predict/workflow/scripts/enformer_predict.py --param_config {params.cf}
         """
     

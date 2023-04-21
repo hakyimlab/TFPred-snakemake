@@ -18,7 +18,7 @@ rscript: "/project2/haky/temi/software/conda_envs/TFXcan-tools/bin/Rscript"
 
 enformer:
   prediction_directives: 
-    project_dir: 'data'
+    project_dir: '/project2/haky/temi/projects/TFPred-snakemake/data'
     metadata_dir: "/project2/haky/temi/projects/TFPred-snakemake/metadata/enformer_config"
     sub_dir: True
     model_path: "/project2/haky/Data/enformer/raw"
@@ -28,7 +28,7 @@ enformer:
     sequence_source: 'reference'
     exclude_regions: False
     predictions_log_dir: "predictions_log"
-    tracks_to_save: -1
+    tracks_to_save: "2,3,4"
     bins_to_save: "447,448,449"
     n_regions: 100
     batch_regions: 40
@@ -47,6 +47,7 @@ enformer:
       min_num_blocks: 0
       max_num_blocks: 2
       queue:
+      account: "pi-haky"
       hpc: "beagle3"
       provider: "highthroughput"
       worker_init: "source ~/.bashrc; conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib"

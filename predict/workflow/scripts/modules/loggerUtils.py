@@ -19,8 +19,6 @@ def get_gpu_memory():
     command = "nvidia-smi --query-gpu=memory.free,memory.used --format=csv"
     memory_info = subprocess.check_output(command.split()).decode('ascii').split('\n')[1].split(',')
     memory_values = [int(x.strip().split(' ')[0]) for i, x in enumerate(memory_info)]
-    if len(memory_values) != 2:
-        return([0, 0])
     return memory_values
 
 def setup_logger(logger_name, log_file, level=logging.INFO):

@@ -309,27 +309,13 @@ def beagle3_localParslConfig(params):
 
     return(local_htex)
 
-
-from parsl.config import Config
-from parsl.executors.threads import ThreadPoolExecutor
-
-local_threads = Config(
-    executors=[
-        ThreadPoolExecutor(
-            max_threads=8,
-            label='local_threads'
-        )
-    ]
-)
-
 def beagle3_tpParslConfig(params):
-
     import parsl
-    # Make a config that runs on two nodes
+    from parsl.config import Config
     from parsl.executors import ThreadPoolExecutor
-
     import os
-    print(f'Parsl version: {parsl.__version__}')
+
+    print(f'INFO - Parsl version: {parsl.__version__}')
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
 
@@ -340,6 +326,7 @@ def beagle3_tpParslConfig(params):
                 label='local_threads',
                 working_dir = workingdir
             )
-        ]
+        ],
+        run_dir=rundir
     )
     return(local_tpex)

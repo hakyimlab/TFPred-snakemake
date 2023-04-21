@@ -5,9 +5,9 @@ Rules claiming more threads will be scaled down.
 Provided resources: mem_mb=20000, mem_mib=19074, disk_mb=1221, disk_mib=1165
 Select jobs to execute...
 
-[Mon Apr 17 16:44:24 2023]
+[Mon Apr 17 16:49:03 2023]
 Job 0: working on tf=AR,tissue=Breast, data/homer_files/AR/merged_motif_file.txt, config/pipeline.yaml
-Reason: Missing output files: data/predictor_files/AR_Breast_predictors.txt, data/predictor_files/AR_Breast_ground_truth.txt, metadata/enformer_config/enformer_parameters_cistrome_AR_Breast.json, data/predictor_files/AR_Breast_predictor_regions.txt
+Reason: Missing output files: data/predictor_files/AR_Breast_predictor_regions.txt, data/predictor_files/AR_Breast_ground_truth.txt, data/predictor_files/AR_Breast_predictors.txt, metadata/enformer_config/enformer_parameters_cistrome_AR_Breast.json
 
 
         /project2/haky/temi/software/conda_envs/TFXcan-tools/bin/Rscript prepare/workflow/scripts/create_training_sets.R AR Breast data/homer_files/AR/merged_motif_file.txt data/ data/predictor_files/AR_Breast_predictor_regions.txt config/pipeline.yaml
@@ -114,3 +114,18 @@ The following object is masked from ‘package:data.table’:
     shift
 
 Loading required package: GenomeInfoDb
+ ■■■■■                             13% |  ETA: 15s
+ ■■■■■■■■■■■                       33% |  ETA: 12s
+ ■■■■■■■■■■■■■■■                   47% |  ETA:  9s
+ ■■■■■■■■■■■■■■■■■■■■■             67% |  ETA:  6s
+ ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% |  ETA:  2s
+Warning message:
+In .merge_two_Seqinfo_objects(x, y) :
+  Each of the 2 combined objects has sequence levels not in the other:
+  - in 'x': chrMT
+  - in 'y': chrX
+  Make sure to always combine/compare objects based on the same reference
+  genome (use suppressWarnings() to suppress this warning).
+[Mon Apr 17 16:52:01 2023]
+Finished job 0.
+1 of 1 steps (100%) done

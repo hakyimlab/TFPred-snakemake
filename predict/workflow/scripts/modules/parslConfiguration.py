@@ -1,4 +1,8 @@
 
+# Description: Provides the parsl configuration for the different systems
+# Author: Temi
+# Date: Sometime in early 2023
+
 
 # 'source /home/temi/.bashrc; conda activate dl-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/temi/miniconda3/envs/dl-tools/lib; echo Running on host `hostname`; echo Running on nodes `cat $PBS_NODEFILE`'
 
@@ -10,7 +14,7 @@ def polaris_htParslConfig(params):
     from parsl.addresses import address_by_hostname
     from parsl.providers import PBSProProvider
     import os
-    print(f'Parsl version: {parsl.__version__}')
+    print(f'INFO - Parsl version: {parsl.__version__}')
     # I defined these locations otherwise parsl will use the current directory to output the run informations and log messages
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
@@ -28,7 +32,7 @@ def polaris_htParslConfig(params):
             'worker_init': params['worker_init'],
             'scheduler_options': f'{sch_options}',
             # ALCF allocation to use
-            'account': 'covid-ct',
+            'account': params['account'],
         }
     }
     pbs_htex = Config(
@@ -42,7 +46,7 @@ def polaris_htParslConfig(params):
                 provider=PBSProProvider(
                     launcher=MpiExecLauncher(
                         bind_cmd="--cpu-bind", overrides="--depth=64 --ppn 1"
-                    ),  # Ensures 1 manger per node, work on all 64 cores
+                    ),
                     account=user_opts['polaris']['account'],
                     queue=params['queue'], #preemptable',
                     cpus_per_node=64,
@@ -62,7 +66,6 @@ def polaris_htParslConfig(params):
     )
     return pbs_htex
 
-
 def theta_htParslConfig(params):
     import parsl
     from parsl.config import Config
@@ -70,7 +73,7 @@ def theta_htParslConfig(params):
     from parsl.launchers import MpiExecLauncher
     from parsl.executors import HighThroughputExecutor
     import os
-    print(f'Parsl version: {parsl.__version__}')
+    print(f'INFO - Parsl version: {parsl.__version__}')
     # I defined these locations otherwise parsl will use the current directory to output the run informations and log messages
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
@@ -87,7 +90,7 @@ def theta_htParslConfig(params):
             'worker_init': params['worker_init'],
             'scheduler_options': f'{sch_options}',
             # ALCF allocation to use
-            'account': 'covid-ct',
+            'account': params['account'],
         }
     }
     #just in case there is a config loaded already
@@ -119,7 +122,6 @@ def theta_htParslConfig(params):
     )
     return(cobalt_htex)
 
-
 def polaris_localParslConfig(params):
     import parsl
     # Make a config that runs on two nodes
@@ -130,7 +132,7 @@ def polaris_localParslConfig(params):
     from parsl.launchers import MpiExecLauncher
     from parsl.addresses import address_by_hostname
     import os
-    print(f'Parsl version: {parsl.__version__}')
+    print(f'INFO - Parsl version: {parsl.__version__}')
     # I defined these locations otherwise parsl will use the current directory to output the run informations and log messages
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
@@ -175,7 +177,7 @@ def theta_localParslConfig(params):
 
     import os
 
-    print(f'Parsl version: {parsl.__version__}')
+    print(f'INFO - Parsl version: {parsl.__version__}')
     # I defined these locations otherwise parsl will use the current directory to output the run informations and log messages
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
@@ -217,11 +219,11 @@ def beagle3_htParslConfig(params):
     from parsl.launchers import SrunLauncher
     import os
 
-    print(f'Parsl version: {parsl.__version__}')
+    print(f'INFO - Parsl version: {parsl.__version__}')
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
 
-    scheduler_options = [f"#SBATCH --gres=gpu:2", 
+    scheduler_options = [f"#SBATCH --gres=gpu:4", 
             "#SBATCH --partition=beagle3"
     ]
     scheduler_options = '\n'.join(scheduler_options)
@@ -236,7 +238,7 @@ def beagle3_htParslConfig(params):
             # Node setup: activate necessary conda environment and such.
             'worker_init': params['worker_init'],
             # ALCF allocation to use
-            'account': 'pi-haky',
+            'account': params['account'],
         }
     }
 
@@ -264,7 +266,6 @@ def beagle3_htParslConfig(params):
     )
     return config
 
-
 def beagle3_localParslConfig(params):
 
     import parsl
@@ -277,11 +278,11 @@ def beagle3_localParslConfig(params):
 
     import os
 
-    print(f'Parsl version: {parsl.__version__}')
+    print(f'INFO - Parsl version: {parsl.__version__}')
     # I defined these locations otherwise parsl will use the current directory to output the run informations and log messages
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
-    #job_name = params['job_name']
+    job_name = params['job_name']
     #parsl.clear()
 
     local_htex = Config(

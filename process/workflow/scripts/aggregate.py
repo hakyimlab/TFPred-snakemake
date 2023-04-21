@@ -96,6 +96,8 @@ if use_parsl == True:
     #parsl.load(parslConfiguration.localParslConfig_htpool(parsl_params))
     parsl.load(parslConfiguration.beagle3_tpParslConfig(parsl_params))
 
+
+
 collection_fxn = return_prediction_function(use_parsl)
 
 app_futures = []

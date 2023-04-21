@@ -11,8 +11,6 @@ from datetime import date
 
 global module_path, write_log, sequence_source, grow_memory
 
-os.environ['CUDA_VISIBLE_DEVICES'] = "0"
-
 # read in the config_file
 whereis_script = os.path.dirname(__file__) #os.path.dirname(sys.argv[0]) # or os.path.dirname(__file__)
 #module_path = os.path.abspath(whereis_script)
@@ -20,7 +18,7 @@ whereis_script = os.path.dirname(__file__) #os.path.dirname(sys.argv[0]) # or os
 #if __name__ == '__main__':
 if __name__ == 'predictUtils_two':
 
-    with open(f'{whereis_script}/config.json') as f:
+    with open(f'{whereis_script}/tmp_config.json') as f:
         parameters = json.load(f)
         parameters_file = parameters['params_path']
     
@@ -44,11 +42,6 @@ if __name__ == 'predictUtils_two':
         bins_indices_raw = parameters['bins_to_save']
         tracks_indices_raw = parameters['tracks_to_save']
         reverse_complement = parameters["reverse_complement"]
-        #vcf_file = parameters['vcf_file']
-
-# for ltype in ['memory', 'error', 'time', 'cache']:
-#     if write_log['logtypes'][ltype]: os.makedirs
-
 
 if any([write_log['logtypes'][ltype] for ltype in ['memory', 'error', 'time', 'cache']]):
     write_log['logdir'] = os.path.join(project_dir, write_logdir)
@@ -64,12 +57,26 @@ import collectUtils
 
 global enformer_model
 global fasta_extractor
+global predictions_expected_shape
 
 #enformer_model = predictionUtils.get_model(model_path)
 grow_memory = True
 #print(f'GPU Memory before calling batch predict function is {loggerUtils.get_gpu_memory()}')
 
 bins_indices, tracks_indices = collectUtils.parse_bins_and_tracks(bins_indices_raw,tracks_indices_raw)
+
+# Check prediction size for correctness
+if bins_indices == None:
+    if tracks_indices == None:
+        predictions_expected_shape = (896,5313)
+    else:
+        predictions_expected_shape = (896,len(tracks_indices))
+else:
+    if tracks_indices == None:
+        predictions_expected_shape = (len(bins_indices), 5313)
+    else:
+        predictions_expected_shape = (len(bins_indices),len(tracks_indices))
+
 #print(bins_indices,tracks_indices)
 
 def enformer_predict_on_batch(batch_regions, samples, logging_dictionary, path_to_vcf, batch_num, output_dir, prediction_logfiles_folder, sequence_source):
@@ -82,8 +89,8 @@ def enformer_predict_on_batch(batch_regions, samples, logging_dictionary, path_t
         raise Exception(f'[INFO] There are no regions in this batch {batch_num}.')
 
     # print(f'batch_regions are: {batch_regions}')
-    # print(f'samples are: {samples}')
-    # print(f'path_to_vcf are: {path_to_vcf}')
+    # # print(f'samples are: {samples}')
+    # # print(f'path_to_vcf are: {path_to_vcf}')
     # print(f'output_dir are: {output_dir}')
     # print(f'prediction_logfiles_folder are: {prediction_logfiles_folder}')
     # print(f'sequence_source are: {sequence_source}')
@@ -160,22 +167,13 @@ def enformer_predict_on_batch(batch_regions, samples, logging_dictionary, path_t
                     for hap in unfiltered_sample_predictions.keys():
 
                         haplo_prediction_cur = np.squeeze(unfiltered_sample_predictions[hap], axis=0)
-                        sample_predictions[hap] = collectUtils.collect_bins_and_tracks(haplo_prediction_cur,bins_indices,tracks_indices)
+                        #print(haplo_prediction_cur)
+                        sample_predictions[hap] = collectUtils.collect_bins_and_tracks(haplo_prediction_cur, bins_indices, tracks_indices)
+                        #print(sample_predictions[hap])
 
-                        # Check prediction size for correctness
-                        if bins_indices == None:
-                            if tracks_indices == None:
-                                sample_predictions_shape= (896,5313)
-                            else:
-                                sample_predictions_shape= (896,len(tracks_indices))
-                        else:
-                            if tracks_indices == None:
-                                sample_predictions_shape= (len(bins_indices),5313)
-                            else:
-                                sample_predictions_shape= (len(bins_indices),len(tracks_indices))
-                                
-                        if sample_predictions[hap].shape != sample_predictions_shape:
-                            raise Exception(f'[ERROR] {sample}\'s {hap} predictions shape is {sample_predictions[hap].shape} and is not the right shape.')
+                        if sample_predictions[hap].shape != predictions_expected_shape:
+                            #print(sample_predictions[hap])
+                            raise Exception(f'ERROR - {sample}\'s {hap} predictions shape is {sample_predictions[hap].shape} and is not equal to expected shape {predictions_expected_shape}.')
                         else:
                             print(f'Sample {sample} {input_region} {hap} predictions are of the correct shape:  {sample_predictions[hap].shape}')
                         
@@ -204,23 +202,22 @@ def enformer_predict_on_batch(batch_regions, samples, logging_dictionary, path_t
                 if tf.config.list_physical_devices('GPU'):
                     MEMORY_LOG_FILE = os.path.join(write_log['logdir'], "memory_usage.log")
                     loggerUtils.write_logger(log_msg_type = 'memory', logfile = MEMORY_LOG_FILE, message = msg_mem_log)
-            # else:
-            #     mem_use = loggerUtils.get_gpu_memory() # [123, 456]#
-            #     msg_mem_log = f"[MEMORY] (GPU) at the end of batch {batch_num} prediction: free {mem_use[0]} mb, used {mem_use[1]} mb on " 
-            #     print(msg_mem_log)
+            else:
+                mem_use = loggerUtils.get_gpu_memory() # [123, 456]#
+                msg_mem_log = f"[MEMORY] (GPU) at the end of batch {batch_num} prediction: free {mem_use[0]} mb, used {mem_use[1]} mb on " 
+                print(msg_mem_log)
 
             if write_log['logtypes']['cache']:
                 msg_cac_log = f'[CACHE] (model) at batch {batch_num}: [{predictionUtils.get_model.cache_info()}]'
                 CACHE_LOG_FILE = os.path.join(write_log['logdir'], 'cache_usage.log')
                 loggerUtils.write_logger(log_msg_type = 'cache', logfile = CACHE_LOG_FILE, message = msg_cac_log)
-            # else:
-            #     msg_cac_log = f'[CACHE] (model) at batch {batch_num}: [{predictionUtils.get_model.cache_info()}]'
-            #     print(msg_cac_log)
+            else:
+                msg_cac_log = f'[CACHE] (model) at batch {batch_num}: [{predictionUtils.get_model.cache_info()}]'
+                print(msg_cac_log)
 
         return(logger_output)
     
     except (TypeError, AttributeError) as tfe:
-        print("Except")
         if write_log['logtypes']['error']:
             if tf.config.list_physical_devices('GPU'):
                 mem_use = loggerUtils.get_gpu_memory()

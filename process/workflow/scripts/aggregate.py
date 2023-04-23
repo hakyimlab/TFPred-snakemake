@@ -18,7 +18,7 @@ parser.add_argument("--metadata_file", help="Path to the metadata file", type=st
 parser.add_argument("--agg_types", nargs='+', help='<Required> aggregation type to be used', required=True)
 args = parser.parse_args()
 
-print(f'[INFO] Available CPUs are {multiprocessing.cpu_count()}')
+print(f'INFO - Available CPUs are {multiprocessing.cpu_count()}')
 
 # use parsl if the num of rows of log_data is more than 10000
 use_parsl = True
@@ -37,7 +37,7 @@ try:
     import aggregate_tools
     import parslConfiguration
 except ModuleNotFoundError:
-    print(f'[ERROR] aggregate_tools module not found.')
+    print(f'ERROR - aggregate_tools module not found.')
 
 with open(f'{args.metadata_file}') as f:
     parameters = json.load(f)
@@ -67,9 +67,9 @@ if sequence_source == 'personalized':
 
 agg_types = args.agg_types
 agg_types = agg_types[0].split(' ')
-print(f'[INFO] Aggregating these: {agg_types}')
+print(f'INFO - Aggregating these: {agg_types}')
 
-print(f'[INFO] Currently on {prediction_data_name}')
+print(f'INFO - Currently on {prediction_data_name}')
 save_dir = os.path.join(base_path, 'aggregated_predictions') 
 if not os.path.isdir(save_dir):
     os.makedirs(save_dir)
@@ -79,24 +79,16 @@ if individuals is None:
 elif isinstance(individuals, list):
     ids_names = individuals
 
-print(ids_names)
-
-# = pd.read_csv(log_file)
-#log_data_all = log_data_all.drop_duplicates(subset=['motif']) #.iloc[1:1000, ]
-
-#fpath = os.path.join(base_path, 'scripts', 'collect_model_data')
 predict_utils_one = f'{script_path}/aggregate_tools.py'
 exec(open(predict_utils_one).read(), globals(), globals())
 
 if use_parsl == True:
     #bpath = os.path.join(base_path, 'modeling_pipeline')
-    print(f'[INFO] Using parsl.')
-    parsl_params = {'working_dir':base_path, 'job_name':'aggregate_predictions', 'queue':"caslake", 'walltime':"06:00:00", 'num_of_full_nodes':1, 'min_num_blocks':0, 'max_num_blocks':10}
+    print(f'INFO - Using parsl.')
+    parsl_params = {'working_dir':base_path, 'job_name':'aggregate_predictions', 'queue':"caslake", 'walltime':"01:00:00", 'num_of_full_nodes':1, 'min_num_blocks':0, 'max_num_blocks':10}
     #parsl.load(parslConfiguration.localParslConfig_htpool(parsl_params))
     #parsl.load(parslConfiguration.localParslConfig_htpool(parsl_params))
     parsl.load(parslConfiguration.beagle3_tpParslConfig(parsl_params))
-
-
 
 collection_fxn = return_prediction_function(use_parsl)
 
@@ -110,12 +102,12 @@ for each_id in ids_names:
         ind_path = os.path.join(enformer_predictions_path, each_id)
         # check that the folder exists
         if not os.path.exists(ind_path):
-            raise Exception(f'[WARNING] {each_id} does not exist')
+            raise Exception(f'WARNING - {each_id} does not exist')
         else:
             app_futures.append(collection_fxn(each_id=each_id, log_data=log_data, predictions_path=ind_path, prediction_id=prediction_id, agg_types=[each_agg], save_dir=save_dir, sequence_source=sequence_source, batch_num=None))
 
-print(f'[INFO] Executing {len(app_futures)} app_futures')
+print(f'INFO - Executing {len(app_futures)} app_futures')
 if use_parsl == True:
     app_execs = [r.result() for r in app_futures]
 
-print(f'[INFO] Aggregation complete for all.')
+print(f'INFO - Aggregation complete for all.')

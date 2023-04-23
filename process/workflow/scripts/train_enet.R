@@ -1,7 +1,4 @@
 
-
-
-
 arguments <- commandArgs(trailingOnly=TRUE)
 #print(arguments)
 
@@ -14,7 +11,6 @@ library(parallel)
 
 data_file <- arguments[1]
 model_file_basename <- arguments[2]
-
 
 if(file.exists(data_file)){
     print(glue('INFO - Training data exists.'))
@@ -31,12 +27,9 @@ if(file.exists(data_file)){
 # print(glue('id is {id_data}\nTF is {TF}\nmetainfo is {metainfo}\noutput directory is {output_dir}\ntraining date is {training_date}\n\n'))
 
 dt_train <- data.table::fread(data_file)
-print(dim(dt_train))
-
 # split the data
 X_train <- dt_train[, -c(1,2,3,4)] |> as.matrix()
 y_train <- dt_train[, c(1,2,3,4)] |> as.data.frame()
-print(head(y_train))
 
 print(glue('INFO - Found {parallel::detectCores()} cores\n\n'))
 
@@ -53,15 +46,29 @@ parallel::mclapply(train_methods, function(each_method){
 
     if(each_method == 'linear'){
 
-        cv_model <- glmnet::cv.glmnet(x=X_train, y=y_train$norm_bc, family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=5)
-        print(cv_model)
+        # cv_model <- glmnet::cv.glmnet(x=X_train, y=y_train$norm_bc, family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=5)
+        # print(cv_model)
+
+        cv_model <- tryCatch({
+            glmnet::cv.glmnet(x=X_train, y=y_train$norm_bc, family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=5)
+        }, error = function(e){
+            print(glue('ERROR - {e}'))
+            return(NULL)
+        })
 
     } else if (each_method == 'logistic'){
 
-        cv_model <- glmnet::cv.glmnet(x=X_train, y=y_train$class, family = "binomial", type.measure = "auc", alpha = 0.5, keep=T, parallel=T, nfolds=5, trace.it=F)
-        print(cv_model)
-    }
+        # cv_model <- glmnet::cv.glmnet(x=X_train, y=y_train$class, family = "binomial", type.measure = "auc", alpha = 0.5, keep=T, parallel=T, nfolds=5, trace.it=F)
+        # print(cv_model)
 
+        cv_model <- tryCatch({
+            glmnet::cv.glmnet(x=X_train, y=y_train$class, family = "binomial", type.measure = "auc", alpha = 0.5, keep=T, parallel=T, nfolds=5, trace.it=F)
+        }, error = function(e){
+            print(glue('ERROR - {e}'))
+            return(NULL)
+        })
+    }
+    print(cv_model)
     print(glue('INFO - Saving `{model_file_basename}.{each_method}.rds`'))
     rds_file <- glue('{model_file_basename}.{each_method}.rds')
     saveRDS(cv_model, file=rds_file)

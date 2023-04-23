@@ -132,7 +132,7 @@ rule all:
         expand(os.path.join(HOMERFILES_DIR, '{tf}', '{motif_file}.motif'), zip, tf = homer_wildcards.tfs, motif_file = homer_wildcards.motif_files),
         expand(os.path.join(HOMERFILES_DIR, '{tf}', 'scanMotifsGenomeWide_{motif_file}.txt'), zip, tf = homer_wildcards.tfs, motif_file = homer_wildcards.motif_files),
         expand(os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt'), tf = set(homer_wildcards.tfs)),
-        expand(os.path.join(PREDICTORS_DIR, '{tf}_{tissue}_predictor_regions.txt'), zip, tf = TF_list, tissue = tissue_list),
+        #expand(os.path.join(PREDICTORS_DIR, '{tf}_{tissue}_predictor_regions.txt'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(PREDICTORS_DIR, '{tf}_{tissue}_predictors.txt'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(PREDICTORS_DIR, '{tf}_{tissue}_ground_truth.txt'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(METADATA_DIR, 'enformer_config', f'enformer_parameters_{config["dataset"]}_{{tf}}_{{tissue}}.json'), zip, tf = TF_list, tissue = tissue_list)
@@ -177,7 +177,7 @@ rule create_training_set:
     input: 
         rules.merge_homer_motifs.output
     output: 
-        f0=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}_predictor_regions.txt'),
+        #f0=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}_predictor_regions.txt'),
         f1=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}_predictors.txt'),
         f2=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}_ground_truth.txt'),
         f3=os.path.join(METADATA_DIR, 'enformer_config', f'enformer_parameters_{config["dataset"]}_{{tf}}_{{tissue}}.json')
@@ -186,12 +186,14 @@ rule create_training_set:
         TF = '{tf}',
         tissue = '{tissue}',
         config_file = cfile,
-        jobname = '{tf}_{tissue}'
+        jobname = '{tf}_{tissue}',
+        basename = os.path.join(PREDICTORS_DIR, '{tf}_{tissue}')
     message: "working on {wildcards}, {input}, {cfile}"
     resources:
-        mem_mb = 20000
+        mem_mb = 20000,
+        gpu = 'beagle3'
     threads: 32
     shell:
         """
-        {params.rscript} prepare/workflow/scripts/create_training_sets.R {params.TF} {params.tissue} {input} data/ {output.f0} {params.config_file}
+        {params.rscript} prepare/workflow/scripts/create_training_sets.R {params.TF} {params.tissue} {input} data/ {params.basename} {params.config_file}
         """

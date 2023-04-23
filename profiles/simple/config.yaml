@@ -15,9 +15,6 @@ default-resources:
   - time="01:00:00"
   - tmpdir="/scratch/midway3/temi"
   - account="pi-haky"
-set-resources:
-  - predict_with_enformer:partition='beagle3'
-  - predict_with_enformer:gres=gpu:{resources.gpus}
 restart-times: 0
 max-jobs-per-second: 10
 max-status-checks-per-second: 1

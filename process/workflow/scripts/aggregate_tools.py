@@ -97,11 +97,10 @@ def aggregate_enformer_predictions(each_id, log_data, predictions_path, predicti
     if __name__ == '__main__':
 
         regions_list = log_data.loc[log_data['sequence_source'] == pred_type, ].region.values.tolist()
-        print(len(regions_list))
 
         pooled_dictionary = {}
         for haplotype in haplotypes:
-            pool = multiprocessing.Pool(16)
+            pool = multiprocessing.Pool(4)
             outputs_list = pool.starmap(read_file, itertools.product(regions_list, [predictions_path], [haplotype])) #pool.map(read_file, regions_list) # 'haplotype1
 
             predictions =  {k: v for d in outputs_list for k, v in d.items()}
@@ -111,7 +110,7 @@ def aggregate_enformer_predictions(each_id, log_data, predictions_path, predicti
             # check that the keys match
             match_condition = sorted(list(pooled_dictionary[haplotypes[0]].keys())) == sorted(list(pooled_dictionary[haplotypes[1]].keys()))
             if not match_condition:
-                raise Exception(f'[ERROR] Fatal: Haplotypes 1 and 2 regions are different. Haplotype1 length is {len(list(pooled_dictionary[haplotypes[0]].keys()))} abd Haplotype2 length is {len(list(pooled_dictionary[haplotypes[1]].keys()))}')
+                raise Exception(f'ERROR - Fatal: Haplotypes 1 and 2 regions are different. Haplotype1 length is {len(list(pooled_dictionary[haplotypes[0]].keys()))} abd Haplotype2 length is {len(list(pooled_dictionary[haplotypes[1]].keys()))}')
             else:
                 # one one of them
                 ids = list(pooled_dictionary[haplotypes[0]].keys())
@@ -119,7 +118,7 @@ def aggregate_enformer_predictions(each_id, log_data, predictions_path, predicti
 
         elif len(haplotypes) == 1:
             summed_pooled_dictionary = pooled_dictionary[haplotypes[0]]
-        print(f'[INFO] Successfully read all files into pooled dictionary.')
+        print(f'INFO - Successfully read all files into pooled dictionary.')
 
 
         for agg_type in agg_types:
@@ -146,11 +145,12 @@ def aggregate_enformer_predictions(each_id, log_data, predictions_path, predicti
 
             #print(len(column_names))
             ty = ty.set_axis(column_names, axis=1)
-            print(ty.iloc[0:5, 0:5])
+            # print(ty.iloc[0:5, 0:5])
 
             print(f'INFO - Saving file to {save_dir}/{each_id}_{agg_type}_{prediction_id}.csv.gz')
             if batch_num is None:
-                ty.to_csv(path_or_buf=f'{save_dir}/{each_id}_{agg_type}_{prediction_id}.csv.gz', index=False, compression='gzip')
+                # writing to a gz file results in several issues
+                ty.to_csv(path_or_buf=f'{save_dir}/{each_id}_{agg_type}_{prediction_id}.csv', index=False)
                 print(f'INFO - Finished saving data for {each_id}')
             else:
                 ty.to_csv(path_or_buf=f'{save_dir}/{each_id}_{agg_type}_{prediction_id}_batch_{batch_num}.csv.gz', index=False, compression='gzip')

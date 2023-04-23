@@ -28,10 +28,10 @@ enformer:
     sequence_source: 'reference'
     exclude_regions: False
     predictions_log_dir: "predictions_log"
-    tracks_to_save: "2,3,4"
+    tracks_to_save: "2,3,4,9,20"
     bins_to_save: "447,448,449"
-    n_regions: 100
-    batch_regions: 40
+    n_regions: 5000
+    batch_regions: 400
     use_parsl: True
     write_log:
       logdir: "job_logs"
@@ -42,10 +42,10 @@ enformer:
         cache: False
     parsl_parameters:
       num_of_full_nodes: 2
-      walltime: "00:30:00"
+      walltime: "02:00:00"
       init_blocks: 1
       min_num_blocks: 0
-      max_num_blocks: 2
+      max_num_blocks: 4
       queue:
       account: "pi-haky"
       hpc: "beagle3"

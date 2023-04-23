@@ -1,7 +1,8 @@
 [1] "config/pipeline.yaml"
-TF: AR, tissue: Breast, predicted_motif_file: data/homer_files/AR/merged_motif_file.txt, data_dir: data/, output_file: data/predictor_files/AR_Breast_predictor_regions.txt
+TF: AR, tissue: Breast, predicted_motif_file: data/homer_files/AR/merged_motif_file.txt, data_dir: data/, output_file_basename: data/predictor_files/AR_Breast
 [1] "/project2/haky/temi/projects/TFPred-snakemake"
 [1] TRUE
+[1] 16826     3
 $base_dir
 [1] "/lus/grand/projects/covid-ct/imlab"
 
@@ -40,7 +41,7 @@ $rscript
 $enformer
 $enformer$prediction_directives
 $enformer$prediction_directives$project_dir
-[1] "data"
+[1] "/project2/haky/temi/projects/TFPred-snakemake/data"
 
 $enformer$prediction_directives$metadata_dir
 [1] "/project2/haky/temi/projects/TFPred-snakemake/metadata/enformer_config"
@@ -70,16 +71,16 @@ $enformer$prediction_directives$predictions_log_dir
 [1] "predictions_log"
 
 $enformer$prediction_directives$tracks_to_save
-[1] -1
+[1] "2,3,4,9,20"
 
 $enformer$prediction_directives$bins_to_save
 [1] "447,448,449"
 
 $enformer$prediction_directives$n_regions
-[1] 100
+[1] 5000
 
 $enformer$prediction_directives$batch_regions
-[1] 40
+[1] 400
 
 $enformer$prediction_directives$use_parsl
 [1] TRUE
@@ -108,7 +109,7 @@ $enformer$prediction_directives$parsl_parameters$num_of_full_nodes
 [1] 2
 
 $enformer$prediction_directives$parsl_parameters$walltime
-[1] "00:30:00"
+[1] "02:00:00"
 
 $enformer$prediction_directives$parsl_parameters$init_blocks
 [1] 1
@@ -117,10 +118,13 @@ $enformer$prediction_directives$parsl_parameters$min_num_blocks
 [1] 0
 
 $enformer$prediction_directives$parsl_parameters$max_num_blocks
-[1] 2
+[1] 4
 
 $enformer$prediction_directives$parsl_parameters$queue
 NULL
+
+$enformer$prediction_directives$parsl_parameters$account
+[1] "pi-haky"
 
 $enformer$prediction_directives$parsl_parameters$hpc
 [1] "beagle3"
@@ -140,4 +144,4 @@ NULL
 
 
 /project2/haky/temi/projects/TFPred-snakemake
-[['AR', 'Breast']]
+[['AR', 'Breast'], ['FOXA1', 'Breast'], ['FOXA1', 'Prostate']]

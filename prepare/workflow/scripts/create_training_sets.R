@@ -1,15 +1,20 @@
 
-
 args <- commandArgs(trailingOnly = TRUE)
 TF <- args[1]
 tissue <- args[2]
 predicted_motif_file <- args[3]
 data_dir <- args[4]
-output_file <- args[5]
+output_file_basename <- args[5]
 config_file <- args[6]
 
-print(config_file)
+# TF <- 'FOXA1' 
+# tissue <- 'Breast' 
+# predicted_motif_file <- 'data/homer_files/FOXA1/merged_motif_file.txt' 
+# data_dir <- 'data/' 
+# output_file <- 'data/predictor_files/FOXA1_Breast_predictor_regions.txt' 
+# config_file <- 'config/pipeline.yaml'
 
+print(config_file)
 valid_chromosomes <- c(paste('chr', 1:22, sep=''), "chrX")
 
 library(yaml)
@@ -21,12 +26,12 @@ library(GenomicRanges)
 # if (!require("BiocManager", quietly = TRUE)){install.packages("BiocManager")}
 # BiocManager::install("GenomicRanges")
 
-print(glue('TF: {TF}, tissue: {tissue}, predicted_motif_file: {predicted_motif_file}, data_dir: {data_dir}, output_file: {output_file}'))
+print(glue('TF: {TF}, tissue: {tissue}, predicted_motif_file: {predicted_motif_file}, data_dir: {data_dir}, output_file_basename: {output_file_basename}'))
 
 print(getwd())
 print(file.exists(predicted_motif_file))
 
-bname <- output_file %>% str_replace('_predictor_regions.txt', '')
+#bname <- output_file %>% str_replace('_predictor_regions.txt', '')
 # output_file <- glue('{data_dir}/predictor_files/{TF}_{tissue}_predictors.txt')
 
 genome_wide_predicted_motifs <- data.table::fread(predicted_motif_file)
@@ -101,16 +106,18 @@ cistrome_dt_pos <- dt_merged[dt_merged$binding_counts > positive_set_threshold, 
 
 num_negs <- 1
 set.seed(2023)
-cistrome_dt_neg <- dplyr::slice_sample(dt_merged[dt_merged$binding_counts == 0, ], n=nrow(dt_merged) * num_negs)[, 1:5]
+cistrome_dt_neg <- dplyr::slice_sample(dt_merged[dt_merged$binding_counts == 0, ], n=nrow(cistrome_dt_pos) * num_negs)[, 1:5]
 cistrome_dr <- rbind(cistrome_dt_pos, cistrome_dt_neg) %>%
     tidyr::unite('region', c(chr, start, end), remove=T) %>% 
     as.data.table()
 cistrome_dr <- cistrome_dr[sample(nrow(cistrome_dr)), ]
 
+print(dim(cistrome_dr))
+
 # write to file
-write.table(dt_merged, file=output_file, sep='\t', quote=F, row.names=F)
-pfile <- glue('{bname}_predictors.txt')
-gfile <- glue('{bname}_ground_truth.txt')
+#write.table(dt_merged, file=output_file, sep='\t', quote=F, row.names=F)
+pfile <- glue('{output_file_basename}_predictors.txt')
+gfile <- glue('{output_file_basename}_ground_truth.txt')
 write.table(cistrome_dr[, 1], pfile, col.names=F, quote=F, row.names=F)
 write.table(cistrome_dr, gfile, col.names=F, quote=F, row.names=F)
 

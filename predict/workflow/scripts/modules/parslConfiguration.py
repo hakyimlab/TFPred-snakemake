@@ -173,7 +173,7 @@ def theta_localParslConfig(params):
     from parsl.config import Config
     from parsl.channels import LocalChannel
     from parsl.launchers import MpiExecLauncher
-    from parsl.addresses import address_by_hostname
+    #from parsl.addresses import address_by_hostname
 
     import os
 
@@ -268,22 +268,19 @@ def beagle3_htParslConfig(params):
 
 def beagle3_localParslConfig(params):
 
-    import parsl
-    # Make a config that runs on two nodes
+    import parsl # Make a config that runs on two nodes
     from parsl.executors import HighThroughputExecutor
     from parsl.providers import LocalProvider
     from parsl.config import Config
     from parsl.channels import LocalChannel
     from parsl.launchers import SrunLauncher
-
     import os
 
     print(f'INFO - Parsl version: {parsl.__version__}')
     # I defined these locations otherwise parsl will use the current directory to output the run informations and log messages
     workingdir = params['working_dir']
     rundir = os.path.join(workingdir, 'runinfo')
-    job_name = params['job_name']
-    #parsl.clear()
+    #job_name = params['job_name']
 
     local_htex = Config(
         executors=[
@@ -308,5 +305,4 @@ def beagle3_localParslConfig(params):
         strategy=None,
         run_dir=rundir
     )
-
     return(local_htex)

@@ -322,7 +322,7 @@ def beagle3_tpParslConfig(params):
     local_tpex = Config(
         executors=[
             ThreadPoolExecutor(
-                max_threads=32,
+                max_threads=64,
                 label='local_threads',
                 working_dir = workingdir
             )

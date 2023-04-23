@@ -36,7 +36,7 @@
     "worker_init": "source ~/.bashrc; conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib"
   },
   "prediction_data_name": "cistrome",
-  "prediction_id": "AR_Breast",
+  "prediction_id": "FOXA1_Breast",
   "date": "2023-04-23",
-  "interval_list_file": "data/predictor_files/AR_Breast_predictors.txt"
+  "interval_list_file": "data/predictor_files/FOXA1_Breast_predictors.txt"
 }

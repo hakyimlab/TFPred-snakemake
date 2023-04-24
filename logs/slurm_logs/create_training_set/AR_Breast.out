@@ -65,22 +65,22 @@ $enformer$prediction_directives$sequence_source
 [1] "reference"
 
 $enformer$prediction_directives$exclude_regions
-[1] FALSE
+[1] TRUE
 
 $enformer$prediction_directives$predictions_log_dir
 [1] "predictions_log"
 
 $enformer$prediction_directives$tracks_to_save
-[1] "2,3,4,9,20"
+[1] -1
 
 $enformer$prediction_directives$bins_to_save
 [1] "447,448,449"
 
 $enformer$prediction_directives$n_regions
-[1] 5000
+[1] 40000
 
 $enformer$prediction_directives$batch_regions
-[1] 400
+[1] 1000
 
 $enformer$prediction_directives$use_parsl
 [1] TRUE
@@ -109,7 +109,7 @@ $enformer$prediction_directives$parsl_parameters$num_of_full_nodes
 [1] 2
 
 $enformer$prediction_directives$parsl_parameters$walltime
-[1] "02:00:00"
+[1] "06:00:00"
 
 $enformer$prediction_directives$parsl_parameters$init_blocks
 [1] 1
@@ -118,7 +118,7 @@ $enformer$prediction_directives$parsl_parameters$min_num_blocks
 [1] 0
 
 $enformer$prediction_directives$parsl_parameters$max_num_blocks
-[1] 4
+[1] 1
 
 $enformer$prediction_directives$parsl_parameters$queue
 NULL

@@ -9,9 +9,9 @@ library(parallel)
 library(tidyverse)
 
 model_basename <- arguments[1] # ./models
-data_basename <- arguments[2] # ./data
+data_file <- arguments[2] # ./data
 output_dir <- arguments[3] # ./model_evaluation
-
+data_type <- arguments[4] # train or test
 
 agg_methods <- 'aggByMeanCenter'
 
@@ -26,8 +26,8 @@ for(model_type in c('linear', 'logistic')){
 
     # read in the newx data : train or test
     newx_list <- purrr::map(.x=agg_methods, function(each_method){
-        mat_file <- glue('{data_basename}.prepared.csv')
-        mat_dt <- data.table::fread(mat_file)
+        #mat_file <- glue('{data_basename}.prepared.csv')
+        mat_dt <- data.table::fread(data_file)
         return(mat_dt)
     }, .progress=T)
     names(newx_list) <- agg_methods
@@ -61,7 +61,7 @@ for(model_type in c('linear', 'logistic')){
     names(predictions_list) <- agg_methods
 
     # save the object to be read later
-    print(glue('INFO - Saving `{agg_methods}_test_evaluation.{model_type}.rds` to {output_dir}'))
-    rds_file <- glue('{output_dir}/{agg_methods}_test_evaluation.{model_type}.rds')
+    print(glue('INFO - Saving `{agg_methods}_{data_type}_evaluation.{model_type}.rds` to {output_dir}'))
+    rds_file <- glue('{output_dir}/{agg_methods}_{data_type}_evaluation.{model_type}.rds')
     saveRDS(predictions_list, file=rds_file)
 }

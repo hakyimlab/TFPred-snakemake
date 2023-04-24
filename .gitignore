@@ -7,3 +7,5 @@ prepare/data/predictor_files/*
 predict/data/homer_files/*
 prepare/data/homer_files/*
 logs/*
+output/*
+cmd_*

@@ -14,11 +14,11 @@ default-resources:
   - tmpdir="/scratch/midway3/temi"
   - account="pi-haky"
 restart-times: 0
-max-jobs-per-second: 2
+max-jobs-per-second: 5
 max-status-checks-per-second: 1
 local-cores: 1
 latency-wait: 60
-jobs: 2
+jobs: 10
 keep-going: True
 rerun-incomplete: True
 printshellcmds: True

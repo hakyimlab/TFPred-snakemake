@@ -119,7 +119,9 @@ rule all:
         expand(os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_{tf_tissue}.linear.rds'), zip, date = prediction_run_date.values(), tf_tissue = tf_tissue_pairs),
         expand(os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_{tf_tissue}.logistic.rds'), zip, date = prediction_run_date.values(), tf_tissue = tf_tissue_pairs),
         expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", f'aggByMeanCenter_test_evaluation.linear.rds'), zip, date = prediction_run_date.values(), tf_tissue = tf_tissue_pairs),
-        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", f'aggByMeanCenter_test_evaluation.logistic.rds'), zip, date = prediction_run_date.values(), tf_tissue = tf_tissue_pairs)
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", f'aggByMeanCenter_test_evaluation.logistic.rds'), zip, date = prediction_run_date.values(), tf_tissue = tf_tissue_pairs),
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", f'aggByMeanCenter_train_evaluation.linear.rds'), zip, date = prediction_run_date.values(), tf_tissue = tf_tissue_pairs),
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", f'aggByMeanCenter_train_evaluation.logistic.rds'), zip, date = prediction_run_date.values(), tf_tissue = tf_tissue_pairs)
 
 
 rule aggregate_predictions:
@@ -170,20 +172,25 @@ rule train_TFPred_weights:
 
 rule evaluate_TFPred:
     input:
-        lambda wildcards: os.path.join(prediction_grouping_paths[wildcards.tf_tissue], 'aggregated_predictions', f'test_{config["dataset"]}_aggByMeanCenter_{wildcards.tf_tissue}.prepared.csv')
+        test_data = lambda wildcards: os.path.join(prediction_grouping_paths[wildcards.tf_tissue], 'aggregated_predictions', f'test_{config["dataset"]}_aggByMeanCenter_{wildcards.tf_tissue}.prepared.csv'),
+        train_data = lambda wildcards: os.path.join(prediction_grouping_paths[wildcards.tf_tissue], 'aggregated_predictions', f'train_{config["dataset"]}_aggByMeanCenter_{wildcards.tf_tissue}.prepared.csv')
     output:        
         os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_test_evaluation.logistic.rds'),
-        os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_test_evaluation.linear.rds')
+        os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_test_evaluation.linear.rds'),
+        os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_train_evaluation.logistic.rds'),
+        os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_train_evaluation.linear.rds')
     message:
-        "evaluating on {tf_tissue} test set"
+        "evaluating on {tf_tissue} train and test sets"
     params:
         jobname = '{tf_tissue}',
         model_basename = os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_{tf_tissue}'),
-        data_basename = lambda wildcards: os.path.join(prediction_grouping_paths[wildcards.tf_tissue], 'aggregated_predictions', f'test_{config["dataset"]}_aggByMeanCenter_{wildcards.tf_tissue}'),
+        #data_basename = lambda wildcards: os.path.join(prediction_grouping_paths[wildcards.tf_tissue], 'aggregated_predictions', f'test_{config["dataset"]}_aggByMeanCenter_{wildcards.tf_tissue}'),
         output_dir = os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}")
     shell:
         """
-            Rscript process/workflow/scripts/test_enet.R {params.model_basename} {params.data_basename} {params.output_dir}
+            Rscript process/workflow/scripts/test_enet.R {params.model_basename} {input.test_data} {params.output_dir} 'test'
+            Rscript process/workflow/scripts/test_enet.R {params.model_basename} {input.train_data} {params.output_dir} 'train'
+
         """
     
     

@@ -188,8 +188,8 @@ rule evaluate_TFPred:
         output_dir = os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}")
     shell:
         """
-            Rscript process/workflow/scripts/test_enet.R {params.model_basename} {input.test_data} {params.output_dir} 'test'
-            Rscript process/workflow/scripts/test_enet.R {params.model_basename} {input.train_data} {params.output_dir} 'train'
+            Rscript process/workflow/scripts/evaluate_enet.R {params.model_basename} {input.test_data} {params.output_dir} 'test'
+            Rscript process/workflow/scripts/evaluate_enet.R {params.model_basename} {input.train_data} {params.output_dir} 'train'
 
         """
     

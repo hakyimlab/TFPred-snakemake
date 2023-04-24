@@ -1,7 +1,0 @@
-/project2/haky/temi/projects/TFPred-snakemake
-[['AR', 'Breast']]
-Building DAG of jobs...
-MissingInputException in rule all in file /project2/haky/temi/projects/TFPred-snakemake/prepare/snakefile.smk, line 130:
-Missing input files for rule all:
-    affected files:
-        metadata/enformer_config/aggregation_config_cistrome_AR_Breast.json

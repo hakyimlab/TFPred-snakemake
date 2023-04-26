@@ -12,15 +12,15 @@ sys.path.append('modules')
 import module
 
 print(os.getcwd())
-print_progress = True
+print_progress = False
 
 cfile = "config/pipeline.yaml"
 configfile: cfile
 
 #metadata_dt = pd.read_csv("/project2/haky/temi/projects/TFPred-snakemake/metadata/metadata.txt")   #config['metadata'])
 
-if not os.path.isdir(config['enformer']['prediction_directives']['metadata_dir']):
-    os.makedirs(config['enformer']['prediction_directives']['metadata_dir'])
+# if not os.path.isdir(config['enformer']['prediction_directives']['metadata_dir']):
+#     os.makedirs(config['enformer']['prediction_directives']['metadata_dir'])
 
 config_file_path = os.path.abspath(cfile)
 
@@ -52,14 +52,14 @@ valid_TFs = [d for d in details if d[0] in data_db.TF.tolist()] # filter the lis
 invalid_TFs = [d for d in details if d[0] not in data_db.TF.tolist()]
 if len(invalid_TFs) > 0:
     print(f'Some invalid TF-tissue pairs were found. See {os.path.join(METADATA_DIR, "invalid_TFs.txt")} for details.')
-    pd.DataFrame(invalid_TFs).to_csv(os.path.join(METADATA_DIR, 'invalid_TFs.txt'), sep='\t', index=False, header=['transcription_factor', 'tissue'])
+    pd.DataFrame(invalid_TFs).to_csv(os.path.join(METADATA_DIR, 'invalid_TFs.csv'), sep=',', index=False, header=['transcription_factor', 'tissue'])
 
 if len(valid_TFs) == 0:
     print('No valid TF-tissue pairs were found. Please check the metadata file.')
     sys.exit(1)
 else:
     print(f'{len(valid_TFs)} valid TF-tissue pairs were found.')
-    pd.DataFrame(valid_TFs).to_csv(os.path.join(METADATA_DIR, 'valid_TFs.txt'), sep='\t', index=False, header=['transcription_factor', 'tissue'])
+    pd.DataFrame(valid_TFs).to_csv(os.path.join(METADATA_DIR, 'valid_TFs.csv'), sep=',', index=False, header=['transcription_factor', 'tissue'])
 
 homer_data = os.path.join(config['homer']['dir'], 'data/knownTFs/motifs')
 #hpath = os.path.join('/project2/haky/temi/software/homer', 'data/knownTFs/motifs')
@@ -84,6 +84,7 @@ print(expand(os.path.join(PREDICTORS_DIR, '{tf_tissue}_predictors.txt'), tf_tiss
 
 rule all:
     input:
+        os.path.join('metadata', 'valid_TFs.csv'),
         expand(os.path.join(HOMERFILES_DIR, '{tf}', '{motif_file}.motif'), zip, tf = homer_motifs_wildcards.tfs, motif_file = homer_motifs_wildcards.motif_files),
         expand(os.path.join(HOMERFILES_DIR, '{tf}', 'scanMotifsGenomeWide_{motif_file}.txt'), zip, tf = homer_motifs_wildcards.tfs, motif_file = homer_motifs_wildcards.motif_files),
         expand(os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt'), tf = set(homer_motifs_wildcards.tfs)),

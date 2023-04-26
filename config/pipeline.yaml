@@ -19,7 +19,7 @@ rscript: "/project2/haky/temi/software/conda_envs/TFXcan-tools/bin/Rscript"
 enformer:
   prediction_directives: 
     project_dir: '/project2/haky/temi/projects/TFPred-snakemake/data'
-    metadata_dir: "/project2/haky/temi/projects/TFPred-snakemake/metadata/enformer_config"
+    #metadata_dir: "/project2/haky/temi/projects/TFPred-snakemake/metadata/enformer_config"
     sub_dir: True
     model_path: "/project2/haky/Data/enformer/raw"
     fasta_file: "/project2/haky/Data/hg_sequences/hg38/Homo_sapiens_assembly38.fasta"

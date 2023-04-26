@@ -16,7 +16,7 @@ cfile = "config/pipeline.yaml"
 configfile: cfile
 
 metadata_dt = pd.read_csv(config['metadata'])
-valid_dt = pd.read_table(os.path.join(os.path.dirname(config['metadata']), 'valid_TFs.txt'))
+valid_dt = pd.read_csv(os.path.join(os.path.dirname(config['metadata']), 'valid_TFs.csv'))
 
 print(valid_dt)
 rscript = config['rscript']

@@ -18,7 +18,8 @@ cfile = "config/pipeline.yaml"
 configfile: cfile
 
 metadata_dt = pd.read_csv(config['metadata'])
-valid_dt = pd.read_table(os.path.join(os.path.dirname(config['metadata']), 'valid_TFs.txt'))
+valid_dt = pd.read_csv(os.path.join(os.path.dirname(config['metadata']), 'valid_TFs.csv'))
+print(valid_dt)
 rscript = config['rscript']
 config_file_path = os.path.abspath(cfile)
 
@@ -29,7 +30,6 @@ tissues = [m.replace(' ', '-') for m in valid_dt['tissue'].tolist()]
 # directories
 DATA_DIR = 'data'
 PREDICTORS_DIR = os.path.join(DATA_DIR, 'predictor_files')
-METADATA_DIR = 'metadata'
 MODELS_DIR = 'output/models'
 MODELS_EVAL_DIR = 'output/models_eval'
 PREDICTION_PARAMS_DIR = os.path.join(DATA_DIR, 'prediction_parameters')
@@ -39,9 +39,6 @@ motif_grouping_dict = module.group_tf_motif_files(dts)
 #tissue_grouping_dict = module.group_tf_tissues(TF_tissue_list)
 
 valid_chromosomes = [f'chr{i}' for i in range(1,23)] + ['chrX']
-
-# TF_list = [d[0] for d in TF_tissue_list]
-# tissue_list = [d[1] for d in TF_tissue_list]
 
 prediction_grouping_paths = {}
 for d in zip(tfs, tissues):
@@ -58,7 +55,7 @@ for d in zip(tfs, tissues):
 aggregated_folders = prediction_grouping_paths.values()
 tf_tissue_pairs = prediction_grouping_paths.keys() #['_'.join(a) for a in TF_tissue_list]
 
-print(tf_tissue_pairs)
+
 
 rule all:
     input:

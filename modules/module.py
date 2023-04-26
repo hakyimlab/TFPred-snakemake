@@ -1,6 +1,6 @@
 
 
-import os, glob, re, sys
+import os, glob, re, sys, json
 
 print_progress = True
 
@@ -89,3 +89,18 @@ def group_tf_tissues(dts):
         else:
             grouping_dict[dt[0]].append(dt[1])
     return(grouping_dict)
+
+
+
+# need to read in the predictions folder
+def return_prediction_folder(json_file_path):
+    with open(json_file_path) as f:
+        data = json.load(f)
+        p = data['predictions_folder']
+    return(p)
+
+def return_prediction_date(json_file_path):
+    with open(json_file_path) as f:
+        data = json.load(f)
+        p = data['run_date']
+    return(p)

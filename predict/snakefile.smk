@@ -16,6 +16,9 @@ cfile = "config/pipeline.yaml"
 configfile: cfile
 
 metadata_dt = pd.read_csv(config['metadata'])
+valid_dt = pd.read_table(os.path.join(os.path.dirname(config['metadata']), 'valid_TFs.txt'))
+
+print(valid_dt)
 rscript = config['rscript']
 
 config_file_path = os.path.abspath(cfile)
@@ -28,8 +31,8 @@ PREDICTION_PARAMS_DIR = os.path.join(DATA_DIR, 'prediction_parameters')
 # agg_wildcards = glob_wildcards(os.path.join(PREDICTION_PARAMS_DIR, f"enformer_parameters_{config['dataset']}_{{tfs}}_{{tissues}}.json"))
 
 # filter for only those available in the metadata
-tfs = metadata_dt['transcription_factor'].tolist()
-tissues = [m.replace(' ', '-') for m in metadata_dt['tissue'].tolist()]
+tfs = valid_dt['transcription_factor'].tolist()
+tissues = [m.replace(' ', '-') for m in valid_dt['tissue'].tolist()]
 
 # print(tfs)
 # print(tissues)

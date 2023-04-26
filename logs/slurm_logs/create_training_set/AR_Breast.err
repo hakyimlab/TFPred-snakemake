@@ -5,12 +5,12 @@ Rules claiming more threads will be scaled down.
 Provided resources: mem_mb=20000, mem_mib=19074, disk_mb=1221, disk_mib=1165
 Select jobs to execute...
 
-[Sun Apr 23 21:25:27 2023]
-Job 0: working on tf=AR,tissue=Breast, data/homer_files/AR/merged_motif_file.txt, config/pipeline.yaml
-Reason: Missing output files: data/predictor_files/AR_Breast_predictors.txt, metadata/enformer_config/enformer_parameters_cistrome_AR_Breast.json, data/predictor_files/AR_Breast_ground_truth.txt
+[Wed Apr 26 06:23:12 2023]
+Job 0: working on tf=AR,tissue=Breast
+Reason: Missing output files: data/prediction_parameters/enformer_parameters_cistrome_AR_Breast.json, data/predictor_files/AR_Breast_ground_truth.txt, data/predictor_files/AR_Breast_predictors.txt
 
 
-        /project2/haky/temi/software/conda_envs/TFXcan-tools/bin/Rscript prepare/workflow/scripts/create_training_sets.R AR Breast data/homer_files/AR/merged_motif_file.txt data/ data/predictor_files/AR_Breast config/pipeline.yaml
+        /project2/haky/temi/software/conda_envs/TFXcan-tools/bin/Rscript prepare/workflow/scripts/create_training_sets.R AR_Breast data/homer_files/AR/merged_motif_file.txt data/bed_files/AR_Breast data/predictor_files/AR_Breast_predictors.txt data/predictor_files/AR_Breast_ground_truth.txt data/prediction_parameters/enformer_parameters_cistrome_AR_Breast.json config/pipeline.yaml
         
 Warning: ‘timedatectl’ indicates the non-existent timezone name ‘n/a’
 unable to deduce timezone name from ‘America/Chicago’
@@ -114,9 +114,9 @@ The following object is masked from ‘package:data.table’:
     shift
 
 Loading required package: GenomeInfoDb
- ■■■                                7% |  ETA: 16s
- ■■■■■■■                           20% |  ETA: 14s
- ■■■■■■■■■■■■■                     40% |  ETA: 10s
+ ■■■                                7% |  ETA: 18s
+ ■■■■■■■■■                         27% |  ETA: 13s
+ ■■■■■■■■■■■■■                     40% |  ETA: 11s
  ■■■■■■■■■■■■■■■■■■■               60% |  ETA:  7s
  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% |  ETA:  3s
 Warning message:
@@ -126,6 +126,6 @@ In .merge_two_Seqinfo_objects(x, y) :
   - in 'y': chrX
   Make sure to always combine/compare objects based on the same reference
   genome (use suppressWarnings() to suppress this warning).
-[Sun Apr 23 21:26:56 2023]
+[Wed Apr 26 06:24:23 2023]
 Finished job 0.
 1 of 1 steps (100%) done

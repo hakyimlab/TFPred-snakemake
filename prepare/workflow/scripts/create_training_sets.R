@@ -1,11 +1,14 @@
 
 args <- commandArgs(trailingOnly = TRUE)
-TF <- args[1]
-tissue <- args[2]
-predicted_motif_file <- args[3]
-data_dir <- args[4]
-output_file_basename <- args[5]
-config_file <- args[6]
+
+TF_tissue <- args[1] # e.g. AR_Breast
+predicted_motifs_file <- args[2] # e.g. data/homer_files/AR/merged_motif_file.txt
+bedfiles_dir <- args[3] # e.g. data/bed_files/AR_Breast
+output_predictors <- args[4] # e.g. data/predictor_files/AR_Breast_predictors.txt
+output_ground_truth <- args[5] #e.g. data/predictor_files/AR_Breast_ground_truth.txt
+output_enformer_config <- args[6] # e.g. enformer_config_AR_Breast.json
+config_file <- args[7]
+
 
 # TF <- 'FOXA1' 
 # tissue <- 'Breast' 
@@ -26,15 +29,15 @@ library(GenomicRanges)
 # if (!require("BiocManager", quietly = TRUE)){install.packages("BiocManager")}
 # BiocManager::install("GenomicRanges")
 
-print(glue('TF: {TF}, tissue: {tissue}, predicted_motif_file: {predicted_motif_file}, data_dir: {data_dir}, output_file_basename: {output_file_basename}'))
+print(glue('TF_tissue: {TF_tissue}, predicted_motifs_file: {predicted_motifs_file}'))
 
 print(getwd())
-print(file.exists(predicted_motif_file))
+print(file.exists(predicted_motifs_file))
 
 #bname <- output_file %>% str_replace('_predictor_regions.txt', '')
 # output_file <- glue('{data_dir}/predictor_files/{TF}_{tissue}_predictors.txt')
 
-genome_wide_predicted_motifs <- data.table::fread(predicted_motif_file)
+genome_wide_predicted_motifs <- data.table::fread(predicted_motifs_file)
 genome_wide_predicted_motifs <- genome_wide_predicted_motifs %>% 
     dplyr::select(chr=V2, start=V3, end=V4, strand=V5, score=V6) %>% 
     dplyr::filter(chr %in% valid_chromosomes)
@@ -53,7 +56,7 @@ tf_motifs_granges <- GenomicRanges::reduce(tf_motifs_granges)
 
 
 # peak files
-peak_files_paths <- list.files(glue('{data_dir}/bed_files/{TF}_{tissue}/'), pattern = '*.bed', full.names = TRUE)
+peak_files_paths <- list.files(bedfiles_dir, pattern = '*.bed', full.names = TRUE)
 peak_files_paths <- peak_files_paths[file.info(peak_files_paths)$size != 0]
 peak_files_list <- purrr::map(.x=peak_files_paths, .f=data.table::fread, .progress=T)
 
@@ -116,24 +119,27 @@ print(dim(cistrome_dr))
 
 # write to file
 #write.table(dt_merged, file=output_file, sep='\t', quote=F, row.names=F)
-pfile <- glue('{output_file_basename}_predictors.txt')
-gfile <- glue('{output_file_basename}_ground_truth.txt')
-write.table(cistrome_dr[, 1], pfile, col.names=F, quote=F, row.names=F)
-write.table(cistrome_dr, gfile, col.names=F, quote=F, row.names=F)
+# pfile <- glue('{output_predictors')
+# gfile <- glue('{output_ground_truth}')
+write.table(cistrome_dr[, 1], output_predictors, col.names=F, quote=F, row.names=F)
+write.table(cistrome_dr, output_ground_truth, col.names=F, quote=F, row.names=F)
 
+
+# read and write the enformer config file
 directives <- yaml::yaml.load_file(config_file)
-print(directives)
-# create tehe enformer prediction config file
 enformer_parameters_json <- directives$enformer$prediction_directives
 # you may change these as appropriate
 enformer_parameters_json[['prediction_data_name']] <- directives$dataset
-enformer_parameters_json[['prediction_id']] <- glue('{TF}_{tissue}')
+enformer_parameters_json[['prediction_id']] <- glue('{TF_tissue}')
 enformer_parameters_json[['date']] <- Sys.Date()
-enformer_parameters_json[['interval_list_file']] <- pfile
+enformer_parameters_json[['interval_list_file']] <- output_predictors
+
+# chANGE the metadata dir
+enformer_parameters_json[['metadata_dir']] <- dirname(output_enformer_config)
 
 write(
     jsonlite::toJSON(enformer_parameters_json, na='null', pretty=TRUE, auto_unbox=T),
-    file=glue('{enformer_parameters_json$metadata_dir}/enformer_parameters_{directives$dataset}_{TF}_{tissue}.json')
+    file=output_enformer_config
 )
 # 
 #param_file <- glue('{enformer_parameters_json$metadata_dir}/enformer_parameters_{directives$dataset}_{TF}_{tissue}.json')

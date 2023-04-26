@@ -2,6 +2,7 @@ cluster:
   mkdir -p logs/slurm_logs/{rule} &&
   sbatch
     --partition={resources.partition}
+    --mem={resources.mem_mb}
     --time={resources.time}
     --account={resources.account}
     --job-name=smk-{rule}-{params.jobname}

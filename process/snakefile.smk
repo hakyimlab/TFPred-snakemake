@@ -120,13 +120,15 @@ rule train_TFPred_weights:
         mem_mb= 100000
     shell:
         """
-            Rscript process/workflow/scripts/train_enet.R {input} {params.basename}
+            Rscript process/workflow/scripts/train_enet.R {input} {params.basename}; sleep 15
         """
 
 rule evaluate_TFPred:
     input:
         test_data = lambda wildcards: os.path.join(prediction_grouping_paths[wildcards.tf_tissue], 'aggregated_predictions', f'test_{config["dataset"]}_aggByMeanCenter_{wildcards.tf_tissue}.prepared.csv'),
-        train_data = lambda wildcards: os.path.join(prediction_grouping_paths[wildcards.tf_tissue], 'aggregated_predictions', f'train_{config["dataset"]}_aggByMeanCenter_{wildcards.tf_tissue}.prepared.csv')
+        train_data = lambda wildcards: os.path.join(prediction_grouping_paths[wildcards.tf_tissue], 'aggregated_predictions', f'train_{config["dataset"]}_aggByMeanCenter_{wildcards.tf_tissue}.prepared.csv'),
+        model_log = lambda wildcards: os.path.join(MODELS_DIR, f"{config['dataset']}_{wildcards.tf_tissue}_{prediction_run_date[wildcards.tf_tissue]}", f'aggByMeanCenter_{wildcards.tf_tissue}.logistic.rds'),
+        model_lin = lambda wildcards: os.path.join(MODELS_DIR, f"{config['dataset']}_{wildcards.tf_tissue}_{prediction_run_date[wildcards.tf_tissue]}", f'aggByMeanCenter_{wildcards.tf_tissue}.linear.rds')
     output:        
         os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_test_evaluation.logistic.rds'),
         os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", 'aggByMeanCenter_test_evaluation.linear.rds'),

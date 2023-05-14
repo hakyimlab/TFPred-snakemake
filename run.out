@@ -1,0 +1,116 @@
+/project2/haky/temi/projects/TFPred-snakemake
+[['AR', 'Breast'], ['FOXA1', 'Breast'], ['GATA3', 'Breast']]
+3 valid TF-tissue pairs were found.
+INFO - Found 1 motif files to be linked for AR
+INFO - Found 2 motif files to be linked for FOXA1
+INFO - Found 5 motif files to be linked for GATA3
+INFO - Found 15 bedfiles to be linked for AR-Breast pair
+INFO - Found 72 bedfiles to be linked for FOXA1-Breast pair
+INFO - Found 31 bedfiles to be linked for GATA3-Breast pair
+['data/predictor_files/AR_Breast_predictors.txt', 'data/predictor_files/FOXA1_Breast_predictors.txt', 'data/predictor_files/GATA3_Breast_predictors.txt']
+INFO - Sequence source is reference. Using a reference genome.
+INFO - Using parsl highthroughput configuration for beagle3: True
+INFO - Parsl version: 2023.04.17
+INFO - Sequence source is reference. Using a reference genome.
+INFO - Using parsl highthroughput configuration for beagle3: True
+INFO - Parsl version: 2023.04.17
+INFO - Sequence source is reference. Using a reference genome.
+INFO - Using parsl highthroughput configuration for beagle3: True
+INFO - Parsl version: 2023.04.17
+INFO - Found one reference set named cistrome to predict on
+INFO - Found 16826 regions to be split into batches with at most 1000 regions in each batch.
+INFO - No regions to exclude yet. You either did not supply a file, this is the first run, or there are truly no regions to exclude
+INFO - There seem to be just one sample i.e. [['cistrome']]. No need to batch.
+INFO - Executing parsl futures for 27 parsl apps
+INFO - Finished predictions for all
+INFO - Check /project2/haky/temi/projects/TFPred-snakemake/data/predictions_folder/cistrome_AR_Breast/predictions_2023-05-14/job_logs/cistrome_AR_Breast_2023-05-14.summary for a summary of the entire run.
+INFO - Writing `aggregation_config_cistrome_AR_Breast.json` file to data/prediction_parameters
+INFO - Completed job in 1237.274783985922 seconds.
+INFO - Found one reference set named cistrome to predict on
+INFO - Found 32062 regions to be split into batches with at most 1000 regions in each batch.
+INFO - No regions to exclude yet. You either did not supply a file, this is the first run, or there are truly no regions to exclude
+INFO - There seem to be just one sample i.e. [['cistrome']]. No need to batch.
+INFO - Executing parsl futures for 42 parsl apps
+INFO - Finished predictions for all
+INFO - Check /project2/haky/temi/projects/TFPred-snakemake/data/predictions_folder/cistrome_GATA3_Breast/predictions_2023-05-14/job_logs/cistrome_GATA3_Breast_2023-05-14.summary for a summary of the entire run.
+INFO - Writing `aggregation_config_cistrome_GATA3_Breast.json` file to data/prediction_parameters
+INFO - Completed job in 3285.774435705971 seconds.
+INFO - Found one reference set named cistrome to predict on
+INFO - Found 40000 regions to be split into batches with at most 1000 regions in each batch.
+INFO - No regions to exclude yet. You either did not supply a file, this is the first run, or there are truly no regions to exclude
+INFO - There seem to be just one sample i.e. [['cistrome']]. No need to batch.
+INFO - Executing parsl futures for 51 parsl apps
+INFO - Finished predictions for all
+INFO - Check /project2/haky/temi/projects/TFPred-snakemake/data/predictions_folder/cistrome_FOXA1_Breast/predictions_2023-05-14/job_logs/cistrome_FOXA1_Breast_2023-05-14.summary for a summary of the entire run.
+INFO - Writing `aggregation_config_cistrome_FOXA1_Breast.json` file to data/prediction_parameters
+INFO - Completed job in 4008.5112965160515 seconds.
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast
+/project2/haky/temi/projects/TFPred-snakemake
+[['AR', 'Breast'], ['FOXA1', 'Breast'], ['GATA3', 'Breast']]
+3 valid TF-tissue pairs were found.
+INFO - Found 1 motif files to be linked for AR
+INFO - Found 2 motif files to be linked for FOXA1
+INFO - Found 5 motif files to be linked for GATA3
+INFO - Found 15 bedfiles to be linked for AR-Breast pair
+INFO - Found 72 bedfiles to be linked for FOXA1-Breast pair
+INFO - Found 31 bedfiles to be linked for GATA3-Breast pair
+['data/predictor_files/AR_Breast_predictors.txt', 'data/predictor_files/FOXA1_Breast_predictors.txt', 'data/predictor_files/GATA3_Breast_predictors.txt']
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast
+/project2/haky/temi/projects/TFPred-snakemake
+[['AR', 'Breast'], ['FOXA1', 'Breast'], ['GATA3', 'Breast']]
+3 valid TF-tissue pairs were found.
+INFO - Found 1 motif files to be linked for AR
+INFO - Found 2 motif files to be linked for FOXA1
+INFO - Found 5 motif files to be linked for GATA3
+INFO - Found 15 bedfiles to be linked for AR-Breast pair
+INFO - Found 72 bedfiles to be linked for FOXA1-Breast pair
+INFO - Found 31 bedfiles to be linked for GATA3-Breast pair
+['data/predictor_files/AR_Breast_predictors.txt', 'data/predictor_files/FOXA1_Breast_predictors.txt', 'data/predictor_files/GATA3_Breast_predictors.txt']
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast
+/project2/haky/temi/projects/TFPred-snakemake
+[['AR', 'Breast'], ['FOXA1', 'Breast'], ['GATA3', 'Breast']]
+3 valid TF-tissue pairs were found.
+INFO - Found 1 motif files to be linked for AR
+INFO - Found 2 motif files to be linked for FOXA1
+INFO - Found 5 motif files to be linked for GATA3
+INFO - Found 15 bedfiles to be linked for AR-Breast pair
+INFO - Found 72 bedfiles to be linked for FOXA1-Breast pair
+INFO - Found 31 bedfiles to be linked for GATA3-Breast pair
+['data/predictor_files/AR_Breast_predictors.txt', 'data/predictor_files/FOXA1_Breast_predictors.txt', 'data/predictor_files/GATA3_Breast_predictors.txt']
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast

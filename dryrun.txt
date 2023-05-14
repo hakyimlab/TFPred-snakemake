@@ -1,0 +1,20 @@
+/project2/haky/temi/projects/TFPred-snakemake
+[['AR', 'Breast'], ['FOXA1', 'Breast'], ['GATA3', 'Breast']]
+3 valid TF-tissue pairs were found.
+INFO - Found 1 motif files to be linked for AR
+INFO - Found 2 motif files to be linked for FOXA1
+INFO - Found 5 motif files to be linked for GATA3
+INFO - Found 15 bedfiles to be linked for AR-Breast pair
+INFO - Found 72 bedfiles to be linked for FOXA1-Breast pair
+INFO - Found 31 bedfiles to be linked for GATA3-Breast pair
+['data/predictor_files/AR_Breast_predictors.txt', 'data/predictor_files/FOXA1_Breast_predictors.txt', 'data/predictor_files/GATA3_Breast_predictors.txt']
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast
+/project2/haky/temi/projects/TFPred-snakemake
+  transcription_factor  tissue
+0                   AR  Breast
+1                FOXA1  Breast
+2                GATA3  Breast

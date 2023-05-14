@@ -1,4 +1,8 @@
 transcription_factor,tissue
 AR,Breast
 FOXA1,Breast
+FOXA1,Prostate
+CTCF,Liver
 GATA3,Breast
+GATA3,Blood
+GATA2,Bone Marrow

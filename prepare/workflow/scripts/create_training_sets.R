@@ -60,6 +60,8 @@ peak_files_paths <- list.files(bedfiles_dir, pattern = '*.bed', full.names = TRU
 peak_files_paths <- peak_files_paths[file.info(peak_files_paths)$size != 0]
 peak_files_list <- purrr::map(.x=peak_files_paths, .f=data.table::fread, .progress=T)
 
+
+# ------ re-write to use parallel to use a for loop which merges as the files are read and processed
 pmi_dt_list <- purrr::map(.x=peak_files_paths, function(each_file){
     dt <- data.table::fread(each_file) %>%
         distinct(V1, V2, .keep_all=T) %>%

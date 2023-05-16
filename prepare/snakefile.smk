@@ -145,7 +145,8 @@ rule create_training_set:
         basename = os.path.join(PREDICTORS_DIR, '{tf}_{tissue}')
     message: "working on {wildcards}"
     resources:
-        mem_mb= 100000
+        mem_mb= 150000,
+        nodes=2
     threads: 32
     shell:
         """

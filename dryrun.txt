@@ -1,20 +1,53 @@
 /project2/haky/temi/projects/TFPred-snakemake
-[['AR', 'Breast'], ['FOXA1', 'Breast'], ['GATA3', 'Breast']]
-3 valid TF-tissue pairs were found.
+[['AR', 'Prostate'], ['AR', 'Breast'], ['FOXA1', 'Breast'], ['FOXA1', 'Prostate'], ['CTCF', 'Liver'], ['GATA3', 'Breast'], ['GATA3', 'Blood'], ['POLR2A', 'Lung'], ['NFKB1', 'Colon'], ['NFKB2', 'Colon'], ['GATA2', 'Bone Marrow']]
+Some invalid TF-tissue pairs were found. See metadata/invalid_TFs.txt for details.
+8 valid TF-tissue pairs were found.
+INFO - Found 1 motif files to be linked for AR
 INFO - Found 1 motif files to be linked for AR
 INFO - Found 2 motif files to be linked for FOXA1
+INFO - Found 2 motif files to be linked for FOXA1
+INFO - Found 2 motif files to be linked for CTCF
 INFO - Found 5 motif files to be linked for GATA3
+INFO - Found 5 motif files to be linked for GATA3
+INFO - Found 1 motif files to be linked for GATA2
+INFO - Found 322 bedfiles to be linked for AR-Prostate pair
 INFO - Found 15 bedfiles to be linked for AR-Breast pair
 INFO - Found 72 bedfiles to be linked for FOXA1-Breast pair
+INFO - Found 82 bedfiles to be linked for FOXA1-Prostate pair
+INFO - Found 13 bedfiles to be linked for CTCF-Liver pair
 INFO - Found 31 bedfiles to be linked for GATA3-Breast pair
-['data/predictor_files/AR_Breast_predictors.txt', 'data/predictor_files/FOXA1_Breast_predictors.txt', 'data/predictor_files/GATA3_Breast_predictors.txt']
+INFO - Found 6 bedfiles to be linked for GATA3-Blood pair
+INFO - Found 14 bedfiles to be linked for GATA2-Bone-Marrow pair
+['data/predictor_files/AR_Prostate_predictors.txt', 'data/predictor_files/AR_Breast_predictors.txt', 'data/predictor_files/FOXA1_Breast_predictors.txt', 'data/predictor_files/FOXA1_Prostate_predictors.txt', 'data/predictor_files/CTCF_Liver_predictors.txt', 'data/predictor_files/GATA3_Breast_predictors.txt', 'data/predictor_files/GATA3_Blood_predictors.txt', 'data/predictor_files/GATA2_Bone-Marrow_predictors.txt']
+INFO - Sequence source is reference. Using a reference genome.
+INFO - Using parsl highthroughput configuration for beagle3: True
+INFO - Parsl version: 2023.04.17
+INFO - Found one reference set named cistrome to predict on
+INFO - Found 19836 regions to be split into batches with at most 1000 regions in each batch.
+INFO - No regions to exclude yet. You either did not supply a file, this is the first run, or there are truly no regions to exclude
+INFO - There seem to be just one sample i.e. [['cistrome']]. No need to batch.
+INFO - Executing parsl futures for 31 parsl apps
+INFO - Finished predictions for all
+INFO - Check /project2/haky/temi/projects/TFPred-snakemake/data/predictions_folder/cistrome_AR_Prostate/predictions_2023-05-16/job_logs/cistrome_AR_Prostate_2023-05-16.summary for a summary of the entire run.
+INFO - Writing `aggregation_config_cistrome_AR_Prostate.json` file to data/prediction_parameters
+INFO - Completed job in 4200.027467390057 seconds.
 /project2/haky/temi/projects/TFPred-snakemake
-  transcription_factor  tissue
-0                   AR  Breast
-1                FOXA1  Breast
-2                GATA3  Breast
+  transcription_factor       tissue
+0                   AR     Prostate
+1                   AR       Breast
+2                FOXA1       Breast
+3                FOXA1     Prostate
+4                 CTCF        Liver
+5                GATA3       Breast
+6                GATA3        Blood
+7                GATA2  Bone Marrow
 /project2/haky/temi/projects/TFPred-snakemake
-  transcription_factor  tissue
-0                   AR  Breast
-1                FOXA1  Breast
-2                GATA3  Breast
+  transcription_factor       tissue
+0                   AR     Prostate
+1                   AR       Breast
+2                FOXA1       Breast
+3                FOXA1     Prostate
+4                 CTCF        Liver
+5                GATA3       Breast
+6                GATA3        Blood
+7                GATA2  Bone Marrow

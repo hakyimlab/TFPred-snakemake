@@ -25,3 +25,4 @@ There are two accompanying txt files `info/data_db.txt` and `info/human_factor_f
 
 ## To-do:
 - [ ] Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 
+- [ ] Extend the pipeline to provide summary information of the models, including diagnostic plots.

@@ -1,7 +1,6 @@
 
 ---
 # directories
-base_dir: '/lus/grand/projects/covid-ct/imlab'
 cistrome_data_dir: '/project2/haky/Data/TFXcan/cistrome/raw/human_factor' # where are the cistrome bed files
 pipeline_dir: '/project2/haky/temi/projects/TFPred-snakemake'
 dataset: 'cistrome' # change this variable name 

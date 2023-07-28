@@ -25,11 +25,14 @@ MODELS_DIR = 'output/models'
 MODELS_EVAL_DIR = 'output/models_eval'
 
 metadata_dt = pd.read_csv(config['metadata'])
+print(metadata_dt)
 details = []
 for row in metadata_dt.itertuples():
     #print(row)
-    r = [row.transcription_factor, row.tissue]
+    r = [row.assay, row.context]
     details.append(r)
+
+print(details)
 
 # check if the TF is present in the homer and cistrome data_db columns
 data_db = pd.read_table('./info/data_db.txt')
@@ -40,15 +43,16 @@ valid_TFs = [d for d in details if d[0] in data_db.TF.tolist()] # filter the lis
 invalid_TFs = [d for d in details if d[0] not in data_db.TF.tolist()]
 if len(invalid_TFs) > 0:
     print(f'Some invalid TF-tissue pairs were found. See {os.path.join(METADATA_DIR, "invalid_TFs.txt")} for details.')
-    pd.DataFrame(invalid_TFs).to_csv(os.path.join(METADATA_DIR, 'invalid_TFs.csv'), sep=',', index=False, header=['transcription_factor', 'tissue'])
+    pd.DataFrame(invalid_TFs).to_csv(os.path.join(METADATA_DIR, 'invalid_TFs.csv'), sep=',', index=False, header=['assay', 'context'])
 
 if len(valid_TFs) == 0:
     print('No valid TF-tissue pairs were found. Please check the metadata file.')
     sys.exit(1)
 else:
     print(f'{len(valid_TFs)} valid TF-tissue pairs were found.')
-    pd.DataFrame(valid_TFs).to_csv(os.path.join(METADATA_DIR, 'valid_TFs.csv'), sep=',', index=False, header=['transcription_factor', 'tissue'])
+    pd.DataFrame(valid_TFs).to_csv(os.path.join(METADATA_DIR, 'valid_TFs.csv'), sep=',', index=False, header=['assay', 'context'])
 
+#use this to filter for homer files
 homer_data = os.path.join(config['homer']['dir'], 'data/knownTFs/motifs')
 #hpath = os.path.join('/project2/haky/temi/software/homer', 'data/knownTFs/motifs')
 
@@ -140,12 +144,13 @@ rule create_training_set:
         basename = os.path.join(PREDICTORS_DIR, '{tf}_{tissue}')
     message: "working on {wildcards}"
     resources:
+        partition = 'beagle3',
         mem_mb= 150000,
-        nodes=2
+        nodes=1
     threads: 32
     shell:
         """
-        {params.rscript} prepare/workflow/scripts/create_training_sets.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --bedfiles_directory {params.bedfiles_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt}
+        {params.rscript} workflow/src/create_training_sets.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --bedfiles_directory {params.bedfiles_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt} ; sleep 5
         """
 
 rule create_enformer_configuration:
@@ -241,13 +246,14 @@ rule train_TFPred_weights:
         "training on {wildcards} training data"
     params:
         jobname = '{tf}_{tissue}',
-        rscript = config['rscript']
+        rscript = config['rscript'],
+        nfolds=5
     resources:
         mem_mb= 100000,
         partition="beagle3"
     shell:
         """
-            {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {output}; sleep 10
+            {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {output} --nfolds {params.nfolds}; sleep 12
         """
 
 rule evaluate_TFPred:

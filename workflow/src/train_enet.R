@@ -7,7 +7,8 @@ suppressPackageStartupMessages(library("optparse"))
 
 option_list <- list(
     make_option("--train_data_file", help='data to train with enet'),
-    make_option("--rds_file", help='.rds file to be created as the model')
+    make_option("--rds_file", help='.rds file to be created as the model'),
+    make_option("--nfolds", type="integer", default=5L, help='How many cv folds?')
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -40,7 +41,7 @@ doParallel::registerDoParallel(cl)
 print(glue('INFO - training enet model\n\n'))
 
 cv_model <- tryCatch({
-    glmnet::cv.glmnet(x=X_train, y=y_train[, 2], family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=10)
+    glmnet::cv.glmnet(x=X_train, y=y_train[, 2], family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds, maxit = 1e+5)
 }, error = function(e){
     print(glue('ERROR - {e}'))
     return(NULL)
@@ -48,7 +49,7 @@ cv_model <- tryCatch({
 
 print(cv_model)
 print(glue('INFO - Saving model to `{opt$rds_file}`'))
-if(!dir.exists(basename(opt$rds_file))){dir.create(basename(opt$rds_file))}
+#if(!dir.exists(dirname(opt$rds_file))){dir.create(basename(opt$rds_file))}
 saveRDS(cv_model, file=opt$rds_file)
 doParallel::stopImplicitCluster()
 print(glue('INFO - Finished with model training and saving\n\n'))

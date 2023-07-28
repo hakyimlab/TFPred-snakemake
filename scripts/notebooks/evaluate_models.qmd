@@ -41,6 +41,15 @@ tfs_tissues
 ```
 
 ```{r}
+one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Breast_2023-07-27/aggByCollect_AR_Breast.linear.rds') |> Sys.glob()
+one_ex <- readRDS(one_ex)
+```
+
+```{r}
+with(one_ex$test_eval, plot(peakActivityScore, predicted, frame.plot=FALSE))
+```
+
+```{r}
 evaluations <- lapply(tfs_tissues, function(each_tft){
   one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Breast_2023-07-27/aggByCollect_AR_Breast.linear.rds') |> Sys.glob()
   one_ex <- readRDS(one_ex)

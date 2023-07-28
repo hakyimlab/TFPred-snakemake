@@ -10,7 +10,7 @@ enformer:
     predictions_log_dir: "predictions_log"
     tracks_to_save: -1
     bins_to_save: -1
-    n_regions: 10000
+    n_regions: 40000
     batch_regions: 500
     use_parsl: True
     write_log:

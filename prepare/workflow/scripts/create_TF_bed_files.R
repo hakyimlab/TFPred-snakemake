@@ -12,6 +12,17 @@ tissue_type <- args[2]
 output_dir <- args[3]
 config_file <- args[4]
 
+suppressPackageStartupMessages(library("optparse"))
+
+option_list <- list(
+    make_option("--transcription_factor", help='A list of files to combine'),
+    make_option("--tissue", help='A list of files to combine'),
+    make_option("--output_directory", help='The final output file.'),
+	make_option("--configuration_file", help='The final output file.')
+)
+
+opt <- parse_args(OptionParser(option_list=option_list))
+
 # print(TF)
 # print(tissue_type)
 # print(output_dir)

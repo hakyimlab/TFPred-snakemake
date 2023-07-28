@@ -1,0 +1,85 @@
+---
+title: "Analyse TFPred models"
+author: "Temi"
+date: 'Mon Jun 12 2023'
+format: 
+  pdf: 
+    toc: true
+    number-sections: true
+    code-line-numbers: true
+---
+
+```{r import libraries}
+setwd('/project2/haky/temi/projects/TFPred-snakemake/scripts/notebooks')
+
+rm(list=ls())
+
+library(glue)
+library(GenomicRanges)
+library(reticulate)
+library(R.utils)
+library(data.table)
+library(tidyverse)
+```
+
+
+```{r}
+root_dir <- '/project2/haky/temi/projects/TFPred-snakemake' # /project2/haky/temi/projects/TFPred-snakemake/metadata
+```
+
+Metadata
+```{r}
+mtdt <- data.table::fread(glue('{root_dir}/metadata/valid_TFs.csv'))
+mtdt
+```
+
+```{r}
+tfs <- mtdt$transcription_factor
+tissues <- mtdt$tissue %>% gsub(' ', '-', .)
+tfs_tissues <- paste(tfs, tissues, sep='_')
+tfs_tissues
+```
+
+```{r}
+evaluations <- lapply(tfs_tissues, function(each_tft){
+  one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_{each_tft}_*/aggByMeanCenter_test_evaluation.logistic.rds') |> Sys.glob()
+  one_ex <- readRDS(one_ex)
+  roc_object <- roc(one_ex[[1]]$class, one_ex[[1]]$prediction_response)
+  auc(roc_object)[1]
+})
+
+names(evaluations) <- tfs_tissues
+evaluations <- do.call('cbind', evaluations)
+evaluations
+```
+
+```{r}
+x <- barplot(evaluations, horiz=FALSE, xaxt = "n", col='steelblue', ylab='AUC', xlab='TF-tissue model', cex.lab=1, )
+text(x, par("usr")[3] - 0.03, cex=0.9, labels = colnames(evaluations), xpd=TRUE, srt=15)
+text(x, evaluations[1, ] - 0.1, labels=round(evaluations[1, ], 3),cex=0.8)
+mtext('AUCs of different models evaluated on respective test sets', side = 3, line = 1, outer = FALSE, at = NA, adj = 0, padj = NA, cex = 1.5)
+
+```
+
+```{r}
+with(one_ex[[1]], plot(norm_bc, prediction_link, xlab='normalized counts of binding', ylab='TFPred score', frame.plot=F))
+```
+
+```{r}
+library(pROC)
+```
+
+```{r}
+roc_object <- roc(one_ex[[1]]$class, one_ex[[1]]$prediction_response)
+auc(roc_object)
+```
+
+```{r}
+plot(roc_object, print.auc=T, frame.plot=F)
+```
+
+
+```{r}
+aaa <- auc(roc_object)
+```
+

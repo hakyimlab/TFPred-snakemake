@@ -2,13 +2,14 @@ cluster:
   mkdir -p logs/slurm_logs/{rule} &&
   sbatch
     --partition=beagle3
-    --time=01:00:00
+    --time=00:30:00
     --account=pi-haky
     --job-name=smk-{rule}-{params.jobname}
     --output=logs/slurm_logs/{rule}/{params.jobname}.out
     --error=logs/slurm_logs/{rule}/{params.jobname}.err
     --gres=gpu:4
     --exclusive
+    --nodes=1
   #     SBATCH --cpus-per-task=1 Number of threads
   # SBATCH --ntasks-per-node=1 Number of CPU cores to drive GPU
 restart-times: 0
@@ -16,7 +17,7 @@ max-jobs-per-second: 2
 max-status-checks-per-second: 1
 local-cores: 1
 latency-wait: 60
-jobs: 4
+jobs: 10
 keep-going: True
 rerun-incomplete: True
 printshellcmds: True

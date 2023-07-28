@@ -12,9 +12,9 @@ cluster:
     --error=logs/slurm_logs/{rule}/{params.jobname}.err
     --exclusive
 default-resources:
-  - partition=caslake
+  - partition=caslake # beagle3 for gpus
   - mem_mb=50000
-  - time="01:00:00"
+  - time="00:30:00"
   - tmpdir="/scratch/midway3/temi"
   - account="pi-haky"
   - nodes=1

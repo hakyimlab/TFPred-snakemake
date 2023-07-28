@@ -1,0 +1,32 @@
+---
+enformer:
+  prediction_directives: 
+    sub_dir: True
+    output_dir: "enformer_predictions"
+    reverse_complement: false
+    sequence_source: 'reference'
+    exclude_regions: true
+    predictions_log_dir: "predictions_log"
+    tracks_to_save: -1
+    bins_to_save: -1
+    n_regions: 100
+    batch_regions: 10
+    use_parsl: True
+    write_log:
+      logdir: "job_logs"
+      logtypes:
+        memory: false
+        error: true
+        time: false
+        cache: false
+    parsl_parameters:
+      num_of_full_nodes: 4
+      walltime: "03:00:00"
+      init_blocks: 1
+      min_num_blocks: 0
+      max_num_blocks: 4
+      queue:
+      account: "pi-haky"
+      hpc: "beagle3"
+      provider: "local"
+      worker_init: "source ~/.bashrc; conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools; which python; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/lib"

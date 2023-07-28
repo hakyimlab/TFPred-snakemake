@@ -10,18 +10,11 @@ sys.path.append('workflow/scripts')
 sys.path.append('modules')
 import module
 
-print(os.getcwd())
-
-cfile = "config/pipeline.yaml"
-configfile: cfile
-
 metadata_dt = pd.read_csv(config['metadata'])
 valid_dt = pd.read_csv(os.path.join(os.path.dirname(config['metadata']), 'valid_TFs.csv'))
 
 print(valid_dt)
-rscript = config['rscript']
 
-config_file_path = os.path.abspath(cfile)
 # directories
 DATA_DIR = 'data'
 PREDICTION_PARAMS_DIR = os.path.join(DATA_DIR, 'prediction_parameters')
@@ -48,7 +41,8 @@ rule predict_with_enformer:
         os.path.join(PREDICTION_PARAMS_DIR, f'aggregation_config_{config["dataset"]}_{{tf}}_{{tissue}}.json')
     params:
         jobname = '{tf}_{tissue}',
-        cf = os.path.join(PREDICTION_PARAMS_DIR, f'enformer_parameters_{config["dataset"]}_{{tf}}_{{tissue}}.json')
+        job_configuration_file = os.path.join(PREDICTION_PARAMS_DIR, f'enformer_parameters_{config["dataset"]}_{{tf}}_{{tissue}}.json'),
+        enformer_predict_script = config['enformer']['predict']
     message: 
         "working on {params.jobname}"
     # resources:
@@ -56,6 +50,6 @@ rule predict_with_enformer:
     #     partition="beagle3"
     shell:
         """
-            python3 predict/workflow/scripts/enformer_predict.py --param_config {params.cf}
+            python3 {params.enformer_predict_script} --parameters {params.job_configuration_file}
         """
     

@@ -1,4 +1,2 @@
 transcription_factor,tissue
 AR,Breast
-FOXA1,Breast
-GATA3,Breast

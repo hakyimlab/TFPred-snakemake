@@ -42,7 +42,7 @@ tfs_tissues
 
 ```{r}
 evaluations <- lapply(tfs_tissues, function(each_tft){
-  one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_{each_tft}_*/aggByMeanCenter_test_evaluation.logistic.rds') |> Sys.glob()
+  one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Breast_2023-07-27/aggByCollect_AR_Breast.linear.rds') |> Sys.glob()
   one_ex <- readRDS(one_ex)
   roc_object <- roc(one_ex[[1]]$class, one_ex[[1]]$prediction_response)
   auc(roc_object)[1]

@@ -1,8 +1,7 @@
-
 # Author: Temi
 # Date: Thursday July 27 2023
-# Description:
-# Usage: Rscript create_training_sets.R
+# Description: split the aggregated enformer outputs into train and test
+# Usage: Rscript train_test_split.R [options]
 
 suppressPackageStartupMessages(library("optparse"))
 

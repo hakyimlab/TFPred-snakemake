@@ -84,7 +84,8 @@ rule all:
         expand(os.path.join(AGGREGATION_DIR, f'{config["dataset"]}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(AGGREGATION_DIR, f'train_{config["dataset"]}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.prepared.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(AGGREGATION_DIR, f'test_{config["dataset"]}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.prepared.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
-        expand(os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds'), zip, tf = TF_list, tissue = tissue_list)
+        expand(os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds'), zip, tf = TF_list, tissue = tissue_list)
 
 rule find_homer_motifs:
     input:
@@ -151,16 +152,19 @@ rule create_enformer_configuration:
     input: rules.create_training_set.output.f1
     output: os.path.join(PREDICTION_PARAMS_DIR, f'enformer_parameters_{config["dataset"]}_{{tf}}_{{tissue}}.json')
     message: "working on {wildcards}"
+    resources:
+        partition="beagle3"
     params:
         rscript = config['rscript'],
         bdirectives = config['enformer']['base_directives'],
+        dset = config['dataset'],
         model = config['enformer']['model'],
         fasta_file = config['genome']['fasta'],
-        pdir = PREDICTIONS_DIR,
+        pdir = DATA_DIR,
         jobname = '{tf}_{tissue}'
     shell:
         """
-            {params.rscript} prepare/workflow/scripts/create_enformer_config.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output}
+            {params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output}
         """
 
 rule predict_with_enformer:
@@ -169,10 +173,11 @@ rule predict_with_enformer:
     output:
         os.path.join(PREDICTION_PARAMS_DIR, f'aggregation_config_{config["dataset"]}_{{tf}}_{{tissue}}.json')
     resources:
-        nodes=1,
-        slurm="gres=gpu:4",
+        slurm="gres=gpu:16",
         partition="beagle3",
-        time="00:40:00"
+        time="04:00:00",
+        nodes=4,
+        mem_mb = 150000
     params:
         jobname = '{tf}_{tissue}',
         enformer_predict_script = config['enformer']['predict']
@@ -232,18 +237,34 @@ rule prepare_training_data:
 rule train_TFPred_weights:
     input: rules.prepare_training_data.output.p1
     output: os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds')
-        # os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", f'aggByMeanCenter_{{tf_tissue}}.logistic.rds'),
-        # os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", f'aggByMeanCenter_{{tf_tissue}}.linear.rds')
     message:
         "training on {wildcards} training data"
     params:
         jobname = '{tf}_{tissue}',
         rscript = config['rscript']
-        #basename = os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf_tissue}}_{{date}}", f'aggByMeanCenter_{{tf_tissue}}')
     resources:
         mem_mb= 100000,
         partition="beagle3"
     shell:
         """
             {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {output}; sleep 10
+        """
+
+rule evaluate_TFPred:
+    input: 
+        model_rds = rules.train_TFPred_weights.output,
+        train_data = rules.prepare_training_data.output.p1,
+        test_data = rules.prepare_training_data.output.p2
+    output: os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds')
+    message:
+        "evaluating on {wildcards} training and test data"
+    params:
+        jobname = '{tf}_{tissue}',
+        rscript = config['rscript']
+    resources:
+        mem_mb= 100000,
+        partition="beagle3"
+    shell:
+        """
+            {params.rscript} workflow/src/evaluate_enet.R --model {input.model_rds} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {output}; sleep 10
         """

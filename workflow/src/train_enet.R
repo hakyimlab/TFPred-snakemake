@@ -1,14 +1,13 @@
-
 # Author: Temi
 # Date: Thursday July 27 2023
-# Description:
-# Usage: Rscript create_training_sets.R
+# Description: script to train elastic net TFPred models
+# Usage: Rscript train_enet.R [options]
 
 suppressPackageStartupMessages(library("optparse"))
 
 option_list <- list(
-    make_option("--train_data_file", help='A transcription factor e.g. AR'),
-    make_option("--rds_file", help='A transcription factor e.g. AR')
+    make_option("--train_data_file", help='data to train with enet'),
+    make_option("--rds_file", help='.rds file to be created as the model')
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -28,25 +27,15 @@ if(file.exists(opt$train_data_file)){
     stop(glue('ERROR - Training data cannot be found.'))
 }
 
-#id_data <- arguments[2]
-#TF <- arguments[3]
-#metainfo <- arguments[4] 
-#output_dir <- arguments[5]
-#training_date <- arguments[6]
-
-# print(glue('id is {id_data}\nTF is {TF}\nmetainfo is {metainfo}\noutput directory is {output_dir}\ntraining date is {training_date}\n\n'))
-
-
 # split the data
 X_train <- dt_train[, -c(1,2)] |> as.matrix()
 y_train <- dt_train[, c(1,2)] |> as.data.frame()
 
-print(glue('INFO - Found {parallel::detectCores()} cores\n\n'))
+cl <- 12 #parallel::makeCluster(5)
+print(glue('INFO - Found {parallel::detectCores()} cores but using {cl}\n\n'))
 
-# build two models
 set.seed(seed)
 
-cl <- 12 #parallel::makeCluster(5)
 doParallel::registerDoParallel(cl)
 print(glue('INFO - training enet model\n\n'))
 

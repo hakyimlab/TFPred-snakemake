@@ -24,4 +24,4 @@ Mon Apr 24 2023
 There are two accompanying txt files `info/data_db.txt` and `info/human_factor_full_QC.txt` that are important for this pipeline to find the TF and tissue and their bed files.
 
 ## To-do:
-[ ] - Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 
+- [ ] Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 

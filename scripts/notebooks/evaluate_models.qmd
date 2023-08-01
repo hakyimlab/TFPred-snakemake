@@ -92,3 +92,31 @@ plot(roc_object, print.auc=T, frame.plot=F)
 aaa <- auc(roc_object)
 ```
 
+```{r}
+set.seed(2023)
+n = 10000
+nmotifs <- sample(0:6, n, replace=T)
+noverlaps <- sample(0:30, n, replace=T)
+intensity <- runif(n, 0, 50.5)
+
+dt <- cbind(nmotifs, noverlaps, intensity) |> as.data.frame()
+head(dt)
+```
+
+```{r}
+dt$peakActivityScore <- with(dt, sqrt(intensity * ((nmotifs + 0.1) * noverlaps + 0.1)))
+with(dt, plot(intensity, peakActivityScore))
+```
+
+```{r}
+head(dt, 20)
+```
+
+```{r}
+dt[dt$intensity > 50, ] |> head(20)
+```
+
+```{r}
+hist(with(dt, peakActivityScore))
+```
+

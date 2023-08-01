@@ -13,4 +13,4 @@ snakemake -s prepare/snakefile.smk --configfile config/pipeline.yaml --profile p
 
 # squeue --format="%.18i %.9P %.30j %.8u %.8T %.10M %.9l %.6D %R" --me
 
-snakemake -s prepare/snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ -np
+snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ -np

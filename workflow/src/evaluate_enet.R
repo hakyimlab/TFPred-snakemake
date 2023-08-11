@@ -27,9 +27,11 @@ newx_list <- purrr::map(.x=c(opt$train_data_file, opt$test_data_file), function(
     newx <- as.matrix(mat_dt[, -c(1:2)])
     # you only need one : link
     link_pred <- predict(model, newx, s = "lambda.1se", type = 'link') |> as.vector()
+    response_pred <- predict(model, newx, s = "lambda.1se", type = 'response') |> as.vector()
     df <- mat_dt[, c(1:2)] |> as.data.frame()
-    df$prediction <- link_pred
-    colnames(df) <- c('locus', 'peakActivityScore', 'predicted')
+    df$TFPred_score <- link_pred
+    df$probability <- response_pred
+    colnames(df) <- c('locus', 'binding_class', 'TFPred_score', 'probability')
     return(df)
 }, .progress=T)
 

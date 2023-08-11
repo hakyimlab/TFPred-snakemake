@@ -41,7 +41,7 @@ doParallel::registerDoParallel(cl)
 print(glue('INFO - training enet model\n\n'))
 
 cv_model <- tryCatch({
-    glmnet::cv.glmnet(x=X_train, y=y_train[, 2], family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds, maxit = 1e+5)
+    glmnet::cv.glmnet(x=X_train, y=y_train[, 2], family = "binomial", type.measure = "auc", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds)
 }, error = function(e){
     print(glue('ERROR - {e}'))
     return(NULL)

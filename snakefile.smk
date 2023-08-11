@@ -1,6 +1,7 @@
-# Description: Common snakefile
+# Description: Given a TF and tissue (or context) , this pipeline trains logistic elastic net models of that TF binding activity in that tissue
 # Author: Temi
 # Date: Wed Mar 29 2023
+# Usage: --> see README
 
 import pandas as pd
 import os, glob, sys, re
@@ -88,8 +89,8 @@ rule all:
         expand(os.path.join(AGGREGATION_DIR, f'{config["dataset"]}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(AGGREGATION_DIR, f'train_{config["dataset"]}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.prepared.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(AGGREGATION_DIR, f'test_{config["dataset"]}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.prepared.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
-        expand(os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds'), zip, tf = TF_list, tissue = tissue_list),
-        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds'), zip, tf = TF_list, tissue = tissue_list)
+        expand(os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds'), zip, tf = TF_list, tissue = tissue_list)
 
 rule find_homer_motifs:
     input:
@@ -150,7 +151,7 @@ rule create_training_set:
     threads: 32
     shell:
         """
-        {params.rscript} workflow/src/create_training_sets.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --bedfiles_directory {params.bedfiles_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt} ; sleep 5
+        {params.rscript} workflow/src/create_training_sets_bb.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --bedfiles_directory {params.bedfiles_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt}; sleep 5
         """
 
 rule create_enformer_configuration:
@@ -166,10 +167,11 @@ rule create_enformer_configuration:
         model = config['enformer']['model'],
         fasta_file = config['genome']['fasta'],
         pdir = DATA_DIR,
+        ddate = config['date'],
         jobname = '{tf}_{tissue}'
     shell:
         """
-            {params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output}
+            {params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate}
         """
 
 rule predict_with_enformer:
@@ -241,7 +243,7 @@ rule prepare_training_data:
 
 rule train_TFPred_weights:
     input: rules.prepare_training_data.output.p1
-    output: os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds')
+    output: os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds')
     message:
         "training on {wildcards} training data"
     params:
@@ -261,7 +263,7 @@ rule evaluate_TFPred:
         model_rds = rules.train_TFPred_weights.output,
         train_data = rules.prepare_training_data.output.p1,
         test_data = rules.prepare_training_data.output.p2
-    output: os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds')
+    output: os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds')
     message:
         "evaluating on {wildcards} training and test data"
     params:

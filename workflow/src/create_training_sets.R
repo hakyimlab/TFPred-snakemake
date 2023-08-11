@@ -142,7 +142,7 @@ motif_overlaps <- GenomicRanges::findOverlaps(query = dt_granges, subject = tf_m
 dt_minus_motifs <- cbind(dt_merged[queryHits(motif_overlaps), ], n_motifs=0, motif=NA) %>% as_tibble()
 dt_plus_motifs <- cbind(dt_merged[queryHits(motif_overlaps), ], as.data.frame(tf_motifs_granges[subjectHits(motif_overlaps), ]) %>% 
     dplyr::select(chr_motif=seqnames, start_motif = start, end_motif = end)) %>% 
-    dplyr::mutate(motif = paste(chr_motif, start_motif, end_motif, sep='_')) %>% 
+    dplyr::mutate(motif = paste(chr_motif, start_motif, end_motif, sep='_'), count=count+1) %>% 
     as_tibble() %>% 
     dplyr::group_by(chr, start, end, count, intensity) %>% 
     dplyr::summarise(n_motifs = n(), motif = paste(motif, collapse = ','))
@@ -150,7 +150,7 @@ dt_plus_motifs <- cbind(dt_merged[queryHits(motif_overlaps), ], as.data.frame(tf
 set.seed(seed)
 dt_train <- rbind(dt_plus_motifs, dt_minus_motifs) 
 dt_train <- dt_train[sample(nrow(dt_train)), ] %>% 
-    dplyr::mutate(peakActivityScore = sqrt(intensity * ((count + 0.1) * (n_motifs + 0.1))))
+    dplyr::mutate(peakActivityScore = log10(intensity * ((count + 0.1) * (n_motifs + 0.1))))
     # dplyr::rename(peakActivityScore = intensity) %>%
     # dplyr::mutate(peakActivityScore = sqrt(intensity * ((count + 0.1) * (n_motifs + 0.1))))
     #dplyr::mutate(peakActivityScore = (intensity * log10((count + 1) * (n_motifs + 1))))

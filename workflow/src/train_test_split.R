@@ -16,12 +16,14 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list=option_list))
 
 seed <- 2023
+set.seed(seed)
 
 library(glue)
 library(tidyverse)
 library(data.table)
 
-ground_truth <- data.table::fread(opt$ground_truth_file) %>% dplyr::rename(locus=V1, peakActivityScore=V2)
+ground_truth <- data.table::fread(opt$ground_truth_file) %>%
+  dplyr::select(locus, binding_class, split) #%>% dplyr::rename(locus=V1, peakActivityScore=V2)
 
 find_duplicates_in_dataframe <- function(dt, col, return_dups=TRUE){
   n_occur <- data.frame(table(dt[[col]]))
@@ -35,18 +37,17 @@ find_duplicates_in_dataframe <- function(dt, col, return_dups=TRUE){
 
 center_dt <- data.table::fread(opt$data_file, fill=T)
 gt <- ground_truth[ground_truth$locus %in% center_dt$id, ]
-gt_dedup <- gt[!duplicated(gt[['locus']]),]
+gt_dedup <- gt[!duplicated(gt[['locus']]), ]
 new_dt <- merge(gt_dedup, center_dt, by.x='locus', by.y='id')
-colnames(new_dt) <- c('locus', 'peakActivityScore', paste('f_', 1:(ncol(new_dt)-2), sep=''))
+colnames(new_dt) <- c('locus', 'binding_class', 'split', paste('f_', 1:(ncol(new_dt)-3), sep=''))
 
-# train_prepared_file <- gsub('.gz', '', train_prepared_file)
-# test_prepared_file <- gsub('.gz', '', test_prepared_file)
+train <- new_dt %>% 
+  dplyr::filter(split == 'train') %>%
+  dplyr::select(-split)
+test <- new_dt %>%
+  dplyr::filter(split == 'test') %>%
+  dplyr::select(-split)
 
-set.seed(seed)
-tr_size <- ceiling(nrow(new_dt) * 0.8)
-tr_indices <- sample(1:nrow(new_dt), tr_size)
-train <- new_dt[tr_indices, ]
-test <- new_dt[-tr_indices, ]
 data.table::fwrite(x=train, file=opt$train_prepared_file, quote=F, row.names=F, compress='gzip')
 # just in case there is a test data
 if(nrow(test) > 0){

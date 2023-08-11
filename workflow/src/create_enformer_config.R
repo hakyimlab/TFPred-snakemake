@@ -14,6 +14,7 @@ option_list <- list(
 	make_option("--predictors_file", help='predictor file containing the intervals to predict on'),
     make_option("--model", help='enformer model'),
 	make_option("--fasta_file", help='fasta file, typically hg38'),
+    make_option("--date", help='fasta file, typically hg38'),
     make_option("--parameters_file", help='the json file that will be created')
 )
 
@@ -29,7 +30,7 @@ enformer_parameters_json[['project_dir']] <- normalizePath(opt$project_directory
 enformer_parameters_json[["interval_list_file"]] <- opt$predictors_file
 enformer_parameters_json[['prediction_data_name']] <- opt$dataset
 enformer_parameters_json[['prediction_id']] <- paste(opt$transcription_factor, opt$tissue, sep='_')
-#enformer_parameters_json[['date']] <- Sys.Date()
+enformer_parameters_json[['date']] <- opt$date
 enformer_parameters_json[['model_path']] <- opt$model
 enformer_parameters_json[['fasta_file']] <- opt$fasta_file
 

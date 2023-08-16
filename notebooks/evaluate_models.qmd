@@ -1,30 +1,28 @@
 ---
-title: "Analyse TFPred models"
+title: "Analyse TFPred-AR-Prostate Performance"
 author: "Temi"
 date: 'Mon Jun 12 2023'
-format: 
-  pdf: 
-    toc: true
-    number-sections: true
-    code-line-numbers: true
+date-modified: 'Tue Aug 15 2023'
+fig-format: svg
 ---
 
 ```{r import libraries}
-setwd('/project2/haky/temi/projects/TFPred-snakemake/scripts/notebooks')
-
 rm(list=ls())
+root_dir <- '/project2/haky/temi/projects/TFPred-snakemake'
+```
 
+```{r message=F, warning=F}
 library(glue)
 library(GenomicRanges)
-library(reticulate)
 library(R.utils)
 library(data.table)
 library(tidyverse)
+library(ROCR)
 ```
 
 
 ```{r}
-root_dir <- '/project2/haky/temi/projects/TFPred-snakemake' # /project2/haky/temi/projects/TFPred-snakemake/metadata
+ # /project2/haky/temi/projects/TFPred-snakemake/metadata
 ```
 
 Metadata
@@ -41,82 +39,74 @@ tfs_tissues
 ```
 
 ```{r}
-one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Breast_2023-07-27/aggByCollect_AR_Breast.linear.rds') |> Sys.glob()
+one_ex <- glue('{root_dir}/output/models_eval/cistrome_AR_Prostate_2023-08-10/aggByCollect_AR_Prostate.logistic.rds') |> Sys.glob()
 one_ex <- readRDS(one_ex)
 ```
 
+
+AUROC curve
 ```{r}
-with(one_ex$test_eval, plot(peakActivityScore, predicted, frame.plot=FALSE))
+pp_test <- with(one_ex$test_eval, prediction(TFPred_score, binding_class))
+pp_train <- with(one_ex$train_eval, prediction(TFPred_score, binding_class))
+perf_test <- performance(pp_test, "tpr", "fpr")
+perf_train <- performance(pp_train, 'tpr', 'fpr')
+auc_test <- performance(pp_test, measure = "auc")
+auc_test <- auc_test@y.values[[1]] |> round(3)
+auc_train <- performance(pp_train, measure = "auc")
+auc_train <- auc_train@y.values[[1]] |> round(3)
 ```
 
 ```{r}
-evaluations <- lapply(tfs_tissues, function(each_tft){
-  one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Breast_2023-07-27/aggByCollect_AR_Breast.linear.rds') |> Sys.glob()
-  one_ex <- readRDS(one_ex)
-  roc_object <- roc(one_ex[[1]]$class, one_ex[[1]]$prediction_response)
-  auc(roc_object)[1]
-})
+# dt <- data.frame('train'=auc_train, 'test'=auc_test) %>% t() %>% as.data.frame()
+# colnames(dt) <- 'auc'
+# barplot(height=dt$auc, names=rownames(dt), space=0.1, width=0.01)
+```
 
-names(evaluations) <- tfs_tissues
-evaluations <- do.call('cbind', evaluations)
-evaluations
+```{r fig.height=8, fig.width=8}
+par(mar = c(5, 5, 5, 5))
+plot(perf_test, frame.plot=F, col='red', cex.lab=1.5,)
+plot(perf_train, add=T, col='blue')
+legend(0.6, 0.5, legend=c(paste("train AUC:", auc_train), paste("test AUC", auc_test)),
+  col=c("blue", "red"), lty=c(1), bty='n')
+```
+
+AUPRC curve
+```{r}
+pp_test <- with(one_ex$test_eval, prediction(TFPred_score, binding_class))
+pp_train <- with(one_ex$train_eval, prediction(TFPred_score, binding_class))
+perf_test <- performance(pp_test, "prec", "rec")
+perf_train <- performance(pp_train, 'prec', 'rec')
+auc_test <- performance(pp_test, measure = "aucpr")
+auc_test <- auc_test@y.values[[1]] |> round(3)
+auc_train <- performance(pp_train, measure = "aucpr")
+auc_train <- auc_train@y.values[[1]] |> round(3)
+```
+
+```{r fig.height=8, fig.width=8}
+par(mar = c(5, 5, 5, 5))
+plot(perf_test, frame.plot=F, col='red', cex.lab=1.5,)
+plot(perf_train, add=T, col='blue')
+legend(0.6, 0.6, legend=c(paste("train PR:", auc_train), paste("test PR", auc_test)),
+  col=c("blue", "red"), lty=c(1), bty='n')
 ```
 
 ```{r}
-x <- barplot(evaluations, horiz=FALSE, xaxt = "n", col='steelblue', ylab='AUC', xlab='TF-tissue model', cex.lab=1, )
-text(x, par("usr")[3] - 0.03, cex=0.9, labels = colnames(evaluations), xpd=TRUE, srt=15)
-text(x, evaluations[1, ] - 0.1, labels=round(evaluations[1, ], 3),cex=0.8)
-mtext('AUCs of different models evaluated on respective test sets', side = 3, line = 1, outer = FALSE, at = NA, adj = 0, padj = NA, cex = 1.5)
+# evaluations <- lapply(tfs_tissues, function(each_tft){
+#   one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Breast_2023-07-27/aggByCollect_AR_Breast.logistic.rds') |> Sys.glob()
+#   one_ex <- readRDS(one_ex)
+#   roc_object <- roc(one_ex[[1]]$class, one_ex[[1]]$prediction_response)
+#   auc(roc_object)[1]
+# })
 
+# names(evaluations) <- tfs_tissues
+# evaluations <- do.call('cbind', evaluations)
+# evaluations
 ```
 
 ```{r}
-with(one_ex[[1]], plot(norm_bc, prediction_link, xlab='normalized counts of binding', ylab='TFPred score', frame.plot=F))
+# x <- barplot(evaluations, horiz=FALSE, xaxt = "n", col='steelblue', ylab='AUC', xlab='TF-tissue model', cex.lab=1, )
+# text(x, par("usr")[3] - 0.03, cex=0.9, labels = colnames(evaluations), xpd=TRUE, srt=15)
+# text(x, evaluations[1, ] - 0.1, labels=round(evaluations[1, ], 3),cex=0.8)
+# mtext('AUCs of different models evaluated on respective test sets', side = 3, line = 1, outer = FALSE, at = NA, adj = 0, padj = NA, cex = 1.5)
+
 ```
-
-```{r}
-library(pROC)
-```
-
-```{r}
-roc_object <- roc(one_ex[[1]]$class, one_ex[[1]]$prediction_response)
-auc(roc_object)
-```
-
-```{r}
-plot(roc_object, print.auc=T, frame.plot=F)
-```
-
-
-```{r}
-aaa <- auc(roc_object)
-```
-
-```{r}
-set.seed(2023)
-n = 10000
-nmotifs <- sample(0:6, n, replace=T)
-noverlaps <- sample(0:30, n, replace=T)
-intensity <- runif(n, 0, 50.5)
-
-dt <- cbind(nmotifs, noverlaps, intensity) |> as.data.frame()
-head(dt)
-```
-
-```{r}
-dt$peakActivityScore <- with(dt, sqrt(intensity * ((nmotifs + 0.1) * noverlaps + 0.1)))
-with(dt, plot(intensity, peakActivityScore))
-```
-
-```{r}
-head(dt, 20)
-```
-
-```{r}
-dt[dt$intensity > 50, ] |> head(20)
-```
-
-```{r}
-hist(with(dt, peakActivityScore))
-```
-

@@ -23,7 +23,7 @@ library(tidyverse)
 library(data.table)
 
 ground_truth <- data.table::fread(opt$ground_truth_file) %>%
-  dplyr::select(locus, binding_class, split) #%>% dplyr::rename(locus=V1, peakActivityScore=V2)
+  dplyr::select(locus, binding_class, binding_counts, split) #%>% dplyr::rename(locus=V1, peakActivityScore=V2)
 
 find_duplicates_in_dataframe <- function(dt, col, return_dups=TRUE){
   n_occur <- data.frame(table(dt[[col]]))
@@ -39,7 +39,7 @@ center_dt <- data.table::fread(opt$data_file, fill=T)
 gt <- ground_truth[ground_truth$locus %in% center_dt$id, ]
 gt_dedup <- gt[!duplicated(gt[['locus']]), ]
 new_dt <- merge(gt_dedup, center_dt, by.x='locus', by.y='id')
-colnames(new_dt) <- c('locus', 'binding_class', 'split', paste('f_', 1:(ncol(new_dt)-3), sep=''))
+colnames(new_dt) <- c('locus', 'binding_class', 'binding_counts', 'split', paste('f_', 1:(ncol(new_dt)-4), sep=''))
 
 train <- new_dt %>% 
   dplyr::filter(split == 'train') %>%

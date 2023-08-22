@@ -90,7 +90,11 @@ rule all:
         expand(os.path.join(AGGREGATION_DIR, f'train_{config["dataset"]}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.prepared.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(AGGREGATION_DIR, f'test_{config["dataset"]}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.prepared.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds'), zip, tf = TF_list, tissue = tissue_list),
-        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds'), zip, tf = TF_list, tissue = tissue_list)
+        expand(os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list)
 
 rule find_homer_motifs:
     input:
@@ -243,36 +247,45 @@ rule prepare_training_data:
 
 rule train_TFPred_weights:
     input: rules.prepare_training_data.output.p1
-    output: os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds')
+    output: 
+        mlogistic=os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds'),
+        mlinear=os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.rds')
     message:
         "training on {wildcards} training data"
     params:
         jobname = '{tf}_{tissue}',
         rscript = config['rscript'],
-        nfolds=5
+        nfolds=5,
+        basename=os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}')
     resources:
         mem_mb= 100000,
         partition="beagle3"
     shell:
         """
-            {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {output} --nfolds {params.nfolds}; sleep 12
+            {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {params.basename} --nfolds {params.nfolds}; sleep 12
         """
 
 rule evaluate_TFPred:
     input: 
-        model_rds = rules.train_TFPred_weights.output,
+        linear_model = rules.train_TFPred_weights.output.mlinear,
+        logistic_model = rules.train_TFPred_weights.output.mlogistic,
         train_data = rules.prepare_training_data.output.p1,
         test_data = rules.prepare_training_data.output.p2
-    output: os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.rds')
+    output: 
+        os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.train_eval.txt.gz'),
+        os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.logistic.test_eval.txt.gz'),
+        os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.train_eval.txt.gz'),
+        os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.linear.test_eval.txt.gz')
     message:
         "evaluating on {wildcards} training and test data"
     params:
         jobname = '{tf}_{tissue}',
-        rscript = config['rscript']
+        rscript = config['rscript'],
+        basename=os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}')
     resources:
         mem_mb= 100000,
         partition="beagle3"
     shell:
         """
-            {params.rscript} workflow/src/evaluate_enet.R --model {input.model_rds} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {output}; sleep 10
+            {params.rscript} workflow/src/evaluate_enet.R --linear_model {input.linear_model} --logistic_model {input.logistic_model} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {params.basename}
         """

@@ -39,8 +39,8 @@ tfs_tissues
 ```
 
 ```{r}
-one_ex <- glue('{root_dir}/output/models_eval/cistrome_AR_Prostate_2023-08-10/aggByCollect_AR_Prostate.logistic.rds') |> Sys.glob()
-one_ex <- readRDS(one_ex)
+one_ex <- glue('{root_dir}/output/models_eval/cistrome_AR_Prostate_2023-08-10/aggByCollect_AR_Prostate.linear.test_eval.txt.gz') |> Sys.glob()
+one_ex <- data.table::fread(one_ex)
 ```
 
 

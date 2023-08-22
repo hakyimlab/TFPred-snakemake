@@ -15,3 +15,5 @@ snakemake -s prepare/snakefile.smk --configfile config/pipeline.yaml --profile p
 
 conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools
 snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ -np
+
+# snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ -R prepare_training_data

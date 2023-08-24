@@ -1,23 +1,26 @@
 cluster:
-  mkdir -p logs/slurm_logs/{rule} &&
+  mkdir -p logs/{rule} &&
   sbatch
     --partition={resources.partition}
     --nodes={resources.nodes}
-    --cpus-per-task={threads}
-    --mem={resources.mem_mb}
     --time={resources.time}
     --account={resources.account}
     --job-name=smk-{rule}-{params.jobname}
-    --output=logs/slurm_logs/{rule}/{params.jobname}.out
-    --error=logs/slurm_logs/{rule}/{params.jobname}.err
-    --exclusive
+    --output=logs/{rule}/{params.jobname}.out
+    --error=logs/{rule}/{params.jobname}.err
+    --gres=gpu:{resources.gpu}
+    --mem-per-cpu={resources.mem_cpu}G
+    --cpus-per-task={resources.cpu_task}
 default-resources:
-  - partition=caslake # beagle3 for gpus
-  - mem_mb=50000
+  - partition=caslake # beagle3 for gpus #bigmem   #- mem_mb=50000
   - time="02:00:00"
   - tmpdir="/scratch/midway3/temi"
   - account="pi-haky"
   - nodes=1
+  - gpu=0
+  - mem_cpu=4
+  - cpu_task=4
+
 restart-times: 0
 max-jobs-per-second: 10
 max-status-checks-per-second: 1

@@ -1,4 +1,0 @@
-TypeError in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 19:
-expected str, bytes or os.PathLike object, not dict
-  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 19, in <module>
-  File "<frozen posixpath>", line 398, in abspath

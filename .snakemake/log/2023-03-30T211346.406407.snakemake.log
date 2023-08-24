@@ -1,5 +1,0 @@
-FileExistsError in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 64:
-[Errno 17] File exists: '/lus/grand/projects/covid-ct/imlab/data/cistrome/raw/human_factor/2319_sort_peaks.narrowPeak.bed' -> 'data/bed_files/FOXA1_Breast/2319_sort_peaks.narrowPeak.bed'
-  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 67, in <module>
-  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 67, in <listcomp>
-  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk", line 64, in link_cistrome_bedfiles

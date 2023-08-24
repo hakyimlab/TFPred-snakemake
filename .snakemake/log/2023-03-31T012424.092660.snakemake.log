@@ -1,7 +1,0 @@
-Building DAG of jobs...
-MissingInputException in rule all in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/workflow/rules/common.smk, line 111:
-Missing input files for rule all:
-    affected files:
-        data/homer_files/FOXA1/foxa1.lncap
-        data/homer_files/FOXA1/foxa1.mcf7
-        data/homer_files/AR/ar-half

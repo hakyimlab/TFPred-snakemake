@@ -1,3 +1,0 @@
-NameError in file /lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/snakefile.smk, line 16:
-name 'FINAL_VCFS_DIR' is not defined
-  File "/lus/theta-fs0/projects/covid-ct/imlab/users/temi/projects/TFPred-snakemake/snakefile.smk", line 16, in <module>

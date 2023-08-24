@@ -26,14 +26,14 @@ MODELS_DIR = 'output/models'
 MODELS_EVAL_DIR = 'output/models_eval'
 
 metadata_dt = pd.read_csv(config['metadata'])
-print(metadata_dt)
+##print(metadata_dt)
 details = []
 for row in metadata_dt.itertuples():
     #print(row)
     r = [row.assay, row.context]
     details.append(r)
 
-print(details)
+#print(details)
 
 # check if the TF is present in the homer and cistrome data_db columns
 data_db = pd.read_table('./info/data_db.txt')
@@ -149,10 +149,10 @@ rule create_training_set:
         basename = os.path.join(PREDICTORS_DIR, '{tf}_{tissue}')
     message: "working on {wildcards}"
     resources:
-        partition = 'beagle3',
-        mem_mb= 150000,
+        partition = 'bigmem',
+        #mem_mb= 150000,
         nodes=1
-    threads: 32
+    threads: 8
     shell:
         """
         {params.rscript} workflow/src/create_training_sets_bb.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --bedfiles_directory {params.bedfiles_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt}; sleep 5
@@ -184,11 +184,11 @@ rule predict_with_enformer:
     output:
         os.path.join(PREDICTION_PARAMS_DIR, f'aggregation_config_{config["dataset"]}_{{tf}}_{{tissue}}.json')
     resources:
-        slurm="gres=gpu:16",
         partition="beagle3",
         time="04:00:00",
-        nodes=4,
-        mem_mb = 150000
+        gpu=4,
+        mem_cpu=8,
+        cpu_task=8
     params:
         jobname = '{tf}_{tissue}',
         enformer_predict_script = config['enformer']['predict']
@@ -207,7 +207,10 @@ rule aggregate_predictions:
     message: 
         "working on {wildcards}"
     resources:
-        partition="beagle3"
+        partition="beagle3",
+        mem_cpu=8,
+        cpu_task=8,
+        mem_mb=24000
     params:
         jobname = '{tf}_{tissue}',
         aggregation_script = config['enformer']['aggregate'],
@@ -216,8 +219,6 @@ rule aggregate_predictions:
         hpc = "beagle3",
         parsl_executor = "local",
         delete_enformer_outputs = False
-    resources:
-        mem_mb= 100000
     run:
         if params.delete_enformer_outputs == True:
             shell("python3 {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor} --delete_enformer_outputs")
@@ -238,7 +239,7 @@ rule prepare_training_data:
         rscript = config['rscript'],
         aggtype = config['enformer']['aggtype']
     resources:
-        mem_mb= 100000,
+        mem_mb=24000,
         partition="beagle3"
     shell:
         """
@@ -258,8 +259,10 @@ rule train_TFPred_weights:
         nfolds=5,
         basename=os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}')
     resources:
-        mem_mb= 100000,
-        partition="beagle3"
+        mem_mb=100000,
+        partition="bigmem",
+        cpu_task=8,
+        mem_cpu=8
     shell:
         """
             {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {params.basename} --nfolds {params.nfolds}; sleep 12

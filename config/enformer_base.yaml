@@ -21,8 +21,8 @@ enformer:
         cache: false
     aggregate_by_width: 1
     parsl_parameters:
-      num_of_full_nodes: 4
-      walltime: "06:00:00"
+      num_of_full_nodes: 1
+      walltime: "04:00:00"
       init_blocks: 1
       min_num_blocks: 0
       max_num_blocks: 2

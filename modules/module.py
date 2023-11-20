@@ -2,7 +2,7 @@
 
 import os, glob, re, sys, json
 
-print_progress = True
+print_progress = False
 
 # linking motifs
 def find_motif_files(tf, homer_path):
@@ -13,6 +13,7 @@ def find_motif_files(tf, homer_path):
 
 # homer motifs
 def link_homer_motifs(TF, tissue, from_db, to_db):
+    tissue = str(tissue)
     if ' ' in tissue:
         tissue = tissue.replace(' ', '-')
     if not os.path.isdir(to_db):

@@ -6,6 +6,7 @@
 import pandas as pd
 import os, glob, sys, re
 from snakemake.io import glob_wildcards
+import numpy as np
 
 sys.path.append('workflow/src')
 sys.path.append('modules')
@@ -14,7 +15,7 @@ import module
 print_progress = False
 
 # directories
-DATA_DIR = 'data'
+DATA_DIR = 'data' #'/project/haky/users/temi/projects/TFPred-snakemake/data' #'data'
 BEDLINKS_DIR = os.path.join(DATA_DIR, 'bed_links')
 HOMERFILES_DIR = os.path.join(DATA_DIR, 'homer_files')
 PREDICTORS_DIR = os.path.join(DATA_DIR, 'predictor_files')
@@ -25,13 +26,15 @@ AGGREGATION_DIR = os.path.join(DATA_DIR, 'aggregation_folder')
 MODELS_DIR = 'output/models'
 MODELS_EVAL_DIR = 'output/models_eval'
 
-metadata_dt = pd.read_csv(config['metadata'])
+metadata_dt = pd.read_csv(config['metadata'], dtype={'assay': 'string', 'context': 'string'})
+metadata_dt = metadata_dt.fillna('none')
 ##print(metadata_dt)
 details = []
 for row in metadata_dt.itertuples():
     #print(row)
     r = [row.assay, row.context]
     details.append(r)
+
 
 #print(details)
 
@@ -56,7 +59,6 @@ else:
 #use this to filter for homer files
 homer_data = os.path.join(config['homer']['dir'], 'data/knownTFs/motifs')
 #hpath = os.path.join('/project2/haky/temi/software/homer', 'data/knownTFs/motifs')
-
 linked_homer_motifs = [module.link_homer_motifs(TF=d[0], tissue=d[1], from_db=homer_data, to_db=os.path.join(HOMERFILES_DIR, d[0])) for d in valid_TFs]
 TF_tissue_motifs_dict = {k: v for elem in linked_homer_motifs if elem is not None for k, v in elem.items()}
 #print(TF_tissue_motifs_dict)
@@ -74,6 +76,18 @@ TF_list = [d[0] for d in valid_TFs]
 tissue_list = [d[1].replace(' ', '-') for d in valid_TFs]
 
 # print(expand(os.path.join(PREDICTORS_DIR, '{tf_tissue}_predictors.txt'), tf_tissue=TF_tissue_motifs_dict.keys()))
+
+# def count_number_of_observations(ffile):
+#     with open(ffile, 'r') as fp:
+#         x = len(fp.readlines())
+#         return(x)
+
+# checkpoint count_number_of_observations:
+#     input: rules.create_training_set.output.f1
+#     output:
+
+report: 
+    f"reports/workflow_{config['date']}.rst"
 
 rule all:
     input:
@@ -99,8 +113,11 @@ rule all:
 rule find_homer_motifs:
     input:
         os.path.join(HOMERFILES_DIR, '{tf}', '{motif_file}.motif')
-    output:
+    output: 
         os.path.join(HOMERFILES_DIR, '{tf}', 'scanMotifsGenomeWide_{motif_file}.txt')
+    # report("fig2.png", caption="report/fig2.rst", category="Step 2", subcategory="{model}")
+        # report(os.path.join(HOMERFILES_DIR, '{tf}', 'scanMotifsGenomeWide_{motif_file}.txt'),
+        #     caption=f"reports/workflow_{config['date']}.rst", category = "step 1", subcategory = "finding_homer_motifs")
     params:
         homer_cmd = config['homer']['scanMotifsGenome'],
         genome = config['homer']['genome'],
@@ -146,12 +163,15 @@ rule create_training_set:
         bedlinks_dir = os.path.join(BEDLINKS_DIR, '{tf}_{tissue}'),
         cistrome_mtdt = config['TF_table'],
         jobname = '{tf}_{tissue}',
-        basename = os.path.join(PREDICTORS_DIR, '{tf}_{tissue}')
+        basename = os.path.join(PREDICTORS_DIR, '{tf}_{tissue}'),
+        #nfiles = len([name for name in os.listdir(os.path.join(BEDLINKS_DIR, f'{tf}_{tissue}')) if os.path.isfile(name)])
     message: "working on {wildcards}"
     resources:
-        partition = 'bigmem',
-        #mem_mb= 150000,
-        nodes=1
+        partition = "caslake", #if params.nfiles > 200 else "caslake",
+        #attempt: attempt * 100,
+        mem_cpu = lambda wildcards,  attempt: attempt * 8,
+        nodes = 1,
+        #load= 50 #if resources.partition == 'bigmem' else 1
     threads: 8
     shell:
         """
@@ -218,7 +238,7 @@ rule aggregate_predictions:
         output_folder = AGGREGATION_DIR,
         hpc = "beagle3",
         parsl_executor = "local",
-        delete_enformer_outputs = False
+        delete_enformer_outputs = config["delete_enformer_outputs"]
     run:
         if params.delete_enformer_outputs == True:
             shell("python3 {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor} --delete_enformer_outputs")
@@ -262,7 +282,8 @@ rule train_TFPred_weights:
         mem_mb=100000,
         partition="bigmem",
         cpu_task=8,
-        mem_cpu=8
+        mem_cpu=8,
+        load=50
     shell:
         """
             {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {params.basename} --nfolds {params.nfolds}; sleep 12

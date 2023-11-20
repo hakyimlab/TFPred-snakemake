@@ -7,7 +7,7 @@ fig-format: svg
 ---
 
 ```{r import libraries}
-rm(list=ls())
+#rm(list=ls())
 root_dir <- '/project2/haky/temi/projects/TFPred-snakemake'
 ```
 
@@ -18,6 +18,8 @@ library(R.utils)
 library(data.table)
 library(tidyverse)
 library(ROCR)
+library(glmnet)
+library(pROC)
 ```
 
 
@@ -32,16 +34,125 @@ mtdt
 ```
 
 ```{r}
-tfs <- mtdt$transcription_factor
-tissues <- mtdt$tissue %>% gsub(' ', '-', .)
+tfs <- mtdt$assay
+tissues <- mtdt$context %>% gsub(' ', '-', .)
 tfs_tissues <- paste(tfs, tissues, sep='_')
 tfs_tissues
 ```
 
 ```{r}
-one_ex <- glue('{root_dir}/output/models_eval/cistrome_AR_Prostate_2023-08-10/aggByCollect_AR_Prostate.linear.test_eval.txt.gz') |> Sys.glob()
-one_ex <- data.table::fread(one_ex)
+rundate <- '2023-11-14'
+evaluations <- lapply(tfs_tissues, function(each_tft){
+  one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_{each_tft}_{rundate}/aggByCollect_{each_tft}.logistic.test_eval.txt.gz') #|> Sys.glob()
+  print(one_ex)
+  if(file.exists(one_ex)){
+    one_ex <- data.table::fread(one_ex)
+    roc_object <- pROC::roc(one_ex$binding_class, one_ex$probability)
+    return(pROC::auc(roc_object)[1])
+  }
+})
+
+names(evaluations) <- tfs_tissues
+evaluations <- Filter(Negate(is.null), evaluations)
+#evaluations <- do.call('cbind', evaluations)
+evaluations
 ```
+
+```{r}
+do.call('rbind', evaluations)
+```
+
+### Predict one with many
+
+```{r}
+mtdt
+```
+
+```{r}
+test_model <- '/project2/haky/temi/projects/TFPred-snakemake/output/models/cistrome_CDX2_Colon_2023-11-14/aggByCollect_CDX2_Colon.logistic.rds' |> readRDS()
+```
+
+```{r}
+# get the test data in a list
+test_list <- lapply(tfs_tissues, function(each_tft){
+  test_file <- glue('/project2/haky/temi/projects/TFPred-snakemake/data/aggregation_folder/test_cistrome_aggByCollect_{each_tft}.prepared.csv.gz')
+  if(file.exists(test_file)){
+    return(test_file)
+  }
+})
+names(test_list) <- tfs_tissues
+test_list <- Filter(Negate(is.null), test_list)
+test_list
+```
+
+```{r}
+other_evaluations <- lapply(test_list, function(eachtest){
+    # read in the newx data : train or test
+    mat_dt <- data.table::fread(eachtest)
+    newx <- as.matrix(mat_dt[, -c(1:3)])
+    # you only need one : link
+    link_pred <- predict(test_model, newx, s = "lambda.1se", type = 'link') |> as.vector()
+    response_pred <- predict(test_model, newx, s = "lambda.1se", type = 'response') |> as.vector()
+    df <- mat_dt[, c(1:3)] |> as.data.frame()
+    df$TFPred_score <- link_pred
+    df$probability <- response_pred
+    colnames(df) <- c('locus', 'binding_class', 'binding_count', 'TFPred_score', 'probability')
+    roc_object <- pROC::roc(df$binding_class, df$probability)
+    return(pROC::auc(roc_object)[1])
+})  
+```
+
+```{r}
+
+# Add extra space to right of plot area; change clipping to figure
+par(mar=c(5.1, 4.1, 4.1, 15.1), xpd=TRUE)
+
+tt <- merge(
+  do.call('rbind', evaluations),
+  do.call('rbind', other_evaluations),
+  by='row.names'
+) 
+colnames(tt) <- c('tf_tissue', 'self_eval', 'other_eval')
+rownames(tt) <- tt[, 'tf_tissue']
+tt[, 'tf_tissue'] <- NULL
+tt <- tt %>% t()
+x <- barplot(tt, beside=T, 
+  ylab='AUC', xlab='TF-tissue model', col=adjustcolor(c('green', 'red'), alpha.f = 0.6), 
+  cex.lab=1, names.arg=colnames(tt))
+text(x, par("usr")[3] - 0.03, cex=0.9, labels = colnames(tt), xpd=F, srt=15)
+text(x, tt[, ] - 0.1, labels=round(tt[, ], 3),cex=0.8)
+mtext('AUCs of different models evaluated on respective test sets as well as on others', side = 3, line = 1, outer = FALSE, at = NA, adj = 0, padj = NA, cex = 1.5)
+legend('topright', 
+  legend=c('model self-evaluation on test set', 'CDX2_Colon model on other test sets'),
+  fill=adjustcolor(c('green', 'red'), alpha.f = 0.6),
+  inset=c(-0.25,0), bty = "n")
+```
+
+
+
+
+
+
+
+
+```{r}
+other_metrics <- lapply(other_evaluations, function(each_dt){
+  
+})
+
+names(other_metrics) <- names(other_evaluations)
+#evaluations <- do.call('cbind', evaluations)
+other_metrics
+```
+
+```{r}
+dt_types <- c('train_eval', 'test_eval')
+one_ex <- purrr::map(dt_types, function(each_dt){
+  data.table::fread(glue('{root_dir}/output/models_eval/cistrome_AR_Prostate_2023-08-10/aggByCollect_AR_Prostate.logistic.{each_dt}.txt.gz'))
+})
+names(one_ex) <- dt_types
+```
+
 
 
 AUROC curve

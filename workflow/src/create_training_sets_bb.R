@@ -22,19 +22,24 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list=option_list))
 
 
-# setwd('./projects/TFPred-snakemake')
+# setwd('/project2/haky/temi/projects/TFPred-snakemake')
 # opt <- list()
-# opt$transcription_factor <- 'AR'
-# opt$tissue <- 'Prostate' 
-# opt$predicted_motif_file <- 'data/homer_files/AR/merged_motif_file.txt' 
+# opt$transcription_factor <- 'FLI1'
+# opt$tissue <- 'none' 
+# opt$predicted_motif_file <- glue('data/homer_files/{opt$transcription_factor}/merged_motif_file.txt')
 # opt$bedfiles_directory <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor' 
-# opt$bedlinks_directory <- 'data/bed_links/AR_Prostate' 
-# opt$predictors_file <- 'data/predictor_files/AR_Prostate.predictors.txt' 
-# opt$ground_truth_file <- 'data/predictor_files/AR_Prostate.ground_truth.txt' 
-# opt$info_file <- 'data/predictor_files/AR_Prostate.info.txt.gz' 
+# opt$bedlinks_directory <- glue('data/bed_links/{opt$transcription_factor}){opt$tissue}')
+# opt$predictors_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.predictors.txt' 
+# opt$ground_truth_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.ground_truth.txt' 
+# opt$info_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.info.txt.gz' 
 # opt$cistrome_metadata_file <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt'
 # opt$train_split <- 0.8
 # opt$num_predictors <- 40000
+
+# # a hacky way to deal with the "none" vs 'None'
+# if(opt$tissue == 'none'){
+#     opt$tissue <- 'None'
+# }
 
 seed <- 2023
 set.seed(seed)
@@ -77,31 +82,42 @@ tf_motifs_granges <- GenomicRanges::reduce(tf_motifs_granges)
 tf_motifs_granges <- keepSeqlevels(tf_motifs_granges, paste0("chr", c(1:22, 'X')), pruning.mode="coarse")
 
 # === read in the cistrome metadata file and prepare the bed files
-mtdt <- data.table::fread(opt$cistrome_metadata_file)
-TF_data <- base::subset(x=mtdt, subset = (Factor == opt$transcription_factor) & (Tissue_type == opt$tissue))
-if( ! (nrow(TF_data) > 1 & ncol(TF_data) > 1)){
-    print(glue('INFO - No DCids found for {opt$transcription_factor} and {opt$tissue}'))
-    quit(status = 1)
-} else {
-    TF_files <- list.files(glue('{opt$bedfiles_directory}'), pattern=paste0('^', TF_data$DCid, collapse='_*|'), full.names=T)
+# mtdt <- data.table::fread(opt$cistrome_metadata_file)
+# ftissue <- gsub('-', ' ', opt$tissue)
+# TF_data <- base::subset(x=mtdt, subset = (Factor == opt$transcription_factor) & (Tissue_type == ftissue))
+# if( ! (nrow(TF_data) > 1 & ncol(TF_data) > 1)){
+#     print(glue('INFO - No DCids found for {opt$transcription_factor} and {opt$tissue}'))
+#     quit(status = 1)
+# } else {
+#     TF_files <- list.files(glue('{opt$bedfiles_directory}'), pattern=paste0('^', TF_data$DCid, collapse='_*|'), full.names=T)
+# }
+
+
+
+# out <- sapply(TF_files, function(each_file){
+#     output_file <- normalizePath(opt$bedlinks_directory)
+#     bname <- basename(each_file)
+#     output_file <- file.path(output_file, bname)
+#     if(!file.exists(output_file)){
+#         cmd <- glue('ln -s {each_file} {output_file}')
+#         system(cmd)
+#     }
+#     return(output_file)
+#     #print(base::normalizePath(output_dir))
+#     #to_ = glue("{normalizePath(output_dir)}/{basename(each_file)}")
+#     #base::file.symlink(from=each_file, to=to_)
+# })
+
+TF_files <- list.files(glue('{opt$bedlinks_directory}'), full.names=T)
+peak_files_paths <- TF_files[file.info(TF_files)$size != 0]
+
+# use just 1000
+if(length(peak_files_paths) > 600){
+    print(glue('INFO - There are {length(peak_files_paths)} bedfiles for for {opt$transcription_factor} and {opt$tissue}; using a random 600 instead'))
+    peak_files_paths <- sample(peak_files_paths, size=600, replace=FALSE)
 }
 
-out <- sapply(TF_files, function(each_file){
-    output_file <- normalizePath(opt$bedlinks_directory)
-    bname <- basename(each_file)
-    output_file <- file.path(output_file, bname)
-    if(!file.exists(output_file)){
-        cmd <- glue('ln -s {each_file} {output_file}')
-        system(cmd)
-    }
-    return(output_file)
-    #print(base::normalizePath(output_dir))
-    #to_ = glue("{normalizePath(output_dir)}/{basename(each_file)}")
-    #base::file.symlink(from=each_file, to=to_)
-})
-peak_files_paths <- out[file.info(out)$size != 0]
-
-pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths)[1:10], function(each_file_index){
+pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_index){
     each_file <- peak_files_paths[each_file_index]
     dt <- data.table::fread(each_file) %>%
         dplyr::distinct(V1, V2, .keep_all=T) %>%
@@ -181,13 +197,15 @@ cistrome_dr <- rbind(cistrome_dt_pos, cistrome_dt_neg) %>%
 print(glue('INFO - There are {nrow(cistrome_dr)} motifs to be trained and tested on after filtering'))
 print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(cistrome_dr$binding_class), collapse=' & ')} respectively"))
 
-
 tr_size <- ceiling(nrow(cistrome_dr) * opt$train_split)
 tr_indices <- sample(1:nrow(cistrome_dr), tr_size)
 cistrome_dr$split <- NA
 cistrome_dr$split[tr_indices] <- 'train'
 cistrome_dr$split[-tr_indices] <- 'test'
 cistrome_dr <- cistrome_dr[sample(nrow(cistrome_dr)), ]
+
+
+
 
 print(glue('INFO - Writing out files...'))
 data.table::fwrite(as.data.frame(cistrome_dr[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')

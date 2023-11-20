@@ -1,0 +1,12 @@
+assay,context
+AR,Prostate
+AR,Breast
+FOXA1,Breast
+FOXA1,Prostate
+CTCF,Liver
+GATA3,Breast
+GATA3,Blood
+POLR2A,Lung
+NFKB1,Colon
+NFKB2,Colon
+GATA2,Bone Marrow

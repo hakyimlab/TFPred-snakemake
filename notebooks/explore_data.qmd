@@ -1,0 +1,110 @@
+
+---
+
+
+
+---
+
+```{r}
+library(tidyverse)
+
+info_dt <- data.table::fread('/project2/haky/temi/projects/TFPred-snakemake/info/data_db.txt')
+cistrome_dt <- data.table::fread('/project2/haky/temi/projects/TFPred-snakemake/info/human_factor_full_QC.txt')
+
+```
+
+
+I want to train models for TFs that are not present in Enformer but present in homer and cistrome. 
+
+Here I will be using the top 20 based on how many cistrome peak files are available. 
+This list, luckily, includes `AR` and `PR` e.t.c.
+```{r}
+use_tfs <- info_dt %>%
+    dplyr::filter(homer_db == 1 & enformer_db == 0 & cistrome_db == 1) %>%
+    dplyr::arrange(desc(cistrome_files)) %>%
+    head(n=20)
+
+use_tfs
+```
+
+
+For instance `PR` progesterone receptor
+```{r}
+cistrome_dt %>%
+    dplyr::filter(Factor %in% use_tfs$TF) %>%
+    dplyr::group_by(Tissue_type) %>%
+    dplyr::summarize(cnt = n())
+```
+
+```{r}
+cistrome_dt %>%
+    dplyr::filter(Factor == 'FLI1')
+```
+
+
+```{r}
+dt <- cistrome_dt %>%
+    dplyr::filter(Factor %in% use_tfs$TF) %>%
+    dplyr::group_by(Tissue_type) %>%
+    dplyr::distinct(Factor, Tissue_type) %>%
+    dplyr::filter(Tissue_type != 'None')
+
+dt
+```
+
+```{r}
+colnames(dt) <- c('assay','context')
+print(dt, n=100)
+```
+
+
+```{r}
+data.table::fwrite(dt, file='/project2/haky/temi/projects/TFPred-snakemake/metadata/metadata.txt',row.names=F, quote=F)
+```
+
+
+```{python}
+2+2
+```
+
+
+```{python}
+import os, sys
+print_progress = True
+def find_motif_files(tf, homer_path):
+    alltfs = [f for f in os.listdir(homer_path) if os.path.isfile(os.path.join(homer_path, f))]
+    pattern = f'\w*-{tf}\.motif$|^{tf}.motif$|{tf}-\w*\.motif$|^{tf}\.\w+\.motif$'
+    output = [os.path.join(homer_path, i) for i in alltfs if re.match(pattern, i)]
+    return(output)
+
+def link_homer_motifs(TF, tissue, from_db, to_db):
+    if ' ' in tissue:
+        tissue = tissue.replace(' ', '-')
+    if not os.path.isdir(to_db):
+        os.makedirs(to_db)
+    files_to_link = find_motif_files(TF.lower(), from_db)
+    if len(files_to_link) >= 1:
+        motif_files_dict = {}
+        if print_progress:
+            print(f'INFO - Found {len(files_to_link)} motif files to be linked for {TF}')
+        for f in files_to_link:
+            dst_file = os.path.join(to_db, os.path.basename(f))
+            if not os.path.isfile(dst_file):
+                os.symlink(f, dst_file)
+            if not f'{TF}_{tissue}' in motif_files_dict.keys():
+                motif_files_dict[f'{TF}_{tissue}'] = [dst_file]
+            else:
+                motif_files_dict[f'{TF}_{tissue}'].append(dst_file)
+    elif len(files_to_link) == 0:
+        if print_progress:
+            print(f'INFO - Found no motif files to be linked for {TF}')
+        return(None)
+    return(motif_files_dict) 
+
+link_homer_motifs('FLI1', 'None', '/project2/haky/temi/software/homer/data/knownTFs/motifs', '.')
+```
+
+
+```{python}
+link_homer_motifs('FLI1', 'None', '/project2/haky/Data/TFXcan/cistrome/raw/human_factor', '.')
+```

@@ -1,0 +1,31 @@
+{
+    "data": {
+    "values": [
+      {"rule": "aggregate_predictions", "runtime": 173.83757710456848},
+      {"rule": "aggregate_predictions", "runtime": 1024.5685074329376},
+      {"rule": "aggregate_predictions", "runtime": 129.9632065296173},
+      {"rule": "create_enformer_configuration", "runtime": 9.60063910484314},
+      {"rule": "create_enformer_configuration", "runtime": 8.6219961643219},
+      {"rule": "create_enformer_configuration", "runtime": 10.444540977478027},
+      {"rule": "create_training_set", "runtime": 29.963176488876343},
+      {"rule": "create_training_set", "runtime": 50.680208921432495},
+      {"rule": "create_training_set", "runtime": 31.186379432678223},
+      {"rule": "evaluate_TFPred", "runtime": 9.610273838043213},
+      {"rule": "evaluate_TFPred", "runtime": 63.995518922805786},
+      {"rule": "evaluate_TFPred", "runtime": 9.297762155532837},
+      {"rule": "find_homer_motifs", "runtime": 713.7071092128754},
+      {"rule": "find_homer_motifs", "runtime": 911.1279511451721},
+      {"rule": "merge_homer_motifs", "runtime": 7.905480623245239},
+      {"rule": "merge_homer_motifs", "runtime": 8.639663219451904},
+      {"rule": "predict_with_enformer", "runtime": 785.5414357185364},
+      {"rule": "predict_with_enformer", "runtime": 5839.684125423431},
+      {"rule": "predict_with_enformer", "runtime": 400.4176676273346},
+      {"rule": "prepare_training_data", "runtime": 30.3630793094635},
+      {"rule": "prepare_training_data", "runtime": 235.64027976989746},
+      {"rule": "prepare_training_data", "runtime": 21.86264133453369},
+      {"rule": "train_TFPred_weights", "runtime": 31.32181406021118},
+      {"rule": "train_TFPred_weights", "runtime": 698.7708134651184},
+      {"rule": "train_TFPred_weights", "runtime": 22.006343841552734}
+    ]
+  }
+}

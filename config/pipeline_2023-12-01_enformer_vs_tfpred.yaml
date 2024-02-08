@@ -4,9 +4,10 @@
 cistrome_data_dir: '/project2/haky/Data/TFXcan/cistrome/raw/human_factor' # where are the cistrome bed files
 pipeline_dir: '/project2/haky/temi/projects/TFPred-snakemake'
 dataset: 'cistrome' # change this variable name 
-date: "2023-11-14" #"2023-11-19" #"2023-11-14"
+date: "2023-12-01" #"2023-11-19" #"2023-11-14"
 TF_table: '/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt' # where is the cistrome metadata file
-metadata: "/project2/haky/temi/projects/TFPred-snakemake/metadata/metadata.txt"
+metadata: "/project2/haky/temi/projects/TFPred-snakemake/metadata/metadata_2023-12-01_enformer_vs_tfpred.txt"
+scratch_dir: "/scratch/midway3/temi"
 delete_enformer_outputs: True # should you delete enformer predictions after aggregating them? Saves disk space
 use_homer_motifs: True
 

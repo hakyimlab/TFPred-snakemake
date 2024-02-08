@@ -108,3 +108,49 @@ link_homer_motifs('FLI1', 'None', '/project2/haky/temi/software/homer/data/known
 ```{python}
 link_homer_motifs('FLI1', 'None', '/project2/haky/Data/TFXcan/cistrome/raw/human_factor', '.')
 ```
+
+
+### Analyse runtime stats
+
+```{r}
+library(jsonlite)
+```
+
+```{r}
+myData <- fromJSON("/project2/haky/temi/projects/TFPred-snakemake/misc/runtime_stats-2023-11-14.json") %>%
+    as.data.frame()
+colnames(myData) <- c('rule', 'runtime')
+
+```
+
+```{r}
+rule_order <- c('find_homer_motifs', 'merge_homer_motifs', 'create_training_set', 'create_enformer_configuration', 'predict_with_enformer', 'aggregate_predictions', 'prepare_training_data', 'train_TFPred_weights', 'evaluate_TFPred')
+
+myData$rule <- factor(myData$rule, levels = rule_order)
+```
+
+```{r}
+myData %>%
+    dplyr::group_by(rule) %>%
+    ggplot(aes(x=runtime, y=rule)) +
+    geom_boxplot() +
+    geom_jitter() +
+    theme_minimal() +
+    labs(x='runtime [s]') +
+    scale_x_continuous(labels = seq(0, 6000, by=500), breaks = seq(0, 6000, by=500))
+```
+
+
+```{r}
+myData %>%
+    dplyr::group_by(rule) %>%
+    dplyr::summarize(avg_runtime = mean(runtime), sd_runtime = sd(runtime), med_runtime=median(runtime), min_runtime = min(runtime), max_runtime = max(runtime))
+```
+
+
+```{r}
+myData %>%
+    dplyr::group_by(rule) %>%
+    dplyr::summarize(avg_runtime = mean(runtime)) %>%
+    pull(avg_runtime) %>% sum()
+```

@@ -21,7 +21,7 @@ HOMERFILES_DIR = os.path.join(DATA_DIR, 'homer_files')
 PREDICTORS_DIR = os.path.join(DATA_DIR, 'predictor_files')
 PREDICTION_PARAMS_DIR = os.path.join(DATA_DIR, 'prediction_parameters')
 METADATA_DIR = 'metadata'
-PREDICTIONS_DIR = os.path.join(DATA_DIR, 'predictions_folder')
+PREDICTIONS_DIR = os.path.join(config['scratch_dir'], 'predictions_folder') if os.path.exists(config['scratch_dir']) else os.path.join(DATA_DIR, 'predictions_folder')
 AGGREGATION_DIR = os.path.join(DATA_DIR, 'aggregation_folder')
 MODELS_DIR = 'output/models'
 MODELS_EVAL_DIR = 'output/models_eval'
@@ -34,6 +34,19 @@ for row in metadata_dt.itertuples():
     #print(row)
     r = [row.assay, row.context]
     details.append(r)
+
+
+def get_mem_mb_allocations(wildcards, attempt):
+    if attempt > 5:
+        return(attempt * 10000)
+    else:
+        return(attempt * 10000)
+
+def get_cluster_allocation(wildcards, attempt):
+    if attempt > 5:
+        return('bigmem')
+    else:
+        return('caslake')
 
 
 #print(details)
@@ -86,8 +99,8 @@ tissue_list = [d[1].replace(' ', '-') for d in valid_TFs]
 #     input: rules.create_training_set.output.f1
 #     output:
 
-report: 
-    f"reports/workflow_{config['date']}.rst"
+# report: 
+#     f"reports/workflow_{config['date']}.rst"
 
 rule all:
     input:
@@ -169,7 +182,7 @@ rule create_training_set:
     resources:
         partition = "caslake", #if params.nfiles > 200 else "caslake",
         #attempt: attempt * 100,
-        mem_cpu = lambda wildcards,  attempt: attempt * 8,
+        mem_cpu = lambda wildcards, attempt: attempt * 8,
         nodes = 1,
         #load= 50 #if resources.partition == 'bigmem' else 1
     threads: 8
@@ -183,14 +196,14 @@ rule create_enformer_configuration:
     output: os.path.join(PREDICTION_PARAMS_DIR, f'enformer_parameters_{config["dataset"]}_{{tf}}_{{tissue}}.json')
     message: "working on {wildcards}"
     resources:
-        partition="beagle3"
+        partition="caslake"
     params:
         rscript = config['rscript'],
         bdirectives = config['enformer']['base_directives'],
         dset = config['dataset'],
         model = config['enformer']['model'],
         fasta_file = config['genome']['fasta'],
-        pdir = DATA_DIR,
+        pdir = config['scratch_dir'], #DATA_DIR,
         ddate = config['date'],
         jobname = '{tf}_{tissue}'
     shell:
@@ -279,10 +292,11 @@ rule train_TFPred_weights:
         nfolds=5,
         basename=os.path.join(MODELS_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}')
     resources:
-        mem_mb=100000,
-        partition="bigmem",
-        cpu_task=8,
-        mem_cpu=8,
+        #mem_mb=100000,
+        mem_mb = get_mem_mb_allocations,
+        partition = get_cluster_allocation,
+        cpu_task=12,
+        mem_cpu=12,
         load=50
     shell:
         """

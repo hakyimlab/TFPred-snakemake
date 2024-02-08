@@ -20,6 +20,7 @@ library(tidyverse)
 library(ROCR)
 library(glmnet)
 library(pROC)
+library(rjson)
 ```
 
 
@@ -47,8 +48,13 @@ evaluations <- lapply(tfs_tissues, function(each_tft){
   print(one_ex)
   if(file.exists(one_ex)){
     one_ex <- data.table::fread(one_ex)
-    roc_object <- pROC::roc(one_ex$binding_class, one_ex$probability)
-    return(pROC::auc(roc_object)[1])
+    tryCatch({
+      roc_object <- pROC::roc(one_ex$binding_class, one_ex$probability)
+      return(pROC::auc(roc_object)[1])
+    }, 
+    error = function(con){
+      return(NULL)
+    })
   }
 })
 
@@ -59,7 +65,16 @@ evaluations
 ```
 
 ```{r}
-do.call('rbind', evaluations)
+do.call('rbind', evaluations) %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column('tf_tissue') %>%
+  dplyr::rename(AUC=V1) %>%
+  dplyr::arrange(desc(AUC)) %>%
+  dplyr::mutate(tf_tissue = factor(tf_tissue, levels=tf_tissue)) %>%
+  ggplot(aes(x=tf_tissue, y=AUC)) +
+  geom_point() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 8, angle = 90))
 ```
 
 ### Predict one with many
@@ -221,3 +236,5 @@ legend(0.6, 0.6, legend=c(paste("train PR:", auc_train), paste("test PR", auc_te
 # mtext('AUCs of different models evaluated on respective test sets', side = 3, line = 1, outer = FALSE, at = NA, adj = 0, padj = NA, cex = 1.5)
 
 ```
+
+

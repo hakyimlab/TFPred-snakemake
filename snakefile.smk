@@ -182,7 +182,7 @@ rule create_training_set:
     resources:
         partition = "caslake", #if params.nfiles > 200 else "caslake",
         #attempt: attempt * 100,
-        mem_cpu = lambda wildcards, attempt: attempt * 8,
+        mem_cpu = 16, #lambda wildcards, attempt: attempt * 8,
         nodes = 1,
         #load= 50 #if resources.partition == 'bigmem' else 1
     threads: 8

@@ -21,15 +21,24 @@ option_list <- list(
 
 opt <- parse_args(OptionParser(option_list=option_list))
 
+seed <- 2023
+set.seed(seed)
+
+library(glue)
+library(data.table)
+library(tidyverse)
+library(GenomicRanges)
+library(plyranges)
+
 
 # setwd('/project2/haky/temi/projects/TFPred-snakemake')
 # opt <- list()
-# opt$transcription_factor <- 'FLI1'
-# opt$tissue <- 'none' 
+# opt$transcription_factor <- 'CTCF'
+# opt$tissue <- 'Retina' 
 # opt$predicted_motif_file <- glue('data/homer_files/{opt$transcription_factor}/merged_motif_file.txt')
 # opt$bedfiles_directory <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor' 
-# opt$bedlinks_directory <- glue('data/bed_links/{opt$transcription_factor}){opt$tissue}')
-# opt$predictors_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.predictors.txt' 
+# opt$bedlinks_directory <- glue('data/bed_links/{opt$transcription_factor}_{opt$tissue}')
+# opt$predictors_file <- 'data/predictor_files/{opt$transcription_factor}_{opt$tissue}.predictors.txt' 
 # opt$ground_truth_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.ground_truth.txt' 
 # opt$info_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.info.txt.gz' 
 # opt$cistrome_metadata_file <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt'
@@ -40,16 +49,6 @@ opt <- parse_args(OptionParser(option_list=option_list))
 # if(opt$tissue == 'none'){
 #     opt$tissue <- 'None'
 # }
-
-seed <- 2023
-set.seed(seed)
-
-library(glue)
-library(data.table)
-library(tidyverse)
-library(GenomicRanges)
-library(plyranges)
-
 
 if(!file.exists(opt$cistrome_metadata_file)){
     print(glue('INFO - Cistrome metadata file cannnot be found at {dirname(opt$cistrome_metadata_file)}'))
@@ -163,10 +162,37 @@ dt_merged <- pmi_dt_list %>%
                     mean_intensity = rowMeans(dplyr::pick(starts_with('intensity_'))),
                     binding_class = ifelse(binding_counts > 0, 1, 0),
                     chr = as.character(chr)) %>%
-    dplyr::select(chr, start, end, binding_class, binding_counts, mean_intensity) %>%
-    dplyr::sample_frac(size=1)
+    dplyr::select(chr, start, end, binding_class, binding_counts, mean_intensity)
 
 print(glue('INFO - Time to merge files: {as.vector(proc.time() - ptm)[0]} seconds'))
+
+# create probility distribution for the binding counts
+dt_pos <- dt_merged[dt_merged$binding_counts > 0, ]
+ss <- sort(unique(dt_pos$binding_counts))
+tt <- ss/sum(ss)
+names(tt) <- ss
+dt_pos <- dt_pos %>%
+    mutate(proba = tt[as.character(binding_counts)])
+dt_neg <- dt_merged[dt_merged$binding_counts == 0, ]
+dt_neg$proba <- 0
+# sample(1:10, size=10, replace=F, prob = runif(10, min=0, max=1))
+
+
+# filtering === use the num of positives to determine the number of negatives if total is less than 40000
+if(nrow(dt_pos) < (opt$num_predictors/2)){
+    #npositives <- ceiling(nrow(dt_merged)/2)
+    npositives <- nrow(dt_pos)
+    nnegatives <- npositives
+} else {
+    npositives <- ceiling(opt$num_predictors/2)
+    nnegatives <- npositives
+}
+
+dt_pos <- dt_pos[with(dt_pos, sample(seq_along(binding_counts), size=npositives, replace=F, prob = proba)), ] %>%
+    dplyr::select(-proba)
+dt_neg <- dt_neg[with(dt_neg, sample(seq_along(binding_counts), size=nnegatives, replace=F)), ] %>%
+    dplyr::select(-proba)
+
 
 data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
 
@@ -176,37 +202,31 @@ print(glue('INFO - There are {nrow(dt_merged)} motifs to be trained and tested o
 print(glue("INFO - Distribution of negatives and positives before filtering: {paste0(table(dt_merged$binding_class), collapse=' & ')} respectively"))
 
 
-# filtering ===
-if(nrow(dt_merged) < opt$num_predictors){
-    npositives <- ceiling(nrow(dt_merged)/2)
-} else {
-    npositives <- ceiling(opt$num_predictors/2)
-}
+### merge and split into train and test
 
-cistrome_dt_pos <- dt_merged[dt_merged$binding_counts > 0, ] %>%
-    dplyr::slice_sample(n=npositives)
-
-num_negs <- 1
-cistrome_dt_neg <- dplyr::slice_sample(dt_merged[dt_merged$binding_counts == 0, ], n=nrow(cistrome_dt_pos) * num_negs)
-
-cistrome_dr <- rbind(cistrome_dt_pos, cistrome_dt_neg) %>%
+dt <- rbind(dt_pos, dt_neg) %>% 
+    as.data.frame() %>%
     tidyr::unite('locus', c(chr, start, end), remove=T) %>% 
     as.data.table() %>%
     dplyr::sample_frac(size=1)
 
-print(glue('INFO - There are {nrow(cistrome_dr)} motifs to be trained and tested on after filtering'))
-print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(cistrome_dr$binding_class), collapse=' & ')} respectively"))
+# cistrome_dt_pos <- dt[dt$binding_counts > 0, ] %>%
+#     dplyr::slice_sample(n=npositives)
 
-tr_size <- ceiling(nrow(cistrome_dr) * opt$train_split)
-tr_indices <- sample(1:nrow(cistrome_dr), tr_size)
-cistrome_dr$split <- NA
-cistrome_dr$split[tr_indices] <- 'train'
-cistrome_dr$split[-tr_indices] <- 'test'
-cistrome_dr <- cistrome_dr[sample(nrow(cistrome_dr)), ]
+# num_negs <- 1
+# cistrome_dt_neg <- dplyr::slice_sample(dt_neg, n=nrow(cistrome_dt_pos) * num_negs)
 
+    
+print(glue('INFO - There are {nrow(dt)} motifs to be trained and tested on after filtering'))
+print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(dt$binding_class), collapse=' & ')} respectively"))
 
-
+tr_size <- ceiling(nrow(dt) * opt$train_split)
+tr_indices <- sample(seq_len(nrow(dt)), tr_size)
+dt$split <- NA
+dt$split[tr_indices] <- 'train'
+dt$split[-tr_indices] <- 'test'
+dt <- dt[sample(nrow(dt)), ]
 
 print(glue('INFO - Writing out files...'))
-data.table::fwrite(as.data.frame(cistrome_dr[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')
-data.table::fwrite(cistrome_dr, glue('{opt$ground_truth_file}'), row.names=F, quote=F, col.names=T, sep='\t')
+data.table::fwrite(as.data.frame(dt[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')
+data.table::fwrite(dt, glue('{opt$ground_truth_file}'), row.names=F, quote=F, col.names=T, sep='\t')

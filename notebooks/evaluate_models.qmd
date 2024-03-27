@@ -6,10 +6,7 @@ date-modified: 'Tue Aug 15 2023'
 fig-format: svg
 ---
 
-```{r import libraries}
-#rm(list=ls())
-root_dir <- '/project2/haky/temi/projects/TFPred-snakemake'
-```
+
 
 ```{r message=F, warning=F}
 library(glue)
@@ -22,7 +19,10 @@ library(glmnet)
 library(pROC)
 library(rjson)
 ```
-
+```{r import libraries}
+#rm(list=ls())
+root_dir <- '/project2/haky/temi/projects/TFPred-snakemake'
+```
 
 ```{r}
  # /project2/haky/temi/projects/TFPred-snakemake/metadata
@@ -39,6 +39,14 @@ tfs <- mtdt$assay
 tissues <- mtdt$context %>% gsub(' ', '-', .)
 tfs_tissues <- paste(tfs, tissues, sep='_')
 tfs_tissues
+```
+
+```{r}
+rundate <- '2023-11-14'
+one_ex <- glue('/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_{tfs_tissues}_{rundate}/aggByCollect_{tfs_tissues}.logistic.test_eval.txt.gz') %>% data.table::fread()
+
+roc_object <- pROC::roc(one_ex$binding_class, one_ex$TFPred_score)
+pROC::auc(roc_object)[1]
 ```
 
 ```{r}
@@ -142,11 +150,6 @@ legend('topright',
   fill=adjustcolor(c('green', 'red'), alpha.f = 0.6),
   inset=c(-0.25,0), bty = "n")
 ```
-
-
-
-
-
 
 
 

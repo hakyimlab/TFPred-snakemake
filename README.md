@@ -41,6 +41,10 @@ Fri Mar 22 2024
 
 - [X] Changes have been made to the way peaks are selected as bound or unbound. Unbound peaks (where there is no motif in a peak) are now selected randomly. For bound peaks:
 
-    1. count the number of bedfiles (experiments) with these peaks
-    2. create a probability distribution of the number of experiments that have a peak i.e. larger counts should have higher probabilities of being sub-sampled
+    1. count the number of bedfiles (experiments) with these peaks i.e. binding counts
+    2. assign probabilities to each unique binding count that have a peak i.e. larger counts should have higher probabilities of being sub-sampled, and lower counts should have lower probabilities
     3. select approprately
+
+Tues Mar 26 2024
+
+- [X] Intersection of peaks is now calculated using `bedtools intersect`. This is faster than using code in R that calculates the intersection of peaks.

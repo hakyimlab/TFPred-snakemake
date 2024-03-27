@@ -1,0 +1,2471 @@
+assay,context
+BTAF1,Cervix
+GAPDH,Cervix
+EGR1,Bone Marrow
+TCF4,Colon
+TERF1,Skin
+TERF2,Skin
+AR,Prostate
+PHF8,Embryonic Kidney
+SMAD3,Embryo
+BRD7,Skin
+TP53,Skin
+CDX2,Colon
+GATA6,Colon
+HNF4A,Colon
+RUNX1,Blood
+NOTCH1,Blood
+RBPJ,Blood
+ZNF143,Blood
+IGF1R,Skin
+ESR1,Endometrium
+ETV1,Stomach
+E2F4,Blood
+VDR,Blood
+FOS,Blood
+JUND,Blood
+MAX,Blood
+MYC,Blood
+NR2C2,Blood
+POLR2A,Blood
+POLR3A,Blood
+ZNF274,Blood
+CTCF,Embryo
+NANOG,Embryo
+PRDM14,Embryo
+EOMES,Embryo
+EP300,Embryo
+EZH2,Embryo
+FOXH1,Embryo
+FOXP1,Embryo
+RNF2,Embryo
+SMAD2/3,Embryo
+SMAD4,Embryo
+AFF4,Colon
+ELL2,Colon
+POLR2A,Colon
+POLR3G,Embryonic Kidney
+ELK4,Embryonic Kidney
+TRIM28,Embryonic Kidney
+POLR2A,Embryonic Kidney
+BDP1,Cervix
+BRF1,Cervix
+BRF2,Cervix
+CTCF,Cervix
+DDX5,Cervix
+E2F1,Cervix
+ELK1,Cervix
+ELK4,Cervix
+GATAD1,Cervix
+LRWD1,Cervix
+GLYR1,Cervix
+TRRAP,Cervix
+C17orf49,Cervix
+CCDC101,Cervix
+GTF3C1,Cervix
+H2AZ,Cervix
+NR2C2,Cervix
+NR3C1,Cervix
+PHF8,Cervix
+POLR2A,Cervix
+POLR3A,Cervix
+POLR3G,Cervix
+POU2F1,Cervix
+RELA,Cervix
+SMARCA4,Cervix
+SMARCB1,Cervix
+SMARCC1,Cervix
+SMARCC2,Cervix
+SMC4,Cervix
+STAT1,Cervix
+ZNF274,Cervix
+CEBPA,Liver
+CTCF,Liver
+HNF4A,Liver
+HNF4G,Liver
+NR2C2,Liver
+RAD21,Liver
+STAG1,Liver
+ZNF274,Liver
+PHF8,Foreskin
+FOS,Umbilical Vein
+GATA2,Umbilical Vein
+SND1,Blood
+BDP1,Lung
+BRF1,Lung
+POLR3D,Lung
+RB1,Lung
+RBL2,Lung
+SNAPC2,Lung
+ESR1,Uterus
+CREBBP,Blood
+CTCF,Blood
+ETS1,Blood
+POLR3G,Blood
+TAL1,Blood
+BCL6,Bone Marrow
+E2F6,Bone Marrow
+FOS,Bone Marrow
+GATA1,Bone Marrow
+GATA2,Bone Marrow
+JUN,Bone Marrow
+L3MBTL2,Bone Marrow
+MYC,Bone Marrow
+NFYA,Bone Marrow
+NFYB,Bone Marrow
+NR2C2,Bone Marrow
+POLR3A,Bone Marrow
+PRAME,Bone Marrow
+RUNX1,Bone Marrow
+SETDB1,Bone Marrow
+TRIM28,Bone Marrow
+ZNF263,Bone Marrow
+ZNF274,Bone Marrow
+SOX2,Brain
+EP300,Prostate
+ERG,Prostate
+FOXA1,Prostate
+H2AZ,Prostate
+MED12,Prostate
+NR3C1,Prostate
+POLR2A,Prostate
+CTCF,Breast
+E2F1,Breast
+EP300,Breast
+ESR1,Breast
+FOS,Breast
+FOXA1,Breast
+GATA3,Breast
+POLR2A,Breast
+JUN,Breast
+RAD21,Breast
+STAG1,Breast
+TDRD3,Breast
+TFAP2A,Breast
+TFAP2C,Breast
+TRIM24,Breast
+PML,Bone Marrow
+PML,Blood
+RARA,Blood
+RXRG,Blood
+EBNA1BP2,Blood
+PAX3,Muscle
+PHF8,Bone Marrow
+ZNF711,Bone Marrow
+ESR1,Mammary Gland
+FOXA1,Mammary Gland
+CREBBP,Brain
+EP300,Brain
+POLR3G,Foreskin
+ESR1,Bone
+TRIM28,Bone
+TP53,Bone
+RARA,Bone Marrow
+RXRG,Bone Marrow
+ATF7IP,Skin
+SETDB1,Skin
+CEBPA,Adipose
+CTCF,Bone Marrow
+CTCF,Pancreatic Islet
+CTCF,Adipose
+E2F4,Adipose
+EP300,Blood
+FLI1,Cord blood
+FOXA2,Liver
+GATA1,Cord blood
+GATA2,Cord blood
+H2AZ,Blood
+H2AZ,Bone Marrow
+HDAC1,Blood
+HDAC2,Blood
+HDAC3,Blood
+HDAC6,Blood
+HSF1,Adipose
+IKZF1,Cord blood
+MEIS1,Cord blood
+KAT8,Blood
+KAT2B,Blood
+POLR2A,Cord blood
+POLR2A,Mammary Gland
+POLR2A,Bone Marrow
+PPARG,Adipose
+RUNX1,Cord blood
+SMARCA4,Bone Marrow
+SMARCA4,Blood
+SPI1,Cord blood
+STAT1,Blood
+STAT4,Blood
+STAT5A,Blood
+STAT5B,Blood
+STAT6,Cord blood
+TAL1,Bone Marrow
+TAL1,Cord blood
+KAT5,Blood
+TP63,Skin
+POU5F1,Embryo
+KLF4,Embryo
+MYC,Embryo
+TAFII,Embryo
+SOX2,Embryo
+RELA,Blood
+ATRX,Blood
+GABPA,Blood
+HMGN1,Blood
+YY1,Blood
+SMARCA4,Embryo
+SMAD2,Embryo
+RUNX2,Prostate
+RELA,Lung
+SP1,Colon
+FLI1,Umbilical Vein
+VDR,Colon
+RXRA,Colon
+BCAT1,Colon
+CEBPB,Colon
+EPAS1,Kidney
+ARNT,Kidney
+CREB1,Mammary Gland
+RAC3,Mammary Gland
+CARM1,Mammary Gland
+POLR2M,Cervix
+GATA1,Blood
+EP300,Heart
+POLR2A,Heart
+POLR2M,Lung
+POLR2A,Lung
+NKX3-1,Prostate
+H2AZ,Urinary Bladder
+E2F7,Cervix
+DUX4,Muscle
+TP53,Lung
+SUZ12,Embryo
+PPARG,Blood
+RXRA,Blood
+SPI1,Blood
+LIN9,Cervix
+MYBL2,Cervix
+ETV4,Prostate
+JUND,Prostate
+ETS1,Prostate
+GABPA,Prostate
+ETV1,Prostate
+TAT,Blood
+SUPT20H,Cervix
+SUPT20H,Blood
+H2AZ,Embryo
+H2AZ,Lung
+TP73,Bone
+SRC,Mammary Gland
+BCLAF1,Blood
+ATF3,Liver
+BHLHE40,Liver
+FOXA1,Liver
+HEY1,Liver
+BCL3,Bone Marrow
+HDAC8,Bone Marrow
+JUNB,Bone Marrow
+JUND,Bone Marrow
+NR4A1,Bone Marrow
+HEY1,Bone Marrow
+CTCF,Umbilical Vein
+CTCF,Skin
+POLR2A,Embryo
+MYC,Cervix
+MYC,Liver
+POLR2A,Liver
+MYC,Umbilical Vein
+POLR2A,Umbilical Vein
+MYC,Skin
+POLR2A,Skin
+NR1H2,Blood
+GATA2,Blood
+SMAD1,Blood
+TCF7L2,Blood
+SMAD1,Bone Marrow
+TCF7L2,Bone Marrow
+CEBPA,Pleura
+SMAD1,Pleura
+TCF7L2,Pleura
+CEBPA,Bone Marrow
+KAT7,Colon
+HNRNPL,Cervix
+VEZF1,Cervix
+RNF2,Embryonic Kidney
+RYBP,Embryonic Kidney
+PCGF1,Embryonic Kidney
+PCGF2,Embryonic Kidney
+BMI1,Embryonic Kidney
+PCGF5,Embryonic Kidney
+PCGF6,Embryonic Kidney
+CBX2,Embryonic Kidney
+GPS2,Embryonic Kidney
+TBL1X,Embryonic Kidney
+NCOR1,Embryonic Kidney
+HDAC1,Prostate
+HDAC2,Prostate
+HDAC3,Prostate
+EZH2,Prostate
+STAG1,Embryo
+CBX2,Bone Marrow
+CBX8,Bone Marrow
+CHD1,Bone Marrow
+CHD7,Bone Marrow
+EZH2,Bone Marrow
+HDAC1,Bone Marrow
+HDAC2,Bone Marrow
+HDAC6,Bone Marrow
+CBX3,Bone Marrow
+KDM5C,Bone Marrow
+CREBBP,Bone Marrow
+KDM1A,Bone Marrow
+CHD3,Bone Marrow
+NCOR1,Bone Marrow
+WHSC1,Bone Marrow
+EP300,Bone Marrow
+KAT2B,Bone Marrow
+KDM5B,Bone Marrow
+RBBP5,Bone Marrow
+REST,Bone Marrow
+RNF2,Bone Marrow
+SAP30,Bone Marrow
+SIRT6,Bone Marrow
+SUZ12,Bone Marrow
+CHD1,Embryo
+CHD7,Embryo
+HDAC2,Embryo
+HDAC6,Embryo
+KDM5A,Embryo
+KDM5B,Embryo
+KDM5C,Embryo
+KDM4A,Embryo
+PHF8,Embryo
+RBBP5,Embryo
+SAP30,Embryo
+SIRT6,Embryo
+NFE2L2,Blood
+TCF7L1,Blood
+GATA3,Blood
+TCF12,Blood
+HCFC1,Cervix
+ZNF143,Cervix
+THAP1,Cervix
+GABPA,Cervix
+YY1,Cervix
+POLR2B,Cervix
+CBX3,Colon
+SMC1A,Blood
+NIPBL,Blood
+HIF1A,Umbilical Vein
+FOXK1,Cervix
+TFAP2C,Mammary Gland
+DNMT3B,Embryo
+DNMT1,Embryo
+DNMT3A,Embryo
+HOTAIR,Mammary Gland
+TERC,Cervix
+FAIRE,Mammary Gland
+FOXM1,Bone
+RELA,Umbilical Vein
+NUP98,Lung
+NUP98,Embryo
+FAIRE,Embryo
+ARNT,Breast
+AHR,Breast
+CDK9,Blood
+MED1,Blood
+MED1,Lung
+MYC,Brain
+MAX,Lung
+MYC,Lung
+MAX,Brain
+MED1,Brain
+NR5A2,Breast
+NFE2,Bone Marrow
+TAL1,Fetal Liver
+RAD21,Fetal Liver
+NFE2,Fetal Liver
+POLR2A,Fetal Liver
+RAD21,Bone Marrow
+CTCF,Fetal Liver
+ELF5,Mammary Gland
+IRF5,Blood
+IRF2,Bone Marrow
+GATA1,Fetal Liver
+PR,Mammary Gland
+FAIRE,Skin
+FAIRE,Blood
+FAIRE,Bone Marrow
+FAIRE,Cervix
+FAIRE,Liver
+FAIRE,Umbilical Vein
+SOX2,Skin
+POU5F1,Skin
+KLF4,Skin
+H2AZ,Breast
+SF1,Adrenal Gland
+SMARCB1,Embryo
+GRHL3,Skin
+WDR5,Skin
+BRD4,Blood
+TET3,Embryonic Kidney
+TET2,Embryonic Kidney
+OGT,Embryonic Kidney
+LMNB1,Lung
+SMC1A,Embryo
+SMC3,Embryo
+CDK8,Colon
+STAT3,Breast
+MYC,Embryonic Kidney
+SUZ12,Prostate
+ESR1,Colon
+FOXO3,Colon
+SUMO1,Cervix
+MECP2,Lung
+MECP2,Colon
+LMNA,Forearm Skin Biopsy
+PAX5,Blood
+NFKBIA,Foreskin
+GCG,Embryonic Kidney
+EHMT2,Embryonic Kidney
+TP63,Foreskin
+NR3C1,Blood
+FOXM1,Breast
+SPDEF,Breast
+HSF1,Colon
+DOT1L,Embryo
+HSF1,Breast
+SNAPC4,Breast
+SNAPC1,Breast
+BRDU,Cervix
+ORC1,Cervix
+ERG,Bone Marrow
+RUNX1T1,Blood
+FLI1,Bone Marrow
+FAIRE,Pancreatic Islet
+GRHL2,Bronchia
+CTCF,Lung
+NKX2-1,Lung
+FOXA1,Lung
+TAL1,Lymph Node
+LMO2,Blood
+NCOR2,Bone Marrow
+BCOR,Bone Marrow
+SFMBT1,Cervix
+RCOR1,Cervix
+KDM1A,Cervix
+REST,Adrenal Gland
+NR2F2,Cranial
+FAIRE,Cranial
+NR2F1,Cranial
+EP300,Cranial
+EZH2,Lymph Node
+PBX1,Mammary Gland
+SUMO1,Lung
+UBE2I,Lung
+SUMO2,Lung
+PIAS4,Lung
+FAIRE,Breast
+REPIN1,Prostate
+BRD3,Embryonic Kidney
+CBX5,Embryonic Kidney
+BRD4,Embryonic Kidney
+BRD2,Embryonic Kidney
+CBX1,Embryonic Kidney
+HIST1H1B,Embryo
+HIST1H1B,Lung
+HIRA,Cervix
+RB1,Cervix
+SPI1,Cervix
+MYOD1,Muscle
+YY1,Embryo
+CTBP1,Breast
+FANCD2,Embryonic Kidney
+DCP1A,Embryonic Kidney
+XRN2,Embryonic Kidney
+TTF2,Embryonic Kidney
+DCP1A,Cervix
+TTF2,Cervix
+XRN2,Cervix
+FLI1,Blood
+ERG,Blood
+LYL1,Blood
+BRD4,Embryo
+PAF1,Lung
+CHD1,Lung
+PTPN11,Lung
+SNAPC1,Lung
+POLR2B,Lung
+SNAPC4,Lung
+BRF2,Lung
+GTF2B,Lung
+SNAPC5,Lung
+LMO1,Blood
+CTCF,Mammary Gland
+CTCF,Skeletal Muscle
+YBX1,Embryonic Kidney
+ZNF76,Embryonic Kidney
+ZNF143,Embryonic Kidney
+ZNF143,Bone Marrow
+GREB1,Breast
+NR2F2,Breast
+E2F4,Breast
+TLE3,Breast
+RXRA,Breast
+KLF4,Breast
+TCF7L2,Mammary Gland
+MYC,Mammary Gland
+AR,Mammary Gland
+EP300,Lung
+TFAP2A,Cranial
+FLI1,Pleura
+MEF2C,Umbilical Vein
+HSF1,Lung
+HSF1,Mammary Gland
+POLR2A,Brain
+CREB1,Lung
+REST,Blood
+JUN,Lung
+FOXA2,Lung
+REPIN1,Colon
+CBFB,Pleura
+MYH11,Pleura
+ERG,Breast
+CBFB,Bone Marrow
+POLR2A,Pleura
+TALE,Bone Marrow
+EP300,Umbilical Vein
+ETS1,Umbilical Vein
+SSRP1,Connective Tissue
+MAX,Cervix
+MYC,Breast
+CTCF,Brain
+AFF4,Embryonic Kidney
+RBL1,Lung
+HSF2,Bone Marrow
+HSF1,Bone Marrow
+TAF3,Colon
+E2F7,Lung
+FOXD2,Colon
+OTX1,Colon
+ZFHX3,Colon
+LEF1,Colon
+NR2F1,Colon
+ATF5,Colon
+ZNF236,Colon
+ERF,Colon
+HSF4,Colon
+NPAT,Colon
+ELF3,Colon
+ETV7,Colon
+GLI1,Colon
+EOMES,Colon
+NFYA,Colon
+NR3C1,Colon
+NR2F2,Colon
+MED12,Colon
+NFATC1,Umbilical Vein
+HOXC6,Colon
+MSX1,Colon
+EHF,Colon
+SOX2,Colon
+ERG,Colon
+TGIF1,Colon
+CAMTA2,Colon
+MYC,Colon
+ESRRA,Colon
+CBFB,Colon
+ZBTB7B,Colon
+NKX3-1,Colon
+PATZ1,Colon
+UBTF,Colon
+T,Colon
+SPIB,Colon
+GLIS1,Colon
+NKX2-1,Colon
+ZZZ3,Colon
+HMGA1,Colon
+HOXA13,Colon
+LHX2,Colon
+JDP2,Colon
+PHF20,Colon
+RARG,Colon
+MAZ,Colon
+EGR1,Colon
+MYB,Colon
+SOX3,Colon
+TFAP2A,Colon
+NKX2-5,Colon
+CREB3L2,Colon
+CEBPG,Colon
+RAD21,Colon
+RARA,Colon
+SMAD4,Colon
+E2F3,Colon
+RBCK1,Colon
+TP53,Colon
+E2F7,Colon
+FOXK2,Colon
+CUX1,Colon
+NFATC1,Colon
+HES1,Colon
+FOXP3,Colon
+HINFP,Colon
+FOXA1,Colon
+VEZF1,Colon
+LIN9,Colon
+HOXA2,Colon
+GLIS3,Colon
+SATB1,Colon
+TRPS1,Colon
+ETS2,Colon
+E2F4,Colon
+EZH2,Colon
+YY1,Colon
+CREM,Colon
+GLI2,Colon
+DLX1,Colon
+KLF10,Colon
+CREB3L4,Colon
+DLX4,Colon
+ARNT,Colon
+GMEB2,Colon
+TFE3,Colon
+HBP1,Colon
+MZF1,Colon
+CASZ1,Colon
+HOXB13,Colon
+GATA2,Colon
+TFDP1,Colon
+HIF1A,Colon
+ADNP,Colon
+MYBL2,Colon
+NKX2-2,Colon
+MED1,Colon
+TCF12,Colon
+ELF2,Colon
+GATA4,Colon
+JUN,Colon
+RAX2,Colon
+PITX1,Colon
+RFX5,Colon
+TOX4,Colon
+PAX2,Colon
+SOX4,Colon
+ZNF407,Colon
+USF2,Colon
+DMRT1,Colon
+ZNF250,Colon
+GLI3,Colon
+ZBTB17,Colon
+ELF1,Colon
+NFIL3,Colon
+JUND,Colon
+ETV5,Colon
+PDX1,Colon
+RFX2,Colon
+EP300,Colon
+ZNF706,Colon
+SREBF2,Colon
+MAX,Colon
+GLIS2,Colon
+TFEB,Colon
+ETV4,Colon
+CLOCK,Colon
+NFAT5,Colon
+CTCF,Colon
+CIC,Colon
+TFDP2,Colon
+NR1H3,Colon
+SMC1A,Colon
+TEAD2,Colon
+LMX1B,Colon
+NEUROG3,Colon
+AEBP2,Colon
+SNAI1,Colon
+RFX1,Colon
+NIPBL,Colon
+TBX3,Colon
+EMX1,Colon
+AR,Colon
+KLF3,Colon
+HOXA10,Colon
+MEIS3,Colon
+SMAD2,Colon
+SMAD3,Colon
+TCF7L2,Colon
+ZFAT,Colon
+GATA1,Colon
+ZBED4,Colon
+GMEB1,Colon
+RORA,Colon
+ETV6,Colon
+MEF2D,Colon
+XBP1,Colon
+E2F8,Colon
+FOXM1,Colon
+ISL1,Colon
+BARHL1,Colon
+SOX9,Colon
+NFATC4,Colon
+SMC3,Colon
+ASCL2,Colon
+REST,Colon
+MXD1,Colon
+IRX3,Colon
+HOXA1,Colon
+SREBF1,Colon
+BARX2,Colon
+HIVEP1,Colon
+HOXA7,Colon
+HES4,Colon
+MNT,Colon
+ZIC2,Colon
+FOXG1,Colon
+BTF3,Colon
+LYL1,Colon
+FEV,Colon
+KLF5,Colon
+TP73,Colon
+STAT3,Colon
+SP3,Colon
+DLX6,Colon
+MSX2,Colon
+LHX3,Colon
+E2F1,Colon
+ALX4,Colon
+CREB3,Colon
+YBX3,Colon
+SP2,Colon
+NFKB2,Colon
+DBP,Colon
+CEBPZ,Colon
+MEF2A,Colon
+TCF7L1,Colon
+MEIS2,Colon
+NFE2L2,Colon
+MEF2C,Colon
+ATF1,Colon
+SMAD1,Colon
+DLX2,Colon
+SRF,Colon
+ATOH1,Colon
+HES2,Colon
+MECOM,Colon
+CEBPE,Colon
+CASP8AP2,Colon
+HSF2,Colon
+NFATC3,Colon
+E2F2,Colon
+H3Pan,Lung
+CHRM2,Ovary
+BRD4,Brain
+BRD4,Lung
+USP49,Colon
+BCL6,Blood
+BACH2,Blood
+SRC,Colon
+NCOR2,Colon
+CREBBP,Colon
+NCOR1,Colon
+CTCF,Prostate
+REPIN1,Blood
+HCFC1,Embryonic Kidney
+ICE1,Colon
+ELL,Colon
+ZC3H8,Colon
+ICE2,Colon
+TFAP2C,Skin
+CDK7,Blood
+IRF4,Blood
+SIRT3,Bone
+MBD2,Cervix
+MBD3,Cervix
+CHD5,Bone Marrow
+NR1H3,Adipose
+EED,Prostate
+TP63,Prostate
+IRF1,Blood
+ZFX,Blood
+PR,Umbilical Vein
+SMC3,Embryonic Kidney
+MBD3,Breast
+MBD3,Mammary Gland
+ERCC3,Connective Tissue
+ERCC2,Connective Tissue
+SFPQ,Prostate
+BRD4,Bone Marrow
+E2F1,Bone Marrow
+RING1,Prostate
+RNF2,Prostate
+BMI1,Prostate
+TP53,Blood
+MED12,Breast
+ING2,Colon
+ING5,Colon
+BRD1,Colon
+MAFK,Blood
+POLR3G,Lung
+POLR3GL,Lung
+TFAM,Cervix
+NR3C1,Embryonic Kidney
+SUMO2,Embryonic Kidney
+ZMYND11,Bone
+POLR2A,Bone
+ZBTB17,Mammary Gland
+ASCL1,Skin
+EZH2,Embryonic Kidney
+MITF,Skin
+STAT3,Bone Marrow
+STAT3,Blood
+STAT3,Peritoneal Effusion
+STAT3,Lymph Node
+STAG1,Blood
+EP300,Embryonic Kidney
+CREBBP,Embryonic Kidney
+ARNTL,Colon
+ATF7,Colon
+BARX1,Colon
+BATF3,Colon
+BHLHE41,Colon
+CAMTA1,Colon
+CREB3L1,Colon
+EVX1,Colon
+FERD3L,Colon
+FOS,Colon
+FOXA2,Colon
+FOXF1,Colon
+FOXK1,Colon
+FOXO1,Colon
+FOXP2,Colon
+FOXQ1,Colon
+HES5,Colon
+HES7,Colon
+HESX1,Colon
+HEY1,Colon
+HIC2,Colon
+HIVEP3,Colon
+HNF1A,Colon
+HNF1B,Colon
+HOXA11,Colon
+HOXB1,Colon
+HOXB2,Colon
+HOXB5,Colon
+HOXD11,Colon
+HOXD13,Colon
+HOXD4,Colon
+HOXD9,Colon
+ID4,Colon
+IKZF5,Colon
+IRF3,Colon
+IRF4,Colon
+IRF8,Colon
+IRX5,Colon
+ISL2,Colon
+KLF13,Colon
+FOXO4,Colon
+LHX4,Colon
+LHX5,Colon
+LHX6,Colon
+MAFB,Colon
+MAFG,Colon
+MIXL1,Colon
+MSC,Colon
+MTF1,Colon
+MYF6,Colon
+NEUROD2,Colon
+NFKB1,Colon
+NHLH1,Colon
+NKX2-8,Colon
+NKX6-1,Colon
+NR2F6,Colon
+NR3C2,Colon
+NR4A2,Colon
+NR5A2,Colon
+ARNT2,Colon
+ATF2,Colon
+ATF6,Colon
+CREB1,Colon
+DR1,Colon
+EPAS1,Colon
+HEYL,Colon
+HHEX,Colon
+HOXA4,Colon
+HOXA5,Colon
+HOXA6,Colon
+HOXB4,Colon
+IRF1,Colon
+IRF2,Colon
+KLF11,Colon
+KLF15,Colon
+KLF6,Colon
+MITF,Colon
+KMT2B,Colon
+MYOD1,Colon
+NCOA1,Colon
+NCOA3,Colon
+NR1I2,Colon
+NR2E3,Colon
+NR4A1,Colon
+PPARA,Colon
+PPARG,Colon
+RELA,Colon
+RELB,Colon
+AHCTF1,Colon
+BACH1,Colon
+BCL6,Colon
+FOXP1,Colon
+GATAD1,Colon
+HOXB6,Colon
+HOXB8,Colon
+HOXC8,Colon
+ID1,Colon
+ID2,Colon
+ID3,Colon
+JAZF1,Colon
+JUNB,Colon
+MXD3,Colon
+NFYB,Colon
+NFYC,Colon
+NR1D1,Colon
+NR1H2,Colon
+OVOL2,Colon
+RUNX1,Colon
+SALL4,Colon
+SMAD5,Colon
+STAT1,Colon
+STAT4,Colon
+STAT5A,Colon
+TAL1,Colon
+TERF1,Colon
+TERF2,Colon
+TLX1,Colon
+ZBTB33,Colon
+PBX1,Colon
+PBX2,Colon
+STAT2,Colon
+STAT6,Colon
+TFAM,Colon
+UBP1,Colon
+ZBTB10,Colon
+ZNF281,Colon
+ZNF3,Colon
+ZNF639,Colon
+ADNP2,Colon
+ARNTL2,Colon
+ASH1L,Colon
+BBX,Colon
+BCL11A,Colon
+BHLHE40,Colon
+BMI1,Colon
+BRCA1,Colon
+CDC5L,Colon
+CDX1,Colon
+CREBL2,Colon
+CTCFL,Colon
+DDIT3,Colon
+DMRT2,Colon
+DRAP1,Colon
+EGR2,Colon
+ELF4,Colon
+FOSL1,Colon
+FOXC1,Colon
+FOXF2,Colon
+FOXJ2,Colon
+GRHL2,Colon
+GZF1,Colon
+HAND1,Colon
+HNF4G,Colon
+HOXA9,Colon
+HOXB7,Colon
+HOXD1,Colon
+IRF9,Colon
+KCMF1,Colon
+LCOR,Colon
+MAFF,Colon
+MEOX2,Colon
+MXI1,Colon
+MYNN,Colon
+NFE2L1,Colon
+STAG1,Colon
+STAG2,Colon
+GRHL1,Colon
+HOXC11,Colon
+HOXC13,Colon
+IRX2,Colon
+MAFK,Colon
+MYBL1,Colon
+NFE2L3,Colon
+NFIB,Colon
+NKX2-3,Colon
+PBX3,Colon
+PCF11,Colon
+PLAG1,Colon
+PRDM4,Colon
+RBPJ,Colon
+RCOR1,Colon
+RFX7,Colon
+RLF,Colon
+SKI,Colon
+SNAPC4,Colon
+TCFL5,Colon
+TEAD4,Colon
+TFCP2,Colon
+THAP4,Colon
+TOE1,Colon
+TSHZ1,Colon
+WHSC1,Colon
+YBX1,Colon
+ZBTB2,Colon
+ZBTB39,Colon
+ZBTB4,Colon
+ZNF12,Colon
+ZNF143,Colon
+ZNF217,Colon
+ZNF263,Colon
+ZNF266,Colon
+ZNF280D,Colon
+ZNF395,Colon
+ZNF581,Colon
+ZNF83,Colon
+ZNF84,Colon
+XBP1,Mammary Gland
+BRD2,Blood
+BRD3,Blood
+TCF7L2,Prostate
+JMJD6,Embryonic Kidney
+CDK9,Embryonic Kidney
+JMJD6,Cervix
+BRD4,Cervix
+CDK8,Blood
+GATA6,Stomach
+FOXM1,Cervix
+CHRM2,Cervix
+TEAD4,Embryo
+CDK6,HeLa contaminant
+POLR2A,HeLa contaminant
+RELA,HeLa contaminant
+SPI1,Embryo
+XBP1,Breast
+GFI1B,Bone Marrow
+SUPT5H,Cervix
+NELFA,Cervix
+C10orf12,Embryonic Kidney
+C17orf96,Embryonic Kidney
+CBX4,Embryonic Kidney
+CBX6,Mammary Gland
+CBX7,Mammary Gland
+CBX8,Mammary Gland
+RING1,Mammary Gland
+RNF2,Mammary Gland
+CBX6,Foreskin
+CBX7,Foreskin
+CBX8,Foreskin
+RING1,Foreskin
+RNF2,Foreskin
+MED1,Bone Marrow
+DPPA2,Embryonic Kidney
+CDK2,Mammary Gland
+PARP1,Mammary Gland
+KDM4C,Esophagus
+HOXC11,Mammary Gland
+TERF1,Blood
+TERF2,Blood
+RAD21,Blood
+HOXC9,Brain
+T,Artery
+TP53,Embryo
+AGO1,Prostate
+AGO2,Prostate
+BRCA1,Breast
+PALB2,Breast
+ARRB1,Lung
+STAT5,Blood
+FOXP3,Blood
+INO80,Blood
+SRCAP,Blood
+PHF6,Blood
+SOX2,Thyroid
+TP63,Thyroid
+SOX2,Lung
+TP63,Lung
+E2F1,Prostate
+PPARD,Umbilical Vein
+GATA3,Mammary Gland
+SMARCC1,Breast
+HIF1A,Kidney
+EMX1,Embryonic Kidney
+BRD4,Prostate
+BRD2,Prostate
+BRD3,Prostate
+LANA,Kidney
+LANA,Blood
+DICER1,Embryonic Kidney
+TP53,Foreskin
+EZH2,Blood
+EZH2,Cervix
+EZH2,Liver
+H2AZ,Liver
+EZH2,Mammary Gland
+H2AZ,Mammary Gland
+H2AZ,Skeletal Muscle
+EZH2,Skeletal Muscle
+EZH2,Umbilical Vein
+H2AZ,Umbilical Vein
+CHD4,Bone Marrow
+H2AZ,Brain
+EZH2,Brain
+EZH2,Skin
+H2AZ,Skin
+EZH2,Lung
+EP300,Bone
+H2AZ,Bone
+CTCF,Bone
+RAD21,Lung
+BHLHE40,Lung
+CEBPB,Lung
+CTCF,Fetal Lung
+CTCF,Gingiva
+SREBF2,Blood
+NFE2,Blood
+IRF3,Blood
+USF2,Blood
+CUX1,Blood
+TBP,Blood
+SREBF1,Blood
+NRF1,Blood
+NFYB,Blood
+NFYA,Blood
+ESRRA,Blood
+WRNIP1,Blood
+BHLHE40,Blood
+MXI1,Blood
+ZNF384,Blood
+ELK1,Blood
+CHD2,Blood
+SIN3A,Blood
+SMC3,Blood
+CHD1,Blood
+IKZF1,Blood
+ZZZ3,Blood
+RFX5,Blood
+RCOR1,Blood
+BRCA1,Blood
+EBF1,Blood
+TBL1XR1,Blood
+MAZ,Blood
+CEBPB,Embryo
+MAX,Embryo
+GTF2F1,Embryo
+TBP,Embryo
+JUN,Embryo
+MAFK,Embryo
+ZNF143,Embryo
+RAD21,Embryo
+BACH1,Embryo
+RFX5,Embryo
+CTBP2,Embryo
+USF2,Embryo
+MXI1,Embryo
+JUND,Embryo
+NRF1,Embryo
+BRCA1,Embryo
+SIN3A,Embryo
+CHD2,Embryo
+ZNF274,Embryo
+CTCF,Spinal Cord
+CTCF,Cerebellum
+CTCF,Heart
+CTCF,Esophagus
+CTCF,Embryonic Kidney
+TCF7L2,Embryonic Kidney
+ZNF263,Embryonic Kidney
+EP300,Cervix
+RFX5,Cervix
+ZZZ3,Cervix
+BRCA1,Cervix
+GTF2F1,Cervix
+USF2,Cervix
+KAT2B,Cervix
+JUND,Cervix
+JUN,Cervix
+MAFK,Cervix
+PRDM1,Cervix
+IRF3,Cervix
+TCF7L2,Cervix
+E2F4,Cervix
+TFAP2A,Cervix
+GTF3C2,Cervix
+RAD21,Cervix
+NFYB,Cervix
+SMC3,Cervix
+MAZ,Cervix
+CEBPB,Cervix
+CHD2,Cervix
+NRF1,Cervix
+NFYA,Cervix
+TFAP2C,Cervix
+STAT3,Cervix
+FOS,Cervix
+MXI1,Cervix
+E2F6,Cervix
+TBP,Cervix
+ZKSCAN1,Cervix
+MAZ,Liver
+CEBPB,Liver
+TBP,Liver
+SREBF1,Liver
+ESRRA,Liver
+MAX,Liver
+RCOR1,Liver
+PPARGC1A,Liver
+MAFF,Liver
+CHD2,Liver
+GRP20,Liver
+USF2,Liver
+CEBPZ,Liver
+ARID3A,Liver
+BRCA1,Liver
+MXI1,Liver
+SREBF2,Liver
+NRF1,Liver
+MAFK,Liver
+SMC3,Liver
+HSF1,Liver
+EP300,Liver
+RFX5,Liver
+TCF7L2,Liver
+JUND,Liver
+JUN,Liver
+IRF3,Liver
+CTCF,Foreskin
+CTCF,Pulmonary Artery
+JUN,Umbilical Vein
+MAX,Umbilical Vein
+CTCF,Connective Tissue
+RFX5,Lung
+MAFK,Lung
+MXI1,Lung
+MAZ,Lung
+RCOR1,Lung
+ATF1,Bone Marrow
+TBL1XR1,Bone Marrow
+XRCC4,Bone Marrow
+GTF2F1,Bone Marrow
+MXI1,Bone Marrow
+TBP,Bone Marrow
+UBTF,Bone Marrow
+NRF1,Bone Marrow
+BDP1,Bone Marrow
+HCFC1,Bone Marrow
+ZC3H11A,Bone Marrow
+RFX5,Bone Marrow
+CCNT2,Bone Marrow
+POLR3G,Bone Marrow
+ARID3A,Bone Marrow
+BACH1,Bone Marrow
+GTF3C2,Bone Marrow
+ATF3,Bone Marrow
+RCOR1,Bone Marrow
+STAT1,Bone Marrow
+CHD2,Bone Marrow
+MAX,Bone Marrow
+SMC3,Bone Marrow
+BHLHE40,Bone Marrow
+ZMIZ1,Bone Marrow
+HMGN3,Bone Marrow
+BRF2,Bone Marrow
+ZNF384,Bone Marrow
+CEBPB,Bone Marrow
+MAZ,Bone Marrow
+IRF1,Bone Marrow
+BRF1,Bone Marrow
+GTF2B,Bone Marrow
+CUX1,Bone Marrow
+SMARCB1,Bone Marrow
+USF2,Bone Marrow
+NELFE,Bone Marrow
+MAFF,Bone Marrow
+E2F4,Bone Marrow
+ELK1,Bone Marrow
+MAFK,Bone Marrow
+YY1,Bone Marrow
+STAT2,Bone Marrow
+CTCF,Kidney
+ZNF217,Breast
+TCF7L2,Breast
+TCF7L2,Pancreas
+CTCF,Pancreas
+GATA3,Bone Marrow
+NRF1,Brain
+JUND,Brain
+RFX5,Brain
+MXI1,Brain
+SMC3,Brain
+RAD21,Brain
+CTCF,Spleen
+SETDB1,Bone
+CTCF,Eye
+BCL3,Lung
+NR3C1,Lung
+SIX5,Lung
+ATF3,Lung
+SIN3A,Lung
+GATA3,Lung
+ELF1,Lung
+SP1,Lung
+USF1,Lung
+YY1,Lung
+TCF12,Lung
+ETS1,Lung
+REST,Lung
+E2F6,Lung
+FOSL2,Lung
+ZBTB33,Lung
+TEAD4,Lung
+TAF1,Lung
+GABPA,Lung
+PBX3,Lung
+TCF12,Endometrium
+EGR1,Endometrium
+RAD21,Endometrium
+CEBPB,Endometrium
+FOXA1,Endometrium
+CTCF,Endometrium
+SRF,Endometrium
+FOXM1,Endometrium
+MAX,Endometrium
+CREB1,Endometrium
+REST,Endometrium
+EP300,Endometrium
+USF1,Endometrium
+NR3C1,Endometrium
+NFIC,Endometrium
+ZBTB7A,Endometrium
+YY1,Endometrium
+POLR2A,Endometrium
+TAF1,Endometrium
+TEAD4,Endometrium
+TAF1,Blood
+BATF,Blood
+NFATC1,Blood
+NFIC,Blood
+ATF2,Blood
+SRF,Blood
+POU2F2,Blood
+PBX3,Blood
+MEF2A,Blood
+USF1,Blood
+EGR1,Blood
+ELF1,Blood
+BCL3,Blood
+RUNX3,Blood
+ATF3,Blood
+FOXM1,Blood
+SP1,Blood
+ZEB1,Blood
+CREB1,Blood
+SIX5,Blood
+MEF2C,Blood
+ZBTB33,Blood
+MTA3,Blood
+CEBPB,Blood
+BCL11A,Blood
+TCF12,Embryo
+SRF,Embryo
+EGR1,Embryo
+USF1,Embryo
+REST,Embryo
+ATF3,Embryo
+FOSL1,Embryo
+SP2,Embryo
+E2F6,Embryo
+BCL11A,Embryo
+SP4,Embryo
+CREB1,Embryo
+GABPA,Embryo
+SIX5,Embryo
+SP1,Embryo
+RXRA,Embryo
+ATF2,Embryo
+TAF7,Embryo
+TAF1,Embryo
+USF1,Colon
+SIN3A,Colon
+ATF3,Colon
+TAF1,Cervix
+REST,Cervix
+SRF,Liver
+ZBTB7A,Liver
+YY1,Liver
+TCF12,Liver
+ZBTB33,Liver
+CEBPD,Liver
+CREB1,Liver
+SP1,Liver
+HDAC2,Liver
+SIN3A,Liver
+GABPA,Liver
+TEAD4,Liver
+NFIC,Liver
+MYBL2,Liver
+RXRA,Liver
+FOSL2,Liver
+ZEB1,Liver
+SP2,Liver
+USF1,Liver
+NR2F2,Liver
+MBD4,Liver
+REST,Liver
+ELF1,Liver
+TAF1,Liver
+NR2F2,Bone Marrow
+ELF1,Bone Marrow
+GABPA,Bone Marrow
+ZBTB33,Bone Marrow
+SPI1,Bone Marrow
+SIX5,Bone Marrow
+CREB1,Bone Marrow
+SIN3A,Bone Marrow
+ETS1,Bone Marrow
+USF1,Bone Marrow
+STAT5A,Bone Marrow
+TAF1,Bone Marrow
+MEF2A,Bone Marrow
+TEAD4,Bone Marrow
+SP2,Bone Marrow
+BCLAF1,Bone Marrow
+TAF7,Bone Marrow
+CTCFL,Bone Marrow
+CEBPD,Bone Marrow
+ZBTB7A,Bone Marrow
+FOSL1,Bone Marrow
+SRF,Bone Marrow
+SP1,Bone Marrow
+THAP1,Bone Marrow
+PML,Breast
+JUND,Breast
+SRF,Breast
+REST,Breast
+GABPA,Breast
+TEAD4,Breast
+CEBPB,Breast
+FOSL2,Breast
+EGR1,Breast
+TAF1,Breast
+TCF12,Breast
+ELF1,Breast
+MAX,Breast
+HDAC2,Breast
+SIN3A,Breast
+REST,Pancreas
+SIN3A,Pancreas
+POLR2A,Pancreas
+FOXP2,Brain
+TAF1,Brain
+SIN3A,Brain
+REST,Brain
+YY1,Brain
+NFIC,Brain
+GABPA,Brain
+FOSL2,Brain
+USF1,Brain
+TEAD4,Brain
+FOXM1,Brain
+MEF2A,Brain
+ELF1,Brain
+RXRA,Brain
+ZBTB33,Brain
+PBX3,Brain
+GATA3,Brain
+TCF12,Brain
+EP300,Mammary Gland
+JUND,Mammary Gland
+ZBTB17,Cervix
+KDM5B,Breast
+KDM5B,Mammary Gland
+FOSL1,Mammary Gland
+JUN,Mammary Gland
+TP53,Breast
+MYC,Bone
+ZBTB17,Bone
+SMAD3,Lung
+TTF1,Lung
+SMAD4,Lung
+SOX4,Brain
+KLF5,Stomach
+GATA4,Stomach
+LDB1,Blood
+BRD4,Umbilical Vein
+AR,Embryonic Kidney
+MBD2,Breast
+EBF1,Adipose
+TEAD1,Muscle
+WDR5,Prostate
+CEBPA,Blood
+KDM6B,Skin
+BRD4,Breast
+KDM6B,Blood
+AGO1,Breast
+CBX5,Breast
+BATF,Bone Marrow
+IRF4,Bone Marrow
+SPIB,Bone Marrow
+SPI1,Liver
+CBX8,Prostate
+ZNF750,Foreskin
+KLF4,Foreskin
+RCOR1,Foreskin
+KDM1A,Foreskin
+TRIM28,Embryo
+AFF4,Cervix
+ELL2,Cervix
+CPSF3L,Cervix
+ERCC6,Skin
+PPARG,Lung
+SFPQ,Breast
+COIL,Cervix
+EGFA-T1,Embryonic Kidney
+EMX1,Cervix
+EGFA-T1,Cervix
+CSNK2A1,Prostate
+DDX5,Testis
+F2RL1,Embryonic Kidney
+PDX1,Embryo
+ELF1,Prostate
+ELK4,Prostate
+ETS1,Pancreas
+HIF1A,Mammary Gland
+EGLN2,Mammary Gland
+NRF1,Mammary Gland
+HES1,Bone
+BRD2,Embryo
+BRD3,Embryo
+ZNF486,Embryo
+RARA,Breast
+RARG,Breast
+MED1,Breast
+PRKDC,Breast
+PROX1,Colon
+DEK,Pleura
+ASCL1,Lung
+SSU72,Embryo
+FLI1,Brain
+WDR5,Brain
+FLI1,Muscle
+WDR5,Muscle
+KDM3A,Blood
+SCML2,Bone Marrow
+BMI1,Bone Marrow
+NME2,Lung
+ESR1,Prostate
+ZFX,Cerebellum
+CHRM2,Pleura
+MAF,Foreskin
+MAFB,Foreskin
+KDM1A,Prostate
+TCF7,Colon
+PR,Prostate
+HIRA,Lung
+DDX21,Embryonic Kidney
+CTBP1,Prostate
+CTBP2,Prostate
+FOXP1,Prostate
+RUNX1,Prostate
+EED,Fetal Liver
+SUZ12,Fetal Liver
+EZH1,Fetal Liver
+EZH2,Fetal Liver
+MYB,Blood
+CREBBP,Adipose
+KLF11,Adipose
+DMC1,Testis
+ELK3,Umbilical Vein
+MLLT3,Cervix
+MYB,Peripheral Blood
+TAL1,Peripheral Blood
+MED1,Adipose
+EHF,Lung
+SPI1,HeLa contaminant
+TERF2,Lung
+NR2F2,Lung
+NR2C2,Lung
+TERF2,Cervix
+NR2F2,Cervix
+GATA6,Pancreatic ductal
+TET2,Colon
+KMT2A,Cord blood
+MLLT3,Cord blood
+PIAS1,Prostate
+POU5F1,Lung
+KDM1B,Liver
+ASH2L,Prostate
+PRDM1,Embryo
+CDX2,Embryo
+FOXA1,Embryo
+FOXA2,Embryo
+GATA4,Embryo
+GATA6,Embryo
+HEY1,Embryo
+HNF1B,Embryo
+HNF4A,Embryo
+KLF5,Embryo
+NR5A2,Embryo
+OTX2,Embryo
+PAX6,Embryo
+ZFP42,Embryo
+SALL4,Embryo
+SMAD1,Embryo
+SNAI2,Embryo
+SOX17,Embryo
+STAT3,Embryo
+T,Embryo
+TAL1,Embryo
+TCF4,Embryo
+THAP11,Embryo
+HAND2,Embryo
+HAND1,Embryo
+MRE11A,Prostate
+TOP1,Prostate
+SUMO2,Prostate
+HJURP,Colon
+HJURP,Cervix
+GATA2,Prostate
+CGGBP1,Foreskin
+TP53,Fetal Skin
+IL1RN,Embryonic Kidney
+TALE,Embryonic Kidney
+HBG1, HBG2,Embryonic Kidney
+EBNA3A,Embryonic Kidney
+LMNA,Cervix
+AR,Ovary
+BCL6,Tonsil
+WDR5,Embryonic Kidney
+TCF21,Coronary artery smooth muscle
+JUN,Coronary artery smooth muscle
+JUND,Coronary artery smooth muscle
+CHRM2,Endometrium
+ZNF644,Embryonic Kidney
+WIZ,Embryonic Kidney
+RELA,Breast
+LMNB1,Cervix
+DYRK1A,Brain
+DYRK1A,Cervix
+CIITA,Blood
+EHMT2,Breast
+MTA3,Breast
+RBP2,Pleura
+HOXB7,Mammary Gland
+ALKBH3,Prostate
+FOXM1,Embryonic Kidney
+INTS3,Cervix
+NELFE,Cervix
+NELFE,Embryo
+CDK9,Cervix
+CHD8,Mammary Gland
+NCOR1,Blood
+SVIL,Bone Marrow
+PR,Breast
+DAXX,Prostate
+DNMT1,Prostate
+AGO2,Bone Marrow
+FOXP1,Bone Marrow
+FOXP1,Blood
+PGR,Endometrium
+FOSL2,Endometrium
+FOXO1,Endometrium
+NR3C2,Kidney
+LMTK3,Breast
+DKK1,Colon
+ZBTB17,Breast
+TP53,Mammary Gland
+HSF1,Bone
+SOX9,Embryo
+NCAPG,Breast
+NCAPG2,Breast
+HECTD1,Breast
+TLX1,Blood
+YAP1,Lung
+VDR,Prostate
+EGFR,Cervix
+MAPK1,Cervix
+MAP2K1,Cervix
+TET2,Prostate
+YAP1,Breast
+WWTR1,Breast
+KDM1A,Lung
+SUMO2,Bone Marrow
+LOXL1,lens
+LOXL1,Schlemm's canal
+LOXL1,Lens capsule
+SPI1,Kidney
+KMT2D,Blood
+CDK9,Colon
+NR0B2,Colon
+LEO1,Colon
+PAF1,Colon
+PAF1,Breast
+CTCFL,Breast
+CDK12,Blood
+ATF1,Liver
+NR3C1,Breast
+APOBEC3B,Breast
+H2AFX,Breast
+PARP1,Breast
+FOXM1,Mammary Gland
+MYBL2,Mammary Gland
+E2F1,Mammary Gland
+BRD1,Embryonic Kidney
+CDK8,Bone Marrow
+TOP2B,Breast
+KMT2D,Tonsil
+HOXB13,Prostate
+KRAB,Bone Marrow
+MAP1LC3A,Lung
+PBX3,Liver
+GTF2B,Cervix
+DACOR1,Colon
+TRIM28,Colon
+LARP7,Colon
+HEXIM1,Colon
+EPO,Uterus
+LEF1,Uterus
+BAHD1,Embryonic Kidney
+PCGF2,Bone Marrow
+PCGF1,Bone Marrow
+SOX15,Esophagus
+JMJD1C,Blood
+CHD1,Prostate
+NR3C1,Bone
+ZNF165,Breast
+KDM2B,Blood
+ARID3B,Head and neck
+KDM4C,Head and neck
+RUNX1,Pleura
+HIF1A,Cervix
+FOXO1,Tonsil
+MED1,Prostate
+MED1,Liver
+PAF1,Prostate
+SUPT5H,Prostate
+ARID1A,Liver
+ARID1B,Liver
+ARID2,Liver
+SMARCB1,Liver
+MED1,Embryo
+CD59,Blood
+KDM5C,Kidney
+SMN1,Embryonic Kidney
+FUS,Embryonic Kidney
+EWSR1,Embryonic Kidney
+TAF15,Embryonic Kidney
+EP400,Bone
+ZNF202,Embryonic Kidney
+SMC3,Lung
+ZEB2,Bone Marrow
+ID3,Bone Marrow
+ZNF2,Embryonic Kidney
+ZNF175,Bone Marrow
+ZNF585B,Embryonic Kidney
+CUX1,Breast
+TFDP1,Bone Marrow
+ZNF600,Embryonic Kidney
+PLRG1,Liver
+BCL11A,Embryonic Kidney
+ZNF623,Embryonic Kidney
+ZNF592,Breast
+DROSHA,Bone Marrow
+TARDBP,Bone Marrow
+MCM7,Bone Marrow
+POLR2A,Stomach
+RFX1,Bone Marrow
+KLF17,Embryonic Kidney
+CHAMP1,Bone Marrow
+RFX1,Breast
+KLF9,Embryonic Kidney
+HES2,Lung
+MCM5,Bone Marrow
+ZNF639,Embryonic Kidney
+RAD51,Liver
+NBN,Bone Marrow
+KAT8,Bone Marrow
+HLTF,Bone Marrow
+HES1,Bone Marrow
+CREB3,Bone Marrow
+ZNF16,Embryonic Kidney
+CEBPG,Breast
+ZNF207,Breast
+POLR2A,gastroesophageal sphincter
+PRDM1,Embryonic Kidney
+ZNF24,Bone Marrow
+ZMYM3,Bone Marrow
+ZNF175,Embryonic Kidney
+TFAP4,Liver
+ZNF366,Embryonic Kidney
+MLLT1,Bone Marrow
+YBX1,Bone Marrow
+MTA2,Bone Marrow
+PKNOX1,Bone Marrow
+ZNF71,Embryonic Kidney
+CDC5L,Bone Marrow
+ZNF394,Embryonic Kidney
+KLF9,Breast
+PTRF,Bone Marrow
+COPS2,Bone Marrow
+ZFP3,Embryonic Kidney
+NRF1,Breast
+SP3,Embryonic Kidney
+HDGF,Blood
+CTCF,gastroesophageal sphincter
+ZNF584,Bone Marrow
+ARNT,Bone Marrow
+ZBTB11,Breast
+DNMT3B,Liver
+SMARCE1,Bone Marrow
+ZNF518A,Embryonic Kidney
+ZNF346,Embryonic Kidney
+DIDO1,Bone Marrow
+FOXK2,Liver
+CTCF,Stomach
+ZSCAN29,Bone Marrow
+ZNF341,Embryonic Kidney
+ZBTB40,Blood
+ZNF766,Bone Marrow
+HDGF,Bone Marrow
+SREBF1,Breast
+NFE2L2,Lung
+EED,Blood
+HDGF,Breast
+YBX1,Blood
+ZBED1,Blood
+ZNF391,Embryonic Kidney
+GLI4,Embryonic Kidney
+TRIM25,Bone Marrow
+ZNF8,Embryonic Kidney
+ATF2,Embryonic Kidney
+ZNF697,Embryonic Kidney
+TSHZ1,Embryonic Kidney
+DEK,Cervix
+PRPF4,Bone Marrow
+MBD2,Bone Marrow
+PRDM10,Embryonic Kidney
+ZNF121,Embryonic Kidney
+ZNF292,Embryonic Kidney
+DPF2,Breast
+ZBTB40,Bone Marrow
+PRPF4,Liver
+SMAD5,Blood
+HNRNPLL,Liver
+ZNF83,Bone Marrow
+MBD1_isoform2,Liver
+MNT,Liver
+PBX2,Bone Marrow
+SRSF3,Bone Marrow
+GABP,Liver
+ETV1,Bone Marrow
+IKZF1,Liver
+NBN,Blood
+SIX4,Breast
+LARP7,Bone Marrow
+ZNF354C,Embryonic Kidney
+MAZ,Embryonic Kidney
+MTA2,Blood
+FOXK2,Bone Marrow
+ZNF680,Embryonic Kidney
+PTTG1,Bone Marrow
+DROSHA,Liver
+ZBTB40,Breast
+CTCF,Sigmoid Colon
+OSR2,Embryonic Kidney
+ZNF335,Embryonic Kidney
+NKRF,Bone Marrow
+ZBTB11,Bone Marrow
+ZNF318,Bone Marrow
+SCRT2,Embryonic Kidney
+POLR2A,Sigmoid Colon
+LEF1,Bone Marrow
+CEBPZ,Blood
+ZFP41,Embryonic Kidney
+C11orf30,Bone Marrow
+ZSCAN5A,Embryonic Kidney
+CHD1,Breast
+ZNF488,Embryonic Kidney
+ZFP37,Embryonic Kidney
+CBX5,Blood
+ZFP69B,Embryonic Kidney
+DDX20,Bone Marrow
+INSM2,Embryonic Kidney
+ELK1,Breast
+DEAF1,Bone Marrow
+GATAD2B,Breast
+RCOR1,Breast
+IKZF1,Bone Marrow
+MBD1_isoform1,Liver
+POLR2H,Bone Marrow
+CSDE1,Bone Marrow
+PYGO2,Bone Marrow
+TARDBP,Blood
+ZFP2,Embryonic Kidney
+ZEB2,Embryonic Kidney
+ZNF692,Embryonic Kidney
+MIER1,Bone Marrow
+MLLT1,Breast
+ZNF239,Embryonic Kidney
+ADNP,Bone Marrow
+TCF7,Liver
+SOX13,Liver
+GFI1B,Embryonic Kidney
+ZNF558,Embryonic Kidney
+ZKSCAN8,Bone Marrow
+ZKSCAN1,Breast
+ZNF280D,Embryonic Kidney
+ZNF501,Embryonic Kidney
+ZNF101,Embryonic Kidney
+ZNF140,Embryonic Kidney
+FOXK2,Breast
+SP7,Embryonic Kidney
+ZNF423,Embryonic Kidney
+ZBTB8A,Embryonic Kidney
+GLIS1,Embryonic Kidney
+ZC3H8,Bone Marrow
+ZNF654,Embryonic Kidney
+ZNF48,Embryonic Kidney
+ZNF414,Embryonic Kidney
+NR2F6,Liver
+ZNF264,Embryonic Kidney
+RNF2,Liver
+RAD51,Bone Marrow
+ZBTB40,Liver
+HLF,Liver
+ZNF740,Bone Marrow
+GTF2E2,Bone Marrow
+GLIS2,Embryonic Kidney
+ZBTB33,Embryonic Kidney
+HNRNPLL,Bone Marrow
+KLF1,Bone Marrow
+ZNF138,Embryonic Kidney
+MTA2,Breast
+MLLT1,Blood
+NFE2L1,Bone Marrow
+ZXDB,Embryonic Kidney
+ZNF438,Embryonic Kidney
+YBX3,Bone Marrow
+SSRP1,Liver
+ZNF641,Embryonic Kidney
+ZNF197,Bone Marrow
+GATA4,Liver
+ZNF512,Bone Marrow
+NBN,Breast
+ZFP64,Embryonic Kidney
+ETS2,Bone Marrow
+ZNF589,Bone Marrow
+KLF7,Embryonic Kidney
+SCRT1,Embryonic Kidney
+KLF13,Bone Marrow
+HBP1,Liver
+HINFP,Bone Marrow
+CEBPG,Bone Marrow
+ZBTB17,Embryonic Kidney
+UBTF,Cervix
+TEAD2,Bone Marrow
+KLF8,Embryonic Kidney
+KDM4B,Bone Marrow
+MEF2D,Bone Marrow
+ILK,Bone Marrow
+HHEX,Liver
+NFRKB,Bone Marrow
+ELK1,Lung
+ZNF580,Embryonic Kidney
+ATF4,Liver
+ZNF792,Embryonic Kidney
+ZNF207,Liver
+ZNF146,Embryonic Kidney
+ZNF610,Embryonic Kidney
+HCFC1,Breast
+ZSCAN23,Embryonic Kidney
+MYNN,Embryonic Kidney
+NFE2L2,Cervix
+NR2F6,Bone Marrow
+E2F5,Bone Marrow
+ZNF837,Embryonic Kidney
+PRDM2,Embryonic Kidney
+ZNF664,Embryonic Kidney
+ETV4,Liver
+DPF2,Bone Marrow
+ZNF362,Embryonic Kidney
+ZNF644,Bone Marrow
+SP1,Breast
+ZNF788,Embryonic Kidney
+MYNN,Bone Marrow
+TBX21,Blood
+SUZ12,Blood
+HMBOX1,Bone Marrow
+PRDM12,Embryonic Kidney
+KLF16,Bone Marrow
+ZSCAN20,Embryonic Kidney
+ZNF324,Embryonic Kidney
+OVOL3,Embryonic Kidney
+AEBP2,Embryonic Kidney
+BCL11B,Embryonic Kidney
+RELA,Bone Marrow
+ZBTB7A,Embryonic Kidney
+ZNF781,Embryonic Kidney
+TSC22D4,Bone Marrow
+YBX1,Liver
+HNF1A,Liver
+GTF2A2,Bone Marrow
+HIC1,Embryonic Kidney
+IKZF2,Embryonic Kidney
+SP2,Embryonic Kidney
+SNRNP70,Bone Marrow
+MAFG,Bone Marrow
+CBX1,Liver
+FEZF1,Embryonic Kidney
+TRIM22,Blood
+ZNF639,Bone Marrow
+FOXJ2,Bone Marrow
+ZMYM3,Liver
+PBX2,Liver
+ZNF707,Embryonic Kidney
+KLF1,Embryonic Kidney
+CBFB,Blood
+ZNF382,Embryonic Kidney
+TCF7,Bone Marrow
+YBX1,Breast
+ZSCAN16,Embryonic Kidney
+ZNF800,Embryonic Kidney
+ZKSCAN1,Bone Marrow
+ZBTB11,Embryonic Kidney
+SRSF3,Liver
+SUPT5H,Bone Marrow
+SMARCA5,Bone Marrow
+REST,Embryonic Kidney
+JUNB,Blood
+ZNF687,Breast
+CREM,Liver
+TRIM24,Bone Marrow
+ZEB1,Embryonic Kidney
+ZNF547,Embryonic Kidney
+NONO,Breast
+EGR2,Embryonic Kidney
+ZFX,Bone Marrow
+ZBTB49,Embryonic Kidney
+IRF9,Bone Marrow
+ZBTB1,Embryonic Kidney
+NCOA1,Bone Marrow
+CBX1,Bone Marrow
+SNRNP70,Liver
+WT1,Embryonic Kidney
+PATZ1,Embryonic Kidney
+NR2F1,Bone Marrow
+ZNF18,Embryonic Kidney
+ZNF24,Embryonic Kidney
+DNMT1,Bone Marrow
+MCM3,Bone Marrow
+TGIF2,Liver
+ZFP82,Embryonic Kidney
+ZNF329,Embryonic Kidney
+ZNF554,Embryonic Kidney
+ZNF467,Embryonic Kidney
+ZNF574,Embryonic Kidney
+ZNF34,Embryonic Kidney
+ZNF595,Embryonic Kidney
+ZSCAN29,Embryonic Kidney
+ZNF214,Embryonic Kidney
+ZNF490,Embryonic Kidney
+KLF12,Embryonic Kidney
+KLF15,Embryonic Kidney
+ZNF280A,Embryonic Kidney
+ZNF317,Embryonic Kidney
+ZNF582,Embryonic Kidney
+ZIM3,Embryonic Kidney
+ZNF778,Embryonic Kidney
+ZNF134,Embryonic Kidney
+ZNF41,Embryonic Kidney
+ZNF136,Embryonic Kidney
+ZFP42,Embryonic Kidney
+ZNF669,Embryonic Kidney
+GTF3A,Embryonic Kidney
+ZSCAN31,Embryonic Kidney
+ZNF419,Embryonic Kidney
+ZNF596,Embryonic Kidney
+ZNF502,Embryonic Kidney
+ZNF384,Embryonic Kidney
+ZNF418,Embryonic Kidney
+ZBTB12,Embryonic Kidney
+SP4,Embryonic Kidney
+ZNF768,Embryonic Kidney
+ZBTB26,Embryonic Kidney
+PRDM6,Embryonic Kidney
+ZNF257,Embryonic Kidney
+ZNF281,Embryonic Kidney
+ZNF436,Embryonic Kidney
+ZNF350,Embryonic Kidney
+ZNF184,Embryonic Kidney
+ZBTB18,Embryonic Kidney
+ZBTB42,Embryonic Kidney
+ZNF320,Embryonic Kidney
+ZNF354A,Embryonic Kidney
+ZBTB14,Embryonic Kidney
+SNAI1,Embryonic Kidney
+SP1,Embryonic Kidney
+ZSCAN22,Embryonic Kidney
+ZBTB48,Embryonic Kidney
+ZNF260,Embryonic Kidney
+ZNF528,Embryonic Kidney
+ZNF774,Embryonic Kidney
+ZNF549,Embryonic Kidney
+ZNF667,Embryonic Kidney
+ZNF770,Embryonic Kidney
+ZNF449,Embryonic Kidney
+ZNF322,Embryonic Kidney
+ZNF22,Embryonic Kidney
+ZNF35,Embryonic Kidney
+ZNF250,Embryonic Kidney
+ZNF708,Embryonic Kidney
+ZNF33A,Embryonic Kidney
+ZNF85,Embryonic Kidney
+ZNF816,Embryonic Kidney
+EGR3,Embryonic Kidney
+ZBTB6,Embryonic Kidney
+ZNF331,Embryonic Kidney
+ZNF224,Embryonic Kidney
+ZNF586,Embryonic Kidney
+ZNF30,Embryonic Kidney
+ZNF37A,Embryonic Kidney
+YY1,Embryonic Kidney
+MZF1,Embryonic Kidney
+ZFP28,Embryonic Kidney
+ZNF513,Embryonic Kidney
+ZNF454,Embryonic Kidney
+ZNF784,Embryonic Kidney
+ZNF563,Embryonic Kidney
+ESRRA,Breast
+SIX2,Embryonic Kidney
+RARA,Brain
+E2F1,Umbilical Cord
+SMARCA4,Mammary Gland
+BRD4,Colon
+MYC,Foreskin
+FOXA1,Pancreatic ductal
+ELF3,Pancreatic ductal
+KLF6,Pancreatic ductal
+KLF4,Pancreatic ductal
+ZEB1,Pancreatic ductal
+KLF5,Pancreatic ductal
+IRF1,Pancreatic ductal
+HNF1B,Pancreatic ductal
+HIF1A,Lung
+CREB1,Prostate
+RUNX1,Fetal Liver
+SPI1,Fetal Liver
+EBNA2,Blood
+KMT2A,Lung
+POLR3D,Fetal Lung
+CRY1,Bone
+CLOCK,Bone
+ARNTL,Bone
+KDM1A,Blood
+GATA3,Thymus
+ATRX,Bone Marrow
+POU2F1,Prostate
+DUX4,Skeletal Muscle
+RBPJ,Brain
+SMAD3,Skin
+TOP1,Colon
+OVOL2,Corneal Epithelium
+TRIM24,Prostate
+CENPT,Cervix
+SIX2,Kidney
+EP300,Kidney
+TP53,Liver
+KDM5A,Breast
+NELFE,Breast
+MDM2,Lung
+POLR2A,endometrioid adenocarcinoma
+FOXA1,endometrioid adenocarcinoma
+ESR1,endometrioid adenocarcinoma
+INO80,Lung
+CHD4,Prostate
+SMARCA4,Prostate
+SMARCA5,Prostate
+HIST1H1B,Cervix
+DROSHA,Cervix
+KDM2B,Bone Marrow
+PIAS1,Breast
+AR,Breast
+DNMT3B,Foreskin
+DNMT3A,Foreskin
+ZNF335,Blood
+MYC,LNCaP cells
+HDAC4,Blood
+E2F1,Blood
+RUNX1,Breast
+TP63,Breast
+EHMT2,Colon
+SETDB1,Cervix
+ATF7IP,Cervix
+GATAD2B,Cervix
+RELA,Prostate
+BRD4,Pancreas
+POLR2A,Kidney
+SOX4,Fetal Lung
+NANOG,Prostate
+EWSR1,Prostate
+SMC1A,Breast
+NIPBL,Breast
+SMC1A,Lung
+NIPBL,Lung
+GTF2B,Haematopoietic and lymphoid
+AFF1,Bone Marrow
+SMARCA4,Liver
+SMARCC1,Liver
+SMARCA4,Brain
+SMARCC1,Brain
+SMARCA4,Kidney
+SMARCC1,Kidney
+SIX1,Embryonic Kidney
+ORC2,Bone Marrow
+POLR2A,Foreskin
+SMARCA2,Prostate
+POLR2A,Haematopoietic and lymphoid
+NCOA1,Bone
+NUP98,Kidney
+HOXA9,Kidney
+NUP98-HOXA9,Kidney
+SOX9,Prostate
+TRAF7,meningioma
+SRC,Prostate
+DNMT3A,Embryonic Kidney
+RPA2,Cervix
+GRHL2,Breast
+LARP7,Cervix
+PARP1,Kidney
+KMT2A,Bone Marrow
+AFF1,Spleen
+KMT2A,Spleen
+CREBBP,Tonsil
+NR3C1,Liver
+FOXD3,Lung
+MEN1,Breast
+KMT2D,Breast
+KMT2A,Breast
+BCL11B,Thymus
+SPDEF,Lung
+POLR2A,Pontine
+EZH2,Pontine
+SUZ12,Pontine
+BRD4,Pontine
+BRD2,Pontine
+PROX1,Umbilical Vein
+ATF2,Liver
+SMAD4,Liver
+TSC22D4,Liver
+NFATC3,Liver
+HES1,Liver
+TSC22D4,Blood
+ETV6,Blood
+TP73,Blood
+DRAP1,Blood
+BATF3,Blood
+ZMYM3,Blood
+ZNF18,Blood
+ZBTB2,Liver
+ZNF18,Bone Marrow
+RUVBL1,Liver
+STAT2,Blood
+FOXO3,Bone Marrow
+FOXO3,Liver
+ZBTB2,Blood
+NFIL3,Liver
+KLF10,Liver
+GRHL2,Prostate
+EZH2,Breast
+FOSL1,Breast
+RELA,Liver
+KLF10,Lung
+POLR2A,Retina
+CTCF,Retina
+BRD4,Retina
+H2AFX,Cervix
+MYC,Prostate
+JUND,Lung
+STAT3,Umbilical Cord
+MAML3,Brain
+USP7,Lung
+USP7,Mammary Gland
+MBD3L2,Embryonic Kidney
+CCNT1,Prostate
+BRPF3,Colon
+CENPC,Cervix
+SIX1,Kidney
+PAX8,Fallopian tube secretory
+DDX11,Lung
+SMARCA1,Prostate
+ZMYND8,Prostate
+CCND2,Blood
+CDKN1B,Blood
+NEUROG2,Fetal Lung
+PGBD5,Kidney
+SETX,Lung
+EBF3,Brain
+ZMYND8,Embryonic Kidney
+CDCA2,Cervix
+ZMYND8,Kidney
+IRAK1,Embryonic Kidney
+TERT,Colon
+TERT,Ovary
+TERT,Lung
+CNOT3,Snap-frozen tissue
+MBOAT4,Cervix
+RPA1,Cervix
+PITX3,Midbrain
+FOXR2,Breast
+ZMYND11,Prostate
+ZNF597,Blood
+HMG20A,Blood
+NFIA,Bone Marrow
+DPF1,Bone Marrow
+ZNF75A,Bone Marrow
+ZSCAN2,Liver
+NFIA,Liver
+ZNF410,Bone Marrow
+L3MBTL4,Liver
+TRIM25,Breast
+ZNF516,Breast
+TAZ,Colon
+H2AFX,Lung
+HIF1A,Bone
+TFDP1,Blood
+AUTS2,Cervix
+ZFX,Colon
+ZFX,Kidney
+L3MBTL3,Breast
+RBPJ,Breast
+MYCN,Bone Marrow
+TET2,Blood
+BRD4,Skin
+MORC2,Cervix
+FAM208A,Cervix
+MAF,Blood
+NUP153,Bone Marrow
+NUP98,Bone Marrow
+RUVBL2,Liver
+RAD21,Umbilical Vein
+BRD4,Urinary Bladder
+BRD4,Stomach
+NCAPH2,Embryonic Kidney
+BRAF,Embryonic Lung
+ATF3,Skin
+KLF5,Head and neck
+TFAP2A,Embryo
+TFAP2C,Embryo
+FOXA2,Skin
+POLR2A,Adherent HeLa cells
+ERF,Prostate
+SUZ12,epithelioid sarcoma
+SMARCC1,epithelioid sarcoma
+SMARCA4,epithelioid sarcoma
+MKL2,Muscle
+MKL1,Muscle
+HCFC1R1,Cartilage
+SMARCC1,Bone Marrow
+HNF1A,Epididymis
+GATA3,Embryo
+NR3C1,Muscle
+KDM3B,HCT116
+INTS11,Cervix
+POLR2A,HCT116
+KLF15,Muscle
+ZFX,Prostate
+NELFA,Adherent HeLa cells
+SUPT5H,Adherent HeLa cells
+TP53,HCT116
+FOXN3,Breast
+SATB1,Liver
+T,Blood
+GRIP1,Blood
+OGT,Colon
+FOXA2,Endoderm
+ARID5B,Blood
+PRMT5,Breast
+H2AZ,Colon
+DDX21,Cervix
+TCOF1,Cervix
+NELFA,Breast
+SUZ12,Malignant rhabdoid tumor
+SMARCC1,Malignant rhabdoid tumor
+SMARCB1,Malignant rhabdoid tumor
+SMARCA4,Malignant rhabdoid tumor
+KLF4,Lung
+SMAD2/3,Breast
+MCRS1,Liver
+TFCP2,Liver
+MYOG,Embryo
+SMARCA2,Brain
+PAK1IP1,Cartilage
+HNF4G,Prostate
+SIRT1,HCT116
+MCM2,HCT116
+PHIP,Embryonic Kidney
+SUZ12,Lung
+EP300,Head and neck
+RPE,Retina
+POLR2A,Uterus
+KDM4A,Breast
+RUNX1,Kidney
+FASN,uterine leiomyosarcoma
+WDHD1,Prostate
+SRF,Muscle
+PTPA,Pleura
+PAF1,HCT116
+ZEB1,Lung
+ZFX,Breast
+ZNF711,Breast
+KAT2B,Colon
+INO80,Liver
+STAT6,Blood
+KDM1A,Breast
+BPTF,Breast
+PHIP,HCT116
+TRIM28,Breast
+CTCF,Cord blood
+SMARCB1,epithelioid sarcoma
+ARID1A,HCT116
+SMARCC1,Blood
+MYT1,Breast
+POLR2A,Muscle
+KLF4,Brain
+EMSY,Cervix
+ZNF131,Cervix
+AHRR,Breast
+GLI2,Blood
+PWWP2A,Cervix
+GATA4,Skin
+U2AF1,Embryonic Kidney
+FOXO1,Cord blood
+SMC1A,Foreskin
+EWSR1,Muscle
+MEPCE,Cervix
+GATA6,Endoderm
+MTA2,Colon
+HN1L,Breast
+SUMO2,Breast
+ARID2,Malignant rhabdoid tumor
+ZEB1,Mammary Gland
+ZEB1,Breast
+CTNNB1,Embryo
+STAT3,Lung
+STAT1,Lung
+ZIC2,Peritoneal Effusion
+RELA,Kidney
+TERF2,Muscle
+ARID1A,Prostate
+T,Breast
+YAP1,ovarian
+ZBTB16,Bone Marrow
+SS18,Malignant rhabdoid tumor
+TRIM28,Prostate
+TLE3,Prostate
+GATA4,Lung
+FXR1,Lung
+MTOR,Prostate

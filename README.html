@@ -95,8 +95,8 @@ ul.task-list li input[type="checkbox"] {
 <ul class="task-list">
 <li><p><label><input type="checkbox" checked="">Changes have been made to the way peaks are selected as bound or unbound. Unbound peaks (where there is no motif in a peak) are now selected randomly. For bound peaks:</label></p>
 <ol type="1">
-<li>count the number of bedfiles (experiments) with these peaks</li>
-<li>create a probability distribution of the number of experiments that have a peak i.e.&nbsp;larger counts should have higher probabilities of being sub-sampled</li>
+<li>count the number of bedfiles (experiments) with these peaks i.e.&nbsp;binding counts</li>
+<li>assign probabilities to each unique binding count that have a peak i.e.&nbsp;larger counts should have higher probabilities of being sub-sampled, and lower counts should have lower probabilities</li>
 <li>select approprately</li>
 </ol></li>
 </ul>

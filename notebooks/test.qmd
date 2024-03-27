@@ -1,0 +1,197 @@
+---
+title: "Untitled"
+format: html
+---
+
+
+# Introduction
+A notebook to generate plots used in the TFPred paper
+
+```{r message=F, warning=F}
+library(glue)
+library(GenomicRanges)
+library(R.utils)
+library(data.table)
+library(tidyverse)
+library(ROCR)
+library(qvalue)
+library(VennDiagram)
+```
+
+```{r warning=F, message=F}
+Sys.setenv(GITHUB_PAT = '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')
+# for manhattan plots
+devtools::source_gist('https://gist.github.com/TemiPete/250d9922b9516691f83bb1fd999a3ccc')
+devtools::source_gist('https://gist.github.com/hakyim/38431b74c6c0bf90c12f')
+devtools::source_gist('https://gist.github.com/hakyim/5d2251ea1a86009499e4ffdf47fe2735')
+devtools::source_gist('https://gist.github.com/TemiPete/e7214eb308c4116e2f10ee96401be0c2')
+devtools::source_gist('https://gist.github.com/TemiPete/b309a46e25ecec93127fb6756e68fb14')
+```
+
+::: {.callout-note}
+In the box folder, the data is here `/Users/temi/Library/CloudStorage/Box-Box/imlab-data/data-Github/analysis-temi/TFPred-data`
+
+On midway3, here: `/project2/haky/temi/projects/TFPred-figures/data`
+
+You only need to change the code block below accordingly.
+:::
+```{r}
+data_dir <- "/project2/haky/temi/projects/TFPred-figures/data" #'/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Prostate_2023-11-14' #'/project2/haky/temi/projects/TFPred-figures/data'
+```
+
+## Performance of $\text{TFP}_\text{prostate}^\text{AR}$
+### Across the genome, on held-out test set
+
+Metadata
+```{r}
+transcription_factor <- 'AR'
+tissue <- 'prostate'
+```
+
+```{r}
+dt_types <- c('train_eval', 'test_eval')
+old_ex <- purrr::map(dt_types, function(each_dt){
+  data.table::fread(glue('{data_dir}/aggByCollect_AR_Prostate.logistic.{each_dt}.txt.gz'))
+})
+names(old_ex) <- dt_types
+```
+
+```{r}
+pp_test <- with(old_ex$test_eval, prediction(TFPred_score, binding_class))
+pp_train <- with(old_ex$train_eval, prediction(TFPred_score, binding_class))
+perf_test <- performance(pp_test, "tpr", "fpr")
+perf_train <- performance(pp_train, 'tpr', 'fpr')
+auc_test <- performance(pp_test, measure = "auc")
+auc_test <- auc_test@y.values[[1]] |> round(3)
+auc_train <- performance(pp_train, measure = "auc")
+auc_train <- auc_train@y.values[[1]] |> round(3)
+```
+
+```{r fig.height=8, fig.width=8}
+par(mar = c(5, 5, 5, 5))
+plot(perf_test, frame.plot=F, col='red', cex.lab=1.5,)
+plot(perf_train, add=T, col='blue')
+legend(0.6, 0.5, legend=c(paste("train AUC:", auc_train), paste("test AUC", auc_test)),
+  col=c("blue", "red"), lty=c(1), bty='n')
+```
+
+
+```{r}
+new_ex <- list(
+    train_eval = data.table::fread("/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Prostate_2024-03-20/aggByCollect_AR_Prostate.logistic.train_eval.txt.gz"),
+    test_eval = data.table::fread("/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_AR_Prostate_2024-03-20/aggByCollect_AR_Prostate.logistic.test_eval.txt.gz")
+)
+```
+
+
+```{r}
+pp_test <- with(new_ex$test_eval, prediction(TFPred_score, binding_class))
+pp_train <- with(new_ex$train_eval, prediction(TFPred_score, binding_class))
+perf_test <- performance(pp_test, "tpr", "fpr")
+perf_train <- performance(pp_train, 'tpr', 'fpr')
+auc_test <- performance(pp_test, measure = "auc")
+auc_test <- auc_test@y.values[[1]] |> round(3)
+auc_train <- performance(pp_train, measure = "auc")
+auc_train <- auc_train@y.values[[1]] |> round(3)
+```
+
+```{r fig.height=8, fig.width=8}
+par(mar = c(5, 5, 5, 5))
+plot(perf_test, frame.plot=F, col='red', cex.lab=1.5,)
+plot(perf_train, add=T, col='blue')
+legend(0.6, 0.5, legend=c(paste("train AUC:", auc_train), paste("test AUC", auc_test)),
+  col=c("blue", "red"), lty=c(1), bty='n')
+```
+
+```{r}
+new_gt <- data.table::fread("/project2/haky/temi/projects/TFPred-snakemake/data/predictor_files/AR_Prostate.info.txt.gz")
+```
+
+```{r}
+any(old_ex$train_eval$locus %in% new_ex$train_eval$locus)
+sum(old_ex$train_eval$locus %in% new_ex$train_eval$locus)
+```
+
+
+```{r}
+sum(old_ex$test_eval$locus %in% new_ex$test_eval$locus)
+```
+
+```{r}
+any(old_ex$train_eval$locus %in% new_gt$locus)
+sum(old_ex$train_eval$locus %in% new_gt$locus)
+```
+
+```{r}
+old_ex$train_eval$binding_count %>% table()
+```
+
+
+```{r}
+new_ex$train_eval$binding_count %>% table()
+```
+
+
+
+```{r}
+a <- c(1:100)
+b <- sample(a, 1000, replace=T)
+```
+
+```{r}
+quantile(a)
+quantile(b)
+```
+
+
+```{r}
+new_gt %>% dplyr::filter(binding_counts > 0) %>% pull(binding_counts) %>% quantile()
+```
+
+
+```{r}
+tt <- new_gt %>% dplyr::filter(binding_counts > 0) %>% pull(binding_counts) %>% table()
+tt
+```
+
+
+```{r}
+new_gt %>% dplyr::filter(binding_counts > 0) %>% pull(binding_counts) %>% unique() %>% quantile()
+```
+
+
+```{r}
+new_gt %>% dplyr::filter(binding_counts >= 70)
+```
+
+
+```{r}
+# picking algorithm
+sort(tt)
+#wsum <- vector(mode = 'numeric')
+csum <- cumsum(sort(tt))
+wsum <- which(csum <= 20000)
+```
+
+
+```{r}
+dt_pos <- new_gt[new_gt$binding_counts > 0, ]
+```
+
+```{r}
+npositives <- 20000
+if(nrow(dt_pos) >= npositives){ 
+    csum <- cumsum(sort(dt_pos$binding_counts |> table()))
+    wsum <- which(csum <= npositives) |> names() |> as.numeric()
+    dtp1 <- dt_pos %>% dplyr::filter(binding_counts %in% wsum)
+    if(nrow(dtp1 < npositives)){
+        dtp2 <- dt_pos %>% dplyr::filter(!binding_counts %in% wsum)
+        remainder <- npositives - nrow(dtp1)
+        dtp2 <- dplyr::slice_sample(dtp2, n=remainder)
+        dt_pos <- cbind(dtp1, dtp2)
+    } else {
+        dt_pos <- dtp1
+    }
+    
+}
+```

@@ -9,7 +9,7 @@ option_list <- list(
     make_option("--transcription_factor", help='A transcription factor e.g. AR'),
     make_option("--tissue", help='A tissue e.g. Breast'),
     make_option("--predicted_motif_file", help="Predicted motif file, particularly from HOMER"),
-    make_option("--bedfiles_directory", help='The folder where the cistrome bedfiles are located'),
+    make_option("--sorted_bedfiles_directory", help='The folder where the cistrome bedfiles are located'),
     make_option("--bedlinks_directory", help='A folder where relevant bedfiles will be linked'),
 	make_option("--predictors_file", help='The final predictor file'),
     make_option("--ground_truth_file", help='The final file containing predictors and ground truths'),
@@ -36,7 +36,7 @@ library(plyranges)
 # opt$transcription_factor <- 'CTCF'
 # opt$tissue <- 'Retina' 
 # opt$predicted_motif_file <- glue('data/homer_files/{opt$transcription_factor}/merged_motif_file.txt')
-# opt$bedfiles_directory <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor' 
+# opt$sorted_bedfiles_directory <- glue('data/sorted/{opt$transcription_factor}_{opt$tissue}')
 # opt$bedlinks_directory <- glue('data/bed_links/{opt$transcription_factor}_{opt$tissue}')
 # opt$predictors_file <- 'data/predictor_files/{opt$transcription_factor}_{opt$tissue}.predictors.txt' 
 # opt$ground_truth_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.ground_truth.txt' 
@@ -44,11 +44,17 @@ library(plyranges)
 # opt$cistrome_metadata_file <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt'
 # opt$train_split <- 0.8
 # opt$num_predictors <- 40000
+# dir.create(opt$sorted_bedfiles_directory, recursive = T)
 
 # # a hacky way to deal with the "none" vs 'None'
 # if(opt$tissue == 'none'){
 #     opt$tissue <- 'None'
 # }
+
+
+if(!dir.exists(opt$sorted_bedfiles_directory)){
+    dir.create(opt$sorted_bedfiles_directory, recursive = T)
+}
 
 if(!file.exists(opt$cistrome_metadata_file)){
     print(glue('INFO - Cistrome metadata file cannnot be found at {dirname(opt$cistrome_metadata_file)}'))
@@ -66,55 +72,20 @@ genome_wide_predicted_motifs <- data.table::fread(opt$predicted_motif_file) %>%
     dplyr::select(chr=V2, start=V3, end=V4, strand=V5, score=V6) %>% 
     dplyr::filter(chr %in% valid_chromosomes, score > quantile(.$score, 0.25))
 
-
-# get threshold
-# threshold <- genome_wide_predicted_motifs %>% 
-#     dplyr::pull(score) %>% 
-#     quantile(0.05)
-# genome_wide_predicted_motifs <- genome_wide_predicted_motifs %>% 
-# dplyr::filter(score >= threshold)
-
 # turn into GRanges
 tf_motifs_granges <- with(genome_wide_predicted_motifs, GRanges(chr, IRanges(start,end), strand, score))
 tf_motifs_granges <- tf_motifs_granges[seqnames(tf_motifs_granges) %in% valid_chromosomes]
 tf_motifs_granges <- GenomicRanges::reduce(tf_motifs_granges)
 tf_motifs_granges <- keepSeqlevels(tf_motifs_granges, paste0("chr", c(1:22, 'X')), pruning.mode="coarse")
 
-# === read in the cistrome metadata file and prepare the bed files
-# mtdt <- data.table::fread(opt$cistrome_metadata_file)
-# ftissue <- gsub('-', ' ', opt$tissue)
-# TF_data <- base::subset(x=mtdt, subset = (Factor == opt$transcription_factor) & (Tissue_type == ftissue))
-# if( ! (nrow(TF_data) > 1 & ncol(TF_data) > 1)){
-#     print(glue('INFO - No DCids found for {opt$transcription_factor} and {opt$tissue}'))
-#     quit(status = 1)
-# } else {
-#     TF_files <- list.files(glue('{opt$bedfiles_directory}'), pattern=paste0('^', TF_data$DCid, collapse='_*|'), full.names=T)
-# }
-
-
-
-# out <- sapply(TF_files, function(each_file){
-#     output_file <- normalizePath(opt$bedlinks_directory)
-#     bname <- basename(each_file)
-#     output_file <- file.path(output_file, bname)
-#     if(!file.exists(output_file)){
-#         cmd <- glue('ln -s {each_file} {output_file}')
-#         system(cmd)
-#     }
-#     return(output_file)
-#     #print(base::normalizePath(output_dir))
-#     #to_ = glue("{normalizePath(output_dir)}/{basename(each_file)}")
-#     #base::file.symlink(from=each_file, to=to_)
-# })
-
 TF_files <- list.files(glue('{opt$bedlinks_directory}'), full.names=T)
 peak_files_paths <- TF_files[file.info(TF_files)$size != 0]
 
 # use just 1000
-if(length(peak_files_paths) > 600){
-    print(glue('INFO - There are {length(peak_files_paths)} bedfiles for for {opt$transcription_factor} and {opt$tissue}; using a random 600 instead'))
-    peak_files_paths <- sample(peak_files_paths, size=600, replace=FALSE)
-}
+#if(length(peak_files_paths) > 600){
+print(glue('INFO - There are {length(peak_files_paths)} bedfiles for {opt$transcription_factor} and {opt$tissue}'))
+#peak_files_paths <- sample(peak_files_paths, size=600, replace=FALSE)
+#}
 
 pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_index){
     each_file <- peak_files_paths[each_file_index]
@@ -150,37 +121,59 @@ pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_ind
         data.table::setDT() %>% 
         dplyr::select(-peakOffset) %>%
         dplyr::rename(!!quo_name(cname) := class, !!quo_name(iname) := intensity)
+
+    # creating bedfiles to merge with bedtools
+    positive_dt %>%
+        dplyr::select(chr, start, end) %>%
+        dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
+        data.table::fwrite(file = glue('{opt$sorted_bedfiles_directory}/{each_file_index}.sorted.bed'), row.names=F, col.names = F, quote=F, sep='\t')
     return(data)
 
 }, .progress=T)
 
-ptm <- proc.time()
-dt_merged <- pmi_dt_list %>% 
-    purrr::reduce(full_join, by = c('chr', 'start', 'end')) %>% 
-    base::replace(is.na(.), 0) %>%
-    dplyr::mutate(binding_counts = rowSums(dplyr::pick(starts_with('class_'))),
-                    mean_intensity = rowMeans(dplyr::pick(starts_with('intensity_'))),
-                    binding_class = ifelse(binding_counts > 0, 1, 0),
-                    chr = as.character(chr)) %>%
-    dplyr::select(chr, start, end, binding_class, binding_counts, mean_intensity)
+query_bed <- glue('{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.ALL.query.bed')
 
+## get a union of all peaks
+purrr::map(pmi_dt_list, function(each_dt){
+    each_dt %>%
+        filter(.[[4]] == 1) %>%
+        dplyr::select(chr, start, end) 
+}, .progress = T) %>%
+    do.call('rbind', .) %>%
+    dplyr::distinct(chr, start, end, .keep_all = FALSE) %>%
+    dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
+    data.table::fwrite(file = query_bed, row.names=F, col.names = F, quote=F, sep='\t')
+
+
+#
+intersect_bed <- glue("{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.intersect.bed")
+pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
+cmd <- glue("bedtools intersect -c -a {query_bed} -g /project2/haky/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
+ptm <- proc.time()
+system(cmd)
 print(glue('INFO - Time to merge files: {as.vector(proc.time() - ptm)[1]} seconds'))
 
-# ss <- sort(unique(dt_pos$binding_counts))
-# tt <- ss/sum(ss)
-# names(tt) <- ss
-# dt_pos <- dt_pos %>%
-#     mutate(proba = tt[as.character(binding_counts)])
-# dt_neg <- dt_merged[dt_merged$binding_counts == 0, ]
-# dt_neg$proba <- 0
-# sample(1:10, size=10, replace=F, prob = runif(10, min=0, max=1))
+if(file.exists(intersect_bed)){
+    dt_pos <- data.table::fread(intersect_bed) %>%
+        setNames(c('chr', 'start', 'end', 'binding_counts')) %>%
+        dplyr::mutate(binding_class = 1)
+}
 
+# select negatives and merge
+dt_neg <- purrr::map(pmi_dt_list, function(each_dt){
+    each_dt %>%
+        filter(.[[4]] == 0) %>%
+        dplyr::select(chr, start, end) 
+}) %>%
+    do.call('rbind', .) %>%
+    dplyr::distinct(chr, start, end, .keep_all = FALSE) %>%
+    dplyr::mutate(binding_class = 0, binding_counts = 0)
 
-# filtering === use the num of positives to determine the number of negatives if total is less than 40000
-dt_pos <- dt_merged[dt_merged$binding_counts > 0, ]
+dt_merged <- dplyr::bind_rows(dt_pos, dt_neg)
+data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
 
+# select training data ===============
 if(nrow(dt_pos) < (opt$num_predictors/2)){
-    #npositives <- ceiling(nrow(dt_merged)/2)
     npositives <- nrow(dt_pos)
     nnegatives <- npositives
 } else {
@@ -204,38 +197,20 @@ if(nrow(dt_pos) >= ceiling(opt$num_predictors/2)){
     
 }
 
-# create probility distribution for the binding counts
-# rg <- range(dt_pos$binding_counts)
-# positive_set_threshold <- c(rg[1]:rg[2]) |> quantile(0.25)
-# dt_pos <- dt_pos[dt_pos$binding_counts > positive_set_threshold, ]#[, 1:5]
-dt_neg <- dt_merged[dt_merged$binding_counts == 0, ]
 dt_pos <- dt_pos[with(dt_pos, sample(seq_along(binding_counts), size=npositives, replace=F)), ] 
 dt_neg <- dt_neg[with(dt_neg, sample(seq_along(binding_counts), size=nnegatives, replace=F)), ]
-
-
-data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
-
-# dt_merged <- data.table::fread('/project2/haky/temi/projects/TFPred-snakemake/data/predictor_files/AR_Breast_predictors.txt')
 
 print(glue('INFO - There are {nrow(dt_merged)} motifs to be trained and tested on before filtering'))
 print(glue("INFO - Distribution of negatives and positives before filtering: {paste0(table(dt_merged$binding_class), collapse=' & ')} respectively"))
 
 
 ### merge and split into train and test
-
 dt <- rbind(dt_pos, dt_neg) %>% 
     as.data.frame() %>%
     tidyr::unite('locus', c(chr, start, end), remove=T) %>% 
     as.data.table() %>%
     dplyr::sample_frac(size=1)
 
-# cistrome_dt_pos <- dt[dt$binding_counts > 0, ] %>%
-#     dplyr::slice_sample(n=npositives)
-
-# num_negs <- 1
-# cistrome_dt_neg <- dplyr::slice_sample(dt_neg, n=nrow(cistrome_dt_pos) * num_negs)
-
-    
 print(glue('INFO - There are {nrow(dt)} motifs to be trained and tested on after filtering'))
 print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(dt$binding_class), collapse=' & ')} respectively"))
 
@@ -249,3 +224,15 @@ dt <- dt[sample(nrow(dt)), ]
 print(glue('INFO - Writing out files...'))
 data.table::fwrite(as.data.frame(dt[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')
 data.table::fwrite(dt, glue('{opt$ground_truth_file}'), row.names=F, quote=F, col.names=T, sep='\t')
+
+
+
+
+# ts <- data.frame(a=c(1:10, 1:10), b = c(LETTERS[1:10], LETTERS[1:10])) %>%
+#     dplyr::distinct(a, .keep_all = F)
+
+# ts <- data.table::fread('/project2/haky/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes') %>%
+#     dplyr::filter(V1 %in% valid_chromosomes) %>%
+#     dplyr::arrange(factor(V1, levels = valid_chromosomes)) %>%
+#     data.table::fwrite(file = '/project2/haky/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted', row.names=F, col.names=F, sep='\t', quote=F)
+    

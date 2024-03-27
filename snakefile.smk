@@ -17,6 +17,7 @@ print_progress = False
 # directories
 DATA_DIR = 'data' #'/project/haky/users/temi/projects/TFPred-snakemake/data' #'data'
 BEDLINKS_DIR = os.path.join(DATA_DIR, 'bed_links')
+SORTEDBEDS_DIR = os.path.join(DATA_DIR, 'sortedbeds')
 HOMERFILES_DIR = os.path.join(DATA_DIR, 'homer_files')
 PREDICTORS_DIR = os.path.join(DATA_DIR, 'predictor_files')
 PREDICTION_PARAMS_DIR = os.path.join(DATA_DIR, 'prediction_parameters')
@@ -174,6 +175,7 @@ rule create_training_set:
         bedfiles_dir=config['cistrome_data_dir'],
         tf_tissue = '{tf}_{tissue}',
         bedlinks_dir = os.path.join(BEDLINKS_DIR, '{tf}_{tissue}'),
+        sortedbeds_dir = os.path.join(SORTEDBEDS_DIR, '{tf}_{tissue}'),
         cistrome_mtdt = config['TF_table'],
         jobname = '{tf}_{tissue}',
         basename = os.path.join(PREDICTORS_DIR, '{tf}_{tissue}'),
@@ -188,7 +190,7 @@ rule create_training_set:
     threads: 8
     shell:
         """
-        {params.rscript} workflow/src/create_training_sets_bb.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --bedfiles_directory {params.bedfiles_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt}; sleep 5
+        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt}; sleep 5
         """
 
 rule create_enformer_configuration:

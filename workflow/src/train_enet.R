@@ -39,7 +39,8 @@ if(file.exists(opt$train_data_file)){
 X_train <- dt_train[, -c(1,2,3)] |> as.matrix()
 y_train <- dt_train[, c(1,2,3)] |> as.data.frame()
 vbc <- y_train$binding_counts
-nbc <- (vbc - min(vbc))/(max(vbc) - min(vbc)) # min-max normalization
+#nbc <- (vbc - min(vbc))/(max(vbc) - min(vbc)) # min-max normalization
+nbc <- log10(1 + y_train$binding_counts)
 
 cl <- 12 #parallel::makeCluster(5)
 print(glue('INFO - Found {parallel::detectCores()} cores but using {cl}'))

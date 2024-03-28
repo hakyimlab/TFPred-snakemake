@@ -16,7 +16,8 @@ option_list <- list(
     make_option("--info_file", help='The final file containing predictors and extra information'),
     make_option("--cistrome_metadata_file", help='Cistrome metadata file to be read and to find relevant bedfiles'),
     make_option("--train_split", type="double", default=0.8, help='proportion to be used as train'),
-    make_option("--num_predictors", type="integer", default=40000, help='proportion to be used as train')
+    make_option("--num_predictors", type="integer", default=40000, help='proportion to be used as train'),
+    make_option("--train_by_chromosome", type="logical", default=TRUE, help='proportion to be used as train')
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -36,8 +37,8 @@ library(plyranges)
 # opt$transcription_factor <- 'CTCF'
 # opt$tissue <- 'Retina' 
 # opt$predicted_motif_file <- glue('data/homer_files/{opt$transcription_factor}/merged_motif_file.txt')
-# opt$sorted_bedfiles_directory <- glue('data/sorted/{opt$transcription_factor}_{opt$tissue}')
-# opt$bedlinks_directory <- glue('data/bed_links/{opt$transcription_factor}_{opt$tissue}')
+# opt$sorted_bedfiles_directory <- glue('data/sortedbeds/{opt$transcription_factor}_{opt$tissue}')
+# opt$bedlinks_directory <- glue('data/bed_links/{opt$transcription_factor}_{opt$tissue}') # nolint
 # opt$predictors_file <- 'data/predictor_files/{opt$transcription_factor}_{opt$tissue}.predictors.txt' 
 # opt$ground_truth_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.ground_truth.txt' 
 # opt$info_file <- 'data/predictor_files/{opt$transcription_factor}){opt$tissue}.info.txt.gz' 
@@ -80,6 +81,10 @@ tf_motifs_granges <- keepSeqlevels(tf_motifs_granges, paste0("chr", c(1:22, 'X')
 
 TF_files <- list.files(glue('{opt$bedlinks_directory}'), full.names=T)
 peak_files_paths <- TF_files[file.info(TF_files)$size != 0]
+if(length(peak_files_paths) == 0){
+    print(glue('INFO - There are no valid peaks data for {opt$transcription_factor} in {opt$tissue}'))
+    quit(status = 1)
+}
 
 # use just 1000
 #if(length(peak_files_paths) > 600){
@@ -214,12 +219,67 @@ dt <- rbind(dt_pos, dt_neg) %>%
 print(glue('INFO - There are {nrow(dt)} motifs to be trained and tested on after filtering'))
 print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(dt$binding_class), collapse=' & ')} respectively"))
 
-tr_size <- ceiling(nrow(dt) * opt$train_split)
-tr_indices <- sample(seq_len(nrow(dt)), tr_size)
-dt$split <- NA
-dt$split[tr_indices] <- 'train'
-dt$split[-tr_indices] <- 'test'
-dt <- dt[sample(nrow(dt)), ]
+
+### splitting by chromosome 
+### I just need to make sure that I don't pick less than 200
+###
+
+if(opt$train_by_chromosome == TRUE){
+    print(glue('INFO - Splitting by chromosome'))
+    csum <- dt %>% 
+    tidyr::separate(locus, into=c('chrom', 'start', 'end'), sep='_') %>%
+    dplyr::pull(chrom) %>%
+    table() %>%
+    sort() 
+
+    for(i in seq_along(csum)){
+        if(csum[i] <= 100){
+            tpick <- 0
+            next
+        } else {
+            tpick <- i
+            tchrom <- names(csum)[tpick]
+            break
+        }
+    }
+
+    # if all are less than 100, pick the maximum
+    if(tpick == 0){
+        tpick <- which.max(csum)
+        tchrom <- names(csum)[tpick]
+    }
+
+    print(glue('INFO - {tchrom} will be used to test'))
+
+    dt <- dt %>% 
+        tidyr::separate(locus, into=c('chrom', 'start', 'end'), sep='_') %>%
+        dplyr::mutate(split = dplyr::case_when(
+            chrom == tchrom ~ 'test',
+            TRUE ~ 'train'
+        )) %>%
+        tidyr::unite('locus', c(chrom, start, end), remove=T)
+
+} else {
+    tr_size <- ceiling(nrow(dt) * opt$train_split)
+    tr_indices <- sample(seq_len(nrow(dt)), tr_size)
+    dt$split <- NA
+    dt$split[tr_indices] <- 'train'
+    dt$split[-tr_indices] <- 'test'
+    dt <- dt[sample(nrow(dt)), ]
+}
+
+
+# dt %>% 
+#     tidyr::separate(locus, into=c('chrom', 'start', 'end'), sep='_') %>%
+#     dplyr::group_by(chrom, binding_class) %>%
+#     dplyr::summarise(cnt = n()) %>%
+#     dplyr::ungroup() %>%
+#     dplyr::mutate(prop = (cnt/sum(cnt))*100)
+
+# csum <- cumsum(sort(dt_pos$binding_counts |> table()))
+#     wsum <- which(csum <= npositives) |> names() |> as.numeric()
+#     dtp1 <- dt_pos %>% dplyr::filter(binding_counts %in% wsum)
+
 
 print(glue('INFO - Writing out files...'))
 data.table::fwrite(as.data.frame(dt[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')

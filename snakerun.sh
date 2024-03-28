@@ -30,6 +30,8 @@ snakemake -s snakefile.smk --configfile config/pipeline_2023-12-01_enformer_vs_t
 # snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ --resources load=50 --report reports/report.html -F --rerun-incomplete >> run.txt 2>&1  
 # snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ --resources load=50 --report reports/report.html >> run.txt 2>&1  
 
+snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ -R predict_with_enformer -np
+
 snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ -R create_training_set -np
 
 snakemake -s snakefile.smk --configfile config/pipeline_2023-12-01_enformer_vs_tfpred.yaml --profile profiles/simple/ --resources load=50 >> run_2023-12-01_enformer_vs_tfpred.txt 2>&1

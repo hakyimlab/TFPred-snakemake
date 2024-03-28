@@ -12,7 +12,9 @@ models_dir <- '/project2/haky/temi/projects/TFPred-snakemake/output/models'
 
 
 ```{r}
-valid_dates <- c('2023-11-14', '2023-12-01')
+#valid_dates <- c('2023-11-14', '2023-12-01')
+
+valid_dates <- c('2024-03-27')
 
 logistic_models <- list.files(models_dir, full.names = TRUE, recursive = T) %>% sapply(., function(each_model){
     if(endsWith(each_model, ".logistic.rds") && grepl('aggByCollect_', each_model, fixed=T) && any(sapply(valid_dates, grepl, x=each_model, fixed=TRUE))){
@@ -38,10 +40,6 @@ if(length(unique(nn)) == length(nn)){
         as.data.frame() %>%
         tibble::rownames_to_column('model') %>%
         setNames(nm=c('model', 'path')) %>%
-        data.table::fwrite(., file='/project2/haky/temi/projects/TFPred-snakemake/output/enpact_models.txt', row.names=F, col.names=T, quote=F, sep='\t')
+        data.table::fwrite(., file='/project2/haky/temi/projects/enpact-predict-snakemake/metadata/enpact_models.txt', row.names=F, col.names=T, quote=F, sep='\t')
 }
-```
-
-```{r}
-
 ```

@@ -103,6 +103,35 @@ legend(0.6, 0.5, legend=c(paste("train AUC:", auc_train), paste("test AUC", auc_
   col=c("blue", "red"), lty=c(1), bty='n')
 ```
 
+
+
+```{r}
+new_ex <- list(
+    train_eval = data.table::fread("/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_CTCF_Retina_2024-03-20/aggByCollect_CTCF_Retina.linear.train_eval.txt.gz"),
+    test_eval = data.table::fread("/project2/haky/temi/projects/TFPred-snakemake/output/models_eval/cistrome_CTCF_Retina_2024-03-20/aggByCollect_CTCF_Retina.linear.test_eval.txt.gz")
+)
+```
+
+
+```{r}
+pp_test <- with(new_ex$test_eval, prediction(TFPred_score, binding_class))
+pp_train <- with(new_ex$train_eval, prediction(TFPred_score, binding_class))
+perf_test <- performance(pp_test, "tpr", "fpr")
+perf_train <- performance(pp_train, 'tpr', 'fpr')
+auc_test <- performance(pp_test, measure = "auc")
+auc_test <- auc_test@y.values[[1]] |> round(3)
+auc_train <- performance(pp_train, measure = "auc")
+auc_train <- auc_train@y.values[[1]] |> round(3)
+```
+
+```{r fig.height=8, fig.width=8}
+par(mar = c(5, 5, 5, 5))
+plot(perf_test, frame.plot=F, col='red', cex.lab=1.5,)
+plot(perf_train, add=T, col='blue')
+legend(0.6, 0.5, legend=c(paste("train AUC:", auc_train), paste("test AUC", auc_test)),
+  col=c("blue", "red"), lty=c(1), bty='n')
+```
+
 ```{r}
 new_gt <- data.table::fread("/project2/haky/temi/projects/TFPred-snakemake/data/predictor_files/AR_Prostate.info.txt.gz")
 ```

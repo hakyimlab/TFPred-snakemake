@@ -179,6 +179,7 @@ rule create_training_set:
         cistrome_mtdt = config['TF_table'],
         jobname = '{tf}_{tissue}',
         basename = os.path.join(PREDICTORS_DIR, '{tf}_{tissue}'),
+        train_by_chromosome = config['train_by_chromosome']
         #nfiles = len([name for name in os.listdir(os.path.join(BEDLINKS_DIR, f'{tf}_{tissue}')) if os.path.isfile(name)])
     message: "working on {wildcards}"
     resources:
@@ -190,7 +191,7 @@ rule create_training_set:
     threads: 8
     shell:
         """
-        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt}; sleep 5
+        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {input} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedlinks_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {output.f3} --cistrome_metadata_file {params.cistrome_mtdt} --train_by_chromosome {params.train_by_chromosome}; sleep 5
         """
 
 rule create_enformer_configuration:

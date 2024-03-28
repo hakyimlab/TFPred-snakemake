@@ -30,12 +30,13 @@ These contain analysis codes for the pipeline. They are not part of the pipeline
 - [ ] Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 
 - [X] Extend the pipeline to provide summary information of the models, including diagnostic plots.
 
-Tues Aug 22 2023
+Tues Mar 27 2024
 
-- [X] Train both linear and logistic models
-- [X] Evaluation should be saved into a text file rather than a `.rds` file
-- [X] Pipeline can now send jobs to beagle3 (for GPU runs) or caslake as needed
-- [X] Added the option to delete ENFORMER predictions on-the-fly as soon as aggregation is done. This will save plenty of storage space when training many models.
+- [X] Added the option to test models on an held-out chromosome. This is the default option. Set to false if you want to use random motifs across the genome.
+
+Tues Mar 26 2024
+
+- [X] Intersection of peaks is now calculated using `bedtools intersect`. This is faster than using code in R that calculates the intersection of peaks.
 
 Fri Mar 22 2024
 
@@ -45,6 +46,9 @@ Fri Mar 22 2024
     2. assign probabilities to each unique binding count that have a peak i.e. larger counts should have higher probabilities of being sub-sampled, and lower counts should have lower probabilities
     3. select approprately
 
-Tues Mar 26 2024
+Tues Aug 22 2023
 
-- [X] Intersection of peaks is now calculated using `bedtools intersect`. This is faster than using code in R that calculates the intersection of peaks.
+- [X] Train both linear and logistic models
+- [X] Evaluation should be saved into a text file rather than a `.rds` file
+- [X] Pipeline can now send jobs to beagle3 (for GPU runs) or caslake as needed
+- [X] Added the option to delete ENFORMER predictions on-the-fly as soon as aggregation is done. This will save plenty of storage space when training many models.

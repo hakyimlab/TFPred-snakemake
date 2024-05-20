@@ -5,3 +5,7 @@ FOXA1,Prostate
 CTCF,Prostate
 PR,Prostate
 GATA2,Prostate
+MAX,Blood
+REST,Breast
+SOX2,Colon
+YY1,Embryo

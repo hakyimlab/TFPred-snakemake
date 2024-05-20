@@ -12,7 +12,7 @@ cluster:
     --mem-per-cpu={resources.mem_cpu}G
     --cpus-per-task={resources.cpu_task}
 default-resources:
-  - partition=caslake # beagle3 for gpus #bigmem   #- mem_mb=50000
+  - partition="broadwl" #caslake # beagle3 for gpus #bigmem   #- mem_mb=50000
   - time="02:00:00"
   - tmpdir="/scratch/midway3/temi"
   - account="pi-haky"

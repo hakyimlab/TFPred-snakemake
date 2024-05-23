@@ -52,7 +52,7 @@ def get_cluster_allocation(wildcards, attempt):
     if attempt > 5:
         return('bigmem')
     else:
-        return('broadwl')
+        return('beagle3')
 
 
 #print(details)
@@ -191,7 +191,7 @@ rule create_training_set:
         #nfiles = len([name for name in os.listdir(os.path.join(BEDLINKS_DIR, f'{tf}_{tissue}')) if os.path.isfile(name)])
     message: "working on {wildcards}"
     resources:
-        partition = "broadwl", #if params.nfiles > 200 else "caslake",
+        partition = "beagle3", #if params.nfiles > 200 else "caslake",
         #attempt: attempt * 100,
         mem_cpu = 16, #lambda wildcards, attempt: attempt * 8,
         nodes = 1,
@@ -209,7 +209,7 @@ rule create_enformer_configuration:
     output: os.path.join(PREDICTION_PARAMS_DIR, f'enformer_parameters_{config["dataset"]}_{{tf}}_{{tissue}}.json')
     message: "working on {wildcards}"
     resources:
-        partition="broadwl"
+        partition="beagle3"
     params:
         rscript = config['rscript'],
         bdirectives = config['enformer']['base_directives'],
@@ -286,7 +286,7 @@ rule prepare_training_data:
         aggtype = config['enformer']['aggtype']
     resources:
         mem_mb=24000,
-        partition="broadwl"
+        partition="beagle3"
     shell:
         """
             {params.rscript} workflow/src/train_test_split.R --data_file {input.p1} --ground_truth_file {input.p2} --aggregation_method {params.aggtype} --train_prepared_file {output.p1} --test_prepared_file {output.p2}
@@ -335,7 +335,7 @@ rule evaluate_TFPred:
         basename=os.path.join(MODELS_EVAL_DIR, f"{config['dataset']}_{{tf}}_{{tissue}}_{config['date']}", f'{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}')
     resources:
         mem_mb= 100000,
-        partition="broadwl"
+        partition="beagle3"
     shell:
         """
             {params.rscript} workflow/src/evaluate_enet.R --linear_model {input.linear_model} --logistic_model {input.logistic_model} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {params.basename}

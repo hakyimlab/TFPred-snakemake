@@ -3,7 +3,193 @@
 
 ```{r}
 library(data.table)
+library(magrittr)
+library(yaml)
+library(glue)
+library(dplyr)
 ```
+
+```{r}
+
+
+
+```
+
+```{r}
+# Homer gives you motifs to symbol
+# homerdb <- data.table::fread('/project2/haky/temi/projects/TFPred-snakemake/metadata/motifs2symbol.txt', header = T)
+# homerdb
+```
+
+```{r}
+homerdb <- data.table::fread('/project2/haky/temi/projects/TFPred-snakemake/metadata/motifTable.txt', header = T) %>%
+    dplyr::filter(!grepl(',', `Gene Symbol`), !`Gene Symbol` %in% c( "-", "?")) %>%
+    dplyr::select(Filename, Consensus, symbol=`Gene Symbol`)
+homerdb
+```
+
+```{r}
+mt <- data.table::fread('/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt') %>%
+    dplyr::filter(Tissue_type != 'None', !is.na(PeaksUnionDHSRatio)) %>%
+    dplyr::filter(!grepl('-', Factor, fixed = T)) %>%
+    dplyr::filter(Factor %in% homerdb$symbol)
+
+idt <- mt %>%
+    dplyr::group_by(Factor, Tissue_type) %>%
+    dplyr::group_split() 
+
+ldt <- list()
+
+for(i in seq_along(idt)){
+    fdt <- idt[[i]]
+    tissuename <- unique(fdt$Tissue_type)
+    tissuename <- gsub(' ', '', tissuename)
+    tfname <- unique(fdt$Factor)
+    dcids <- fdt$DCid
+
+    if(!tfname %in% names(ldt)){
+        ldt[[as.name(tfname)]] <- list()
+        ldt[[as.name(tfname)]][['peakFiles']] <- list()
+        ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
+    } else {
+        ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
+    }
+}
+
+# ldt <- lapply(idt, function(eachdt){
+#     eachdt <- eachdt %>% dplyr::arrange(desc(FRiP))
+#     tissuename <- unique(eachdt$Tissue_type)
+#     tissuename <- gsub(' ', '', tissuename)
+#     tfname <- unique(eachdt$Factor)
+#     dcids <- eachdt$DCid
+#     et <- list()
+#     et[[as.name(tfname)]] <- list()
+#     et[[as.name(tfname)]][[as.name(tissuename)]] <- paste0(dcids, '_sort_peaks.narrowPeak.bed')
+#     return(et)
+# })
+```
+
+
+```{r}
+factors_motifs <- homerdb %>%
+    dplyr::group_by(symbol) %>%
+    dplyr::group_split()
+ndt <- c()
+mdt <- lapply(factors_motifs, function(edt){
+    res <- list()
+    res[['motifFiles']] <- edt$Filename
+    ndt <<- append(ndt, unique(edt$symbol))
+    return(res)
+})
+names(mdt) <- ndt
+```
+
+```{r}
+common_names <- intersect(names(ldt), names(mdt))
+peakslist <- ldt[common_names]
+motifslist <- mdt[common_names]
+```
+
+
+```{r}
+enpact_models_config <- mapply(c, peakslist, motifslist)
+```
+
+```{r}
+library(purrr)
+# Modified from: https://stackoverflow.com/questions/74655073/how-to-effectively-join-two-lists-elementwise-by-element-name
+cat_lists <- function(list1, list2) {  
+  keys <- unique(c(names(list1), names(list2)))
+  map2(list1[keys], list2[keys], c) |>
+    set_names(keys)  
+
+}
+
+enlist <- reduce(list(motifslist, peakslist), cat_lists)
+yaml::write_yaml(enlist[1:10], file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.yaml')
+```
+
+```{r}
+names(rapply(peakslist, function(x) head(x, 1)))
+```
+
+```{r}
+# prepare the metdata 
+mtdt <- sapply(gsub('.peakFiles.', '_', names(rapply(peakslist, function(x) head(x, 1)))), base::strsplit, '_') |> unname() %>% do.call('rbind', .) %>% as.data.frame()
+colnames(mtdt) <- c('assay', 'context')
+
+data.table::fwrite(mtdt, file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+
+
+data.table::fwrite(mtdt[1:10, ], file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+```
+
+
+```{r}
+arnt <- c(peakslist[2], motifslist[2])
+
+yaml::write_yaml(enlist[2], file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/arnt_config.yaml')
+```
+
+```{r}
+# /project2/haky/temi/software/homer/data/knownTFs/motifs
+```
+
+```{r}
+# for TF get the motif file
+homer_db <- "/project2/haky/temi/software/homer/motifs"
+
+ptrns <- unique(mt$Factor) |> tolower() |> sort()
+ptrns_cond <- paste("\\b", ptrns, "\\b\\.motif$", sep = '')
+
+
+mfiles <- sapply(ptrns_cond, function(ech){
+    mfile <- list.files(path = homer_db, pattern = ech, full.names = T)
+    return(mfile)
+})
+
+# ptrns_cond <- paste(ptrns_cond, collapse = '|')
+
+mfile <- list.files(path = homer_db, pattern = ptrns_cond[1], full.names = T)
+mfile
+
+# mfile <- list.files(path = homer_db, pattern = '*ar-half*.motif', full.names = T)
+# mfile
+```
+
+```{r}
+peaks_db <- "/project2/haky/Data/TFXcan/cistrome/raw/human_factor"
+bedfiles <- lapply(dcids, function(each_dcid){
+    list.files(path = peaks_db, pattern = glue('^{each_dcid}_sort_peaks.narrowPeak.bed$'), full.names = T)
+})
+bedfiles <- Filter(Negate(is.null), bedfiles)
+```
+
+```{r}
+config_list <- list()
+config_list[[tf]][[tiss]][['motifFile']] <- list(mfile)
+config_list[[tf]][[tiss]][['bedFiles']] <- bedfiles
+
+config_list
+```
+
+```{r}
+yaml::write_yaml(config_list, file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/config.yaml')
+```
+
+```{r}
+data.frame(assay = names(config_list), context = names(config_list[[1]]))
+```
+
+
+
+
+
+
+
+
+
+
 
 ```{r}
 # with help from Haky
@@ -59,7 +245,6 @@ paste0(dcids[1:14], collapse = ',')
 ```{r}
 ms_enpact_scores <- readRDS("/project2/haky/temi/projects/enpact-predict-snakemake/output/baca_multisample_2024-05-11/baca_multisample_2024-05-11.enpact_scores.array.rds.gz")
 ```
-
 
 ```{r}
 msnames <- dimnames(ms_enpact_scores)[3][[1]]

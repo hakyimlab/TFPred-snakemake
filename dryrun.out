@@ -1,0 +1,107 @@
+===========================
+===========================
+Building DAG of jobs...
+Job stats:
+job                   count    min threads    max threads
+------------------  -------  -------------  -------------
+all                       1              1              1
+find_homer_motifs         8              1              1
+merge_homer_motifs        2              1              1
+total                    11              1              1
+
+
+[Sat Jun  8 14:07:26 2024]
+Job 1: working on motif_file=are.motif,tf=AR
+Reason: Missing output files: data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt
+
+
+        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/are.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt
+        
+
+[Sat Jun  8 14:07:26 2024]
+Job 3: working on motif_file=arnt.motif,tf=ARNT
+Reason: Missing output files: data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt
+
+
+        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/arnt.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt
+        
+
+[Sat Jun  8 14:07:26 2024]
+Job 7: working on motif_file=ar-half.motif,tf=ARNT
+Reason: Missing output files: data/homer_instances/ARNT/scanMotifsGenomeWide.ar-half.motif.txt
+
+
+        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/ar-half.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/ARNT/scanMotifsGenomeWide.ar-half.motif.txt
+        
+
+[Sat Jun  8 14:07:26 2024]
+Job 9: working on motif_file=arnt.motif,tf=AR
+Reason: Missing output files: data/homer_instances/AR/scanMotifsGenomeWide.arnt.motif.txt
+
+
+        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/arnt.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/AR/scanMotifsGenomeWide.arnt.motif.txt
+        
+
+[Sat Jun  8 14:07:26 2024]
+Job 2: working on motif_file=ar-half.motif,tf=AR
+Reason: Missing output files: data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt
+
+
+        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/ar-half.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt
+        
+
+[Sat Jun  8 14:07:26 2024]
+Job 4: working on motif_file=hif1b.motif,tf=ARNT
+Reason: Missing output files: data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt
+
+
+        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/hif1b.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt
+        
+
+[Sat Jun  8 14:07:26 2024]
+Job 6: working on motif_file=are.motif,tf=ARNT
+Reason: Missing output files: data/homer_instances/ARNT/scanMotifsGenomeWide.are.motif.txt
+
+
+        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/are.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/ARNT/scanMotifsGenomeWide.are.motif.txt
+        
+
+[Sat Jun  8 14:07:26 2024]
+Job 10: working on motif_file=hif1b.motif,tf=AR
+Reason: Missing output files: data/homer_instances/AR/scanMotifsGenomeWide.hif1b.motif.txt
+
+
+        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/hif1b.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/AR/scanMotifsGenomeWide.hif1b.motif.txt
+        
+
+[Sat Jun  8 14:07:26 2024]
+Job 5: working on tf=AR
+Reason: Missing output files: data/homer_instances/AR/merged_motif_file.txt; Input files updated by another job: data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.ar-half.motif.txt
+
+[Sat Jun  8 14:07:26 2024]
+Job 8: working on tf=ARNT
+Reason: Missing output files: data/homer_instances/ARNT/merged_motif_file.txt; Input files updated by another job: data/homer_instances/AR/scanMotifsGenomeWide.arnt.motif.txt, data/homer_instances/AR/scanMotifsGenomeWide.hif1b.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt
+
+[Sat Jun  8 14:07:26 2024]
+localrule all:
+    input: data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt, data/homer_instances/AR/merged_motif_file.txt, data/homer_instances/ARNT/merged_motif_file.txt
+    jobid: 0
+    reason: Input files updated by another job: data/homer_instances/AR/merged_motif_file.txt, data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/ARNT/merged_motif_file.txt, data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt
+    resources: mem_mb=<TBD>, disk_mb=<TBD>, tmpdir=/scratch/midway3/temi, partition=broadwl, time=02:00:00, account=pi-haky, nodes=1, gpu=0, mem_cpu=4, cpu_task=8
+
+Job stats:
+job                   count    min threads    max threads
+------------------  -------  -------------  -------------
+all                       1              1              1
+find_homer_motifs         8              1              1
+merge_homer_motifs        2              1              1
+total                    11              1              1
+
+Reasons:
+    (check individual jobs above for details)
+    input files updated by another job:
+        all, merge_homer_motifs
+    missing output files:
+        find_homer_motifs, merge_homer_motifs
+
+This was a dry-run (flag -n). The order of jobs does not reflect the order of execution.

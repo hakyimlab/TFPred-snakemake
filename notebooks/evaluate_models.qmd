@@ -19,7 +19,7 @@ library(rjson)
 ```
 ```{r import libraries}
 #rm(list=ls())
-root_dir <- '/project2/haky/temi/projects/TFPred-snakemake'
+root_dir <- '/project/haky/users/temi/projects/TFPred-snakemake'
 ```
 
 ```{r}
@@ -63,13 +63,72 @@ colnames(ct) <- c('model', 'path')
 data.table::fwrite(ct, "/project2/haky/temi/projects/enpact-predict-snakemake/metadata/enpact_5_models.txt", sep = '\t', row.names = F, col.names=T, quote = F)
 ```
 
+
+
+
+```{r}
+runs <- data.table::fread('/project/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.tsv')
+rdate <- '2024-06-08'
+
+evals <- list()
+ci_low <- list()
+ci_high <- list()
+
+
+for(i in seq_len(nrow(runs))){
+
+  tf <- runs[i, ]$assay
+  tissue <- runs[i, ]$context
+  m <- glue('/project/haky/users/temi/projects/TFPred-snakemake/data/cistrome_{rdate}/evaluation/{tf}_{tissue}_{rdate}.logistic.test_eval.txt.gz')
+  
+  if(file.exists(m)){
+    print(m)
+
+    dt <- data.table::fread(m)
+    roc_object <- pROC::roc(dt$binding_class, dt$TFPred_score, quiet = T)
+    ci_object <- pROC::ci.auc(dt$binding_class, dt$TFPred_score, conf.level = 0.95, quiet = T)
+    pp_ci <- as.numeric(ci_object)
+    print(pp_ci)
+    evals[[`i`]] <- pROC::auc(roc_object)[1]
+    # pp_ci <- with(dt, pROC::ci.auc(binding_class, TFPred_score, conf.level = 0.95, quiet = T)) |> as.numeric() 
+    #pp_auc <- pp$auc |> as.numeric() |> round(3)
+    #pp_var <- pROC::var(pp)|> as.numeric()
+    # pp_ci <- with(dt, pROC::ci.auc(binding_class, TFPred_score, conf.level = 0.95, quiet = T)) |> as.numeric() 
+    #evals[[`i`]] <- pp_ci[2]
+    ci_low[[`i`]] <- pp_ci[1]
+    ci_high[[`i`]] <- pp_ci[3]
+  }
+}
+res <- lapply(list(evals, ci_low, ci_high), function(ea){
+  Filter(Negate(is.null), ea) |> unlist()
+}) %>% do.call('cbind', .)
+
+names(evals) <- glue('{runs$assay}_{runs$context}')
+evals <- Filter(Negate(is.null), evals)
+```
+
+```{r}
+bp <- barplot(unlist(evals), names.arg = names(evals), col = c("lightblue", "mistyrose", "lavender"), legend = glue('{runs$assay}_{runs$context}'), xlab = 'Number of Sample used to define motifs', ylab = 'AUC on Test set')
+text(bp, 0.2, round(unlist(evals), 3), cex=1, pos=3)
+```
+
+```{r}
+plot(res[,2], type = 'b', col = c("black"), xlab = 'Number of Sample used to define motifs', ylab = 'AUC on Test set', ylim = c(0.85, 0.95), bg = 'red', pch = 21, xaxt = 'n')
+axis(1, at = 1:5, labels = c(1,2,3,7,14))
+text(1:5, res[,2] + 0.005, round(res[,2], 3), cex=1, pos=3)
+# lines(res[, 1], type = 'b', bg = 'red', pch = 21)
+# lines(res[, 3], type = 'b', bg = 'red', pch = 21)
+```
+
+
+
 ```{r}
 transcription_factor <- 'AR'
 evals <- list()
 ci_low <- list()
 ci_high <- list()
 for(i in c(1,2,3,7,14)){
-  m <- glue('/project2/haky/temi/projects/TFPred-snakemake/data/cistrome_{i}_{rundate}/models_eval/cistrome_{i}_{tfs_tissues}_{rundate}/aggByCollect_{tfs_tissues}.logistic.test_eval.txt.gz')
+  m <- glue('/project/haky/temi/projects/TFPred-snakemake/data/cistrome_{i}_{rundate}/models_eval/cistrome_{i}_{tfs_tissues}_{rundate}/aggByCollect_{tfs_tissues}.logistic.test_eval.txt.gz')
   
   if(file.exists(m)){
     print(m)
@@ -99,7 +158,7 @@ res <- lapply(list(evals, ci_low, ci_high), function(ea){
 ```
 
 ```{r}
-bp <- barplot(unlist(evals), names.arg = names(evals), col = c("lightblue", "mistyrose", "lavender"), legend = c("1 sample", "2 samples", "3 samples"), xlab = 'Number of Sample used to define motifs', ylab = 'AUC on Test set')
+bp <- barplot(unlist(evals), names.arg = names(evals), col = c("lightblue", "mistyrose", "lavender"), legend = glue('{r}'), xlab = 'Number of Sample used to define motifs', ylab = 'AUC on Test set')
 text(bp, 0.2, round(unlist(evals), 3), cex=1, pos=3)
 ```
 

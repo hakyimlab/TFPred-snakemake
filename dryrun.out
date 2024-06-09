@@ -1,107 +1,207 @@
-===========================
-===========================
 Building DAG of jobs...
 Job stats:
-job                   count    min threads    max threads
-------------------  -------  -------------  -------------
-all                       1              1              1
-find_homer_motifs         8              1              1
-merge_homer_motifs        2              1              1
-total                    11              1              1
+job                      count    min threads    max threads
+---------------------  -------  -------------  -------------
+aggregate_predictions        4              1              1
+all                          1              1              1
+evaluate_TFPred              5              1              1
+predict_with_enformer        4              1              1
+prepare_training_data        5              1              1
+train_TFPred_weights         5              1              1
+total                       24              1              1
 
 
-[Sat Jun  8 14:07:26 2024]
-Job 1: working on motif_file=are.motif,tf=AR
-Reason: Missing output files: data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 17: working on ARNTL_Bone
+Reason: Missing output files: data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ARNTL_Bone.json
 
 
-        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/are.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt
+            python3 /beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py --parameters data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ARNTL_Bone.json
         
 
-[Sat Jun  8 14:07:26 2024]
-Job 3: working on motif_file=arnt.motif,tf=ARNT
-Reason: Missing output files: data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 19: working on ASCL1_Lung
+Reason: Missing output files: data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL1_Lung.json
 
 
-        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/arnt.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt
+            python3 /beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py --parameters data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ASCL1_Lung.json
         
 
-[Sat Jun  8 14:07:26 2024]
-Job 7: working on motif_file=ar-half.motif,tf=ARNT
-Reason: Missing output files: data/homer_instances/ARNT/scanMotifsGenomeWide.ar-half.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 20: working on ASCL1_Skin
+Reason: Missing output files: data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL1_Skin.json
 
 
-        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/ar-half.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/ARNT/scanMotifsGenomeWide.ar-half.motif.txt
+            python3 /beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py --parameters data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ASCL1_Skin.json
         
 
-[Sat Jun  8 14:07:26 2024]
-Job 9: working on motif_file=arnt.motif,tf=AR
-Reason: Missing output files: data/homer_instances/AR/scanMotifsGenomeWide.arnt.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 21: working on ASCL2_Colon
+Reason: Missing output files: data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL2_Colon.json
 
 
-        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/arnt.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/AR/scanMotifsGenomeWide.arnt.motif.txt
+            python3 /beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py --parameters data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ASCL2_Colon.json
         
 
-[Sat Jun  8 14:07:26 2024]
-Job 2: working on motif_file=ar-half.motif,tf=AR
-Reason: Missing output files: data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 28: preparing tf=ARNTL,tissue=Colon training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz
 
 
-        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/ar-half.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_test_split.R --data_file data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ARNTL_Colon.csv.gz --ground_truth_file data/cistrome_2024-06-08/predictor_files/ARNTL_Colon.ground_truth.txt --aggregation_method aggByCollect --train_prepared_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz --test_prepared_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz
         
 
-[Sat Jun  8 14:07:26 2024]
-Job 4: working on motif_file=hif1b.motif,tf=ARNT
-Reason: Missing output files: data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 33: training on tf=ARNTL,tissue=Colon training data
+Reason: Missing output files: data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.linear.rds; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz
 
 
-        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/hif1b.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_enet.R --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz --rds_file data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08 --nfolds 5; sleep 12
         
 
-[Sat Jun  8 14:07:26 2024]
-Job 6: working on motif_file=are.motif,tf=ARNT
-Reason: Missing output files: data/homer_instances/ARNT/scanMotifsGenomeWide.are.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 22: working on tf=ARNTL,tissue=Bone
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ARNTL_Bone.csv.gz; Input files updated by another job: data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ARNTL_Bone.json
+
+[Sun Jun  9 01:58:22 2024]
+Job 24: working on tf=ASCL1,tissue=Lung
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Lung.csv.gz; Input files updated by another job: data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL1_Lung.json
+
+[Sun Jun  9 01:58:22 2024]
+Job 25: working on tf=ASCL1,tissue=Skin
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Skin.csv.gz; Input files updated by another job: data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL1_Skin.json
+
+[Sun Jun  9 01:58:22 2024]
+Job 26: working on tf=ASCL2,tissue=Colon
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL2_Colon.csv.gz; Input files updated by another job: data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL2_Colon.json
+
+[Sun Jun  9 01:58:22 2024]
+Job 31: preparing tf=ASCL2,tissue=Colon training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL2_Colon.csv.gz
 
 
-        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/are.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/ARNT/scanMotifsGenomeWide.are.motif.txt
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_test_split.R --data_file data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL2_Colon.csv.gz --ground_truth_file data/cistrome_2024-06-08/predictor_files/ASCL2_Colon.ground_truth.txt --aggregation_method aggByCollect --train_prepared_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz --test_prepared_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz
         
 
-[Sat Jun  8 14:07:26 2024]
-Job 10: working on motif_file=hif1b.motif,tf=AR
-Reason: Missing output files: data/homer_instances/AR/scanMotifsGenomeWide.hif1b.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 38: evaluating on tf=ARNTL,tissue=Colon training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.linear.test_eval.txt.gz; Input files updated by another job: data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.logistic.rds, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz, data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.linear.rds
 
 
-        perl /project2/haky/temi/software/homer/bin/scanMotifGenomeWide.pl /project2/haky/temi/software/homer/motifs/hif1b.motif /project2/haky/temi/software/homer/data/genomes/hg38 > data/homer_instances/AR/scanMotifsGenomeWide.hif1b.motif.txt
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/evaluate_enet.R --linear_model data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.linear.rds --logistic_model data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.logistic.rds --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz --test_data_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz --eval_output data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08
         
 
-[Sat Jun  8 14:07:26 2024]
-Job 5: working on tf=AR
-Reason: Missing output files: data/homer_instances/AR/merged_motif_file.txt; Input files updated by another job: data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.ar-half.motif.txt
+[Sun Jun  9 01:58:22 2024]
+Job 27: preparing tf=ARNTL,tissue=Bone training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ARNTL_Bone.csv.gz
 
-[Sat Jun  8 14:07:26 2024]
-Job 8: working on tf=ARNT
-Reason: Missing output files: data/homer_instances/ARNT/merged_motif_file.txt; Input files updated by another job: data/homer_instances/AR/scanMotifsGenomeWide.arnt.motif.txt, data/homer_instances/AR/scanMotifsGenomeWide.hif1b.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt
 
-[Sat Jun  8 14:07:26 2024]
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_test_split.R --data_file data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ARNTL_Bone.csv.gz --ground_truth_file data/cistrome_2024-06-08/predictor_files/ARNTL_Bone.ground_truth.txt --aggregation_method aggByCollect --train_prepared_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz --test_prepared_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 29: preparing tf=ASCL1,tissue=Lung training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Lung.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_test_split.R --data_file data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Lung.csv.gz --ground_truth_file data/cistrome_2024-06-08/predictor_files/ASCL1_Lung.ground_truth.txt --aggregation_method aggByCollect --train_prepared_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz --test_prepared_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 30: preparing tf=ASCL1,tissue=Skin training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Skin.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_test_split.R --data_file data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Skin.csv.gz --ground_truth_file data/cistrome_2024-06-08/predictor_files/ASCL1_Skin.ground_truth.txt --aggregation_method aggByCollect --train_prepared_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz --test_prepared_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 32: training on tf=ARNTL,tissue=Bone training data
+Reason: Missing output files: data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.linear.rds; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_enet.R --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz --rds_file data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08 --nfolds 5; sleep 12
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 34: training on tf=ASCL1,tissue=Lung training data
+Reason: Missing output files: data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.linear.rds; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_enet.R --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz --rds_file data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08 --nfolds 5; sleep 12
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 35: training on tf=ASCL1,tissue=Skin training data
+Reason: Missing output files: data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.linear.rds; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_enet.R --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz --rds_file data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08 --nfolds 5; sleep 12
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 36: training on tf=ASCL2,tissue=Colon training data
+Reason: Missing output files: data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.linear.rds; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_enet.R --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz --rds_file data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08 --nfolds 5; sleep 12
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 37: evaluating on tf=ARNTL,tissue=Bone training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.linear.train_eval.txt.gz; Input files updated by another job: data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.logistic.rds, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz, data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.linear.rds, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/evaluate_enet.R --linear_model data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.linear.rds --logistic_model data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.logistic.rds --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz --test_data_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz --eval_output data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 39: evaluating on tf=ASCL1,tissue=Lung training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.logistic.train_eval.txt.gz; Input files updated by another job: data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.logistic.rds, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz, data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.linear.rds, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/evaluate_enet.R --linear_model data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.linear.rds --logistic_model data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.logistic.rds --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz --test_data_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz --eval_output data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 40: evaluating on tf=ASCL1,tissue=Skin training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.linear.test_eval.txt.gz; Input files updated by another job: data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.logistic.rds, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz, data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.linear.rds, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/evaluate_enet.R --linear_model data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.linear.rds --logistic_model data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.logistic.rds --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz --test_data_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz --eval_output data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08
+        
+
+[Sun Jun  9 01:58:22 2024]
+Job 41: evaluating on tf=ASCL2,tissue=Colon training and test data
+Reason: Missing output files: data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.logistic.train_eval.txt.gz; Input files updated by another job: data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz, data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.linear.rds
+
+
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/evaluate_enet.R --linear_model data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.linear.rds --logistic_model data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.logistic.rds --train_data_file data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz --test_data_file data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz --eval_output data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08
+        
+
+[Sun Jun  9 01:58:22 2024]
 localrule all:
-    input: data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt, data/homer_instances/AR/merged_motif_file.txt, data/homer_instances/ARNT/merged_motif_file.txt
+    input: data/homer_instances/ASCL1/scanMotifsGenomeWide.ascl1.motif.txt, data/homer_instances/ARNTL/scanMotifsGenomeWide.bmal.motif.txt, data/homer_instances/ASCL2/scanMotifsGenomeWide.ascl2.motif.txt, data/homer_instances/ASCL1/merged_motif_file.txt, data/homer_instances/ARNTL/merged_motif_file.txt, data/homer_instances/ASCL2/merged_motif_file.txt, data/cistrome_2024-06-08/predictor_files/ARNTL_Bone.predictors.txt, data/cistrome_2024-06-08/predictor_files/ARNTL_Colon.predictors.txt, data/cistrome_2024-06-08/predictor_files/ASCL1_Lung.predictors.txt, data/cistrome_2024-06-08/predictor_files/ASCL1_Skin.predictors.txt, data/cistrome_2024-06-08/predictor_files/ASCL2_Colon.predictors.txt, data/cistrome_2024-06-08/predictor_files/ARNTL_Bone.ground_truth.txt, data/cistrome_2024-06-08/predictor_files/ARNTL_Colon.ground_truth.txt, data/cistrome_2024-06-08/predictor_files/ASCL1_Lung.ground_truth.txt, data/cistrome_2024-06-08/predictor_files/ASCL1_Skin.ground_truth.txt, data/cistrome_2024-06-08/predictor_files/ASCL2_Colon.ground_truth.txt, data/cistrome_2024-06-08/predictor_files/ARNTL_Bone.info.txt.gz, data/cistrome_2024-06-08/predictor_files/ARNTL_Colon.info.txt.gz, data/cistrome_2024-06-08/predictor_files/ASCL1_Lung.info.txt.gz, data/cistrome_2024-06-08/predictor_files/ASCL1_Skin.info.txt.gz, data/cistrome_2024-06-08/predictor_files/ASCL2_Colon.info.txt.gz, data/cistrome_2024-06-08/predictor_files/ARNTL_Bone.summary.txt, data/cistrome_2024-06-08/predictor_files/ARNTL_Colon.summary.txt, data/cistrome_2024-06-08/predictor_files/ASCL1_Lung.summary.txt, data/cistrome_2024-06-08/predictor_files/ASCL1_Skin.summary.txt, data/cistrome_2024-06-08/predictor_files/ASCL2_Colon.summary.txt, data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ARNTL_Bone.json, data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ARNTL_Colon.json, data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ASCL1_Lung.json, data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ASCL1_Skin.json, data/cistrome_2024-06-08/prediction_parameters/enformer_config_cistrome_2024-06-08.ASCL2_Colon.json, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ARNTL_Bone.json, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ARNTL_Colon.json, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL1_Lung.json, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL1_Skin.json, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL2_Colon.json, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ARNTL_Bone.csv.gz, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ARNTL_Colon.csv.gz, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Lung.csv.gz, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Skin.csv.gz, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL2_Colon.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz, data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.linear.rds, data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.linear.rds, data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.linear.rds, data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.linear.rds, data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.linear.rds, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.logistic.test_eval.txt.gz
     jobid: 0
-    reason: Input files updated by another job: data/homer_instances/AR/merged_motif_file.txt, data/homer_instances/AR/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/ARNT/merged_motif_file.txt, data/homer_instances/AR/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.arnt.motif.txt, data/homer_instances/ARNT/scanMotifsGenomeWide.hif1b.motif.txt
-    resources: mem_mb=<TBD>, disk_mb=<TBD>, tmpdir=/scratch/midway3/temi, partition=broadwl, time=02:00:00, account=pi-haky, nodes=1, gpu=0, mem_cpu=4, cpu_task=8
+    reason: Input files updated by another job: data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.logistic.rds, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.linear.rds, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Skin.csv.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/models/ASCL1_Skin/ASCL1_Skin_2024-06-08.logistic.rds, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL1_Skin.json, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz, data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.linear.rds, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL2_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ASCL1_Lung.prepared.csv.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL1_Lung.csv.gz, data/cistrome_2024-06-08/models/ASCL1_Lung/ASCL1_Lung_2024-06-08.linear.rds, data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.linear.rds, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ARNTL_Bone.json, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/models/ARNTL_Colon/ARNTL_Colon_2024-06-08.logistic.rds, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Bone.prepared.csv.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Bone_2024-06-08.logistic.train_eval.txt.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ASCL1_Skin.prepared.csv.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ASCL2_Colon.csv.gz, data/cistrome_2024-06-08/aggregation_folder/train_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz, data/cistrome_2024-06-08/aggregation_folder/test_cistrome_2024-06-08_aggByCollect.ARNTL_Colon.prepared.csv.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Lung_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL2_Colon_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.linear.train_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ARNTL_Colon_2024-06-08.linear.test_eval.txt.gz, data/cistrome_2024-06-08/evaluation/ASCL1_Skin_2024-06-08.logistic.test_eval.txt.gz, data/cistrome_2024-06-08/models/ARNTL_Bone/ARNTL_Bone_2024-06-08.logistic.rds, data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.logistic.rds, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL1_Lung.json, data/cistrome_2024-06-08/prediction_parameters/aggregation_config_cistrome_ASCL2_Colon.json, data/cistrome_2024-06-08/models/ASCL2_Colon/ASCL2_Colon_2024-06-08.linear.rds, data/cistrome_2024-06-08/aggregation_folder/cistrome_aggByCollect_ARNTL_Bone.csv.gz
+    resources: mem_mb=<TBD>, disk_mb=<TBD>, tmpdir=/scratch/midway3/temi, partition=beagle3, time=02:00:00, account=pi-haky, nodes=1, gpu=0, mem_cpu=4, cpu_task=8
 
 Job stats:
-job                   count    min threads    max threads
-------------------  -------  -------------  -------------
-all                       1              1              1
-find_homer_motifs         8              1              1
-merge_homer_motifs        2              1              1
-total                    11              1              1
+job                      count    min threads    max threads
+---------------------  -------  -------------  -------------
+aggregate_predictions        4              1              1
+all                          1              1              1
+evaluate_TFPred              5              1              1
+predict_with_enformer        4              1              1
+prepare_training_data        5              1              1
+train_TFPred_weights         5              1              1
+total                       24              1              1
 
 Reasons:
     (check individual jobs above for details)
     input files updated by another job:
-        all, merge_homer_motifs
+        aggregate_predictions, all, evaluate_TFPred, prepare_training_data, train_TFPred_weights
     missing output files:
-        find_homer_motifs, merge_homer_motifs
+        aggregate_predictions, evaluate_TFPred, predict_with_enformer, prepare_training_data, train_TFPred_weights
 
 This was a dry-run (flag -n). The order of jobs does not reflect the order of execution.

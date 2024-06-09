@@ -38,8 +38,8 @@ for(i in seq_along(models)){
         mat_dt <- data.table::fread(each_data)
         newx <- as.matrix(mat_dt[, -c(1:3)])
         # you only need one : link
-        link_pred <- predict(models[[i]], newx, s = "lambda.1se", type = 'link') |> as.vector()
-        response_pred <- predict(models[[i]], newx, s = "lambda.1se", type = 'response') |> as.vector()
+        link_pred <- predict(models[[i]], newx, s = "lambda.min", type = 'link') |> as.vector()
+        response_pred <- predict(models[[i]], newx, s = "lambda.min", type = 'response') |> as.vector()
         df <- mat_dt[, c(1:3)] |> as.data.frame()
         df$TFPred_score <- link_pred
         df$probability <- response_pred

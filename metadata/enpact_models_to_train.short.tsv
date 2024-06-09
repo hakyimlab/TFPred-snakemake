@@ -1,11 +1,6 @@
 assay	context
-AR	Breast
-AR	Colon
-AR	EmbryonicKidney
-AR	MammaryGland
-AR	Ovary
-AR	Prostate
-ARNT	BoneMarrow
-ARNT	Breast
-ARNT	Colon
-ARNT	Kidney
+ARNTL	Bone
+ARNTL	Colon
+ASCL1	Lung
+ASCL1	Skin
+ASCL2	Colon

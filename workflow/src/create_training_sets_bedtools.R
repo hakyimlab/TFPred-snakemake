@@ -15,11 +15,10 @@ option_list <- list(
     make_option("--ground_truth_file", help='The final file containing predictors and ground truths'),
     make_option("--info_file", help='The final file containing predictors and extra information'),
     make_option("--summary_file", type = "character"),
-    make_option("--cistrome_metadata_file", help='Cistrome metadata file to be read and to find relevant bedfiles'),
     make_option("--train_split", type="double", default=0.8, help='proportion to be used as train'),
     make_option("--num_predictors", type="integer", default=40000, help='proportion to be used as train'),
-    make_option("--train_by_chromosome", type="logical", default=TRUE, help='should you randomly split or train by chromosome? num_predictors is ignored if training by chromosome'),
-    make_option("--dcids", type="character", default=NULL, help='how many bed samples should be used: will use all if NULL, will use the top n by FRiP otherwise')
+    make_option("--test_chromosomes", type="character", default="chr9,chr22", help='should you randomly split or train by chromosome? num_predictors is ignored if training by chromosome'),
+    make_option("--peaks_files", type="character", default=NULL, help='how many bed samples should be used: will use all if NULL, will use the top n by FRiP otherwise')
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -34,23 +33,25 @@ library(GenomicRanges)
 library(plyranges)
 
 
-# setwd('/project2/haky/temi/projects/TFPred-snakemake')
+#  /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor AR --tissue MammaryGland --predicted_motif_file data/homer_instances/AR/merged_motif_file.txt --sorted_bedfiles_directory data/cistrome_2024-06-08/sortedbeds/AR_MammaryGland --bedlinks_directory /project/haky/data/TFXcan/cistrome/raw/human_factor' --predictors_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.predictors.txt --ground_truth_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.ground_truth.txt --info_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.info.txt.gz --peaks_files 36845_sort_peaks.narrowPeak.bed,57275_sort_peaks.narrowPeak.bed,57276_sort_peaks.narrowPeak.bed,57277_sort_peaks.narrowPeak.bed,57278_sort_peaks.narrowPeak.bed,57279_sort_peaks.narrowPeak.bed,57280_sort_peaks.narrowPeak.bed --train_by_chromosome chr9,chr22 --summary_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.summary.txt; sleep 5
+
+# setwd('/project/haky/users/temi/projects/TFPred-snakemake')
 # opt <- list()
 # opt$transcription_factor <- 'AR'
 # opt$tissue <- 'Prostate' 
 # opt$predicted_motif_file <- glue('data/homer_files/{opt$transcription_factor}/merged_motif_file.txt')
 # opt$sorted_bedfiles_directory <- glue('data/sortedbeds/{opt$transcription_factor}_{opt$tissue}')
-# opt$bedlinks_directory <- glue('data/bed_links/{opt$transcription_factor}_{opt$tissue}') # nolint
+# opt$peaks_files <- "36845_sort_peaks.narrowPeak.bed,57275_sort_peaks.narrowPeak.bed,57276_sort_peaks.narrowPeak.bed,57277_sort_peaks.narrowPeak.bed,57278_sort_peaks.narrowPeak.bed,57279_sort_peaks.narrowPeak.bed,57280_sort_peaks.narrowPeak.bed"
+# opt$bedlinks_directory <- '/project/haky/data/TFXcan/cistrome/raw/human_factor'
 # opt$predictors_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.predictors.txt')
 # opt$ground_truth_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.ground_truth.txt')
 # opt$info_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.info.txt.gz')
 # opt$summary_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.summary.txt')
-# opt$cistrome_metadata_file <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt'
 # opt$train_split <- 0.8
 # opt$num_predictors <- 40000
-# opt$dcids <- "37094"
-# opt$train_by_chromosome <- TRUE
-# dir.create(opt$sorted_bedfiles_directory, recursive = T)
+# opt$test_chromosomes <- "chr9,chr22"
+
+
 
 # # a hacky way to deal with the "none" vs 'None'
 # if(opt$tissue == 'none'){
@@ -61,16 +62,13 @@ if(!dir.exists(opt$sorted_bedfiles_directory)){
     dir.create(opt$sorted_bedfiles_directory, recursive = T)
 }
 
-if(!file.exists(opt$cistrome_metadata_file)){
-    print(glue('INFO - Cistrome metadata file cannnot be found at {dirname(opt$cistrome_metadata_file)}'))
-    quit(status = 1)
-} 
+
 if(!file.exists(opt$predicted_motif_file)){
     print(glue('INFO - HOMER predicted motifs file cannnot be found at {dirname(opt$predicted_motif_file)}'))
     quit(status = 1)
 } 
 
-valid_chromosomes <- c(paste('chr', 1:22, sep='')) #, "chrX")
+valid_chromosomes <- paste0('chr', 1:22) #, "chrX")
 
 # === prepare the predicted motifs file 
 genome_wide_predicted_motifs <- data.table::fread(opt$predicted_motif_file) %>% 
@@ -83,18 +81,27 @@ tf_motifs_granges <- tf_motifs_granges[seqnames(tf_motifs_granges) %in% valid_ch
 tf_motifs_granges <- GenomicRanges::reduce(tf_motifs_granges)
 tf_motifs_granges <- keepSeqlevels(tf_motifs_granges, paste0("chr", c(1:22)), pruning.mode="coarse")
 
-if(!is.null(opt$dcids)){
-    dcid_samples <- base::strsplit(opt$dcids, ',')[[1]] |> as.numeric() |> sort()
-} 
+
 
 # check that all of these are available in the db
-TF_files <- list.files(glue('{opt$bedlinks_directory}'), full.names=T)
+# TF_files <- list.files(glue('{opt$bedlinks_directory}'), full.names=T)
 
-if(!is.null(opt$dcids)){
-    TF_files <- TF_files[grepl(paste0(dcid_samples, collapse='|'), TF_files)]
-}
+if(!is.null(opt$peaks_files)){
+    peaks_files <- base::strsplit(opt$peaks_files, ',')[[1]] |> sort()
+} 
 
-peak_files_paths <- TF_files[file.info(TF_files)$size != 0]
+peaks_files <- sapply(peaks_files, function(each_file){
+    et <- file.path(opt$bedlinks_directory, each_file)
+    if(file.exists(et)){
+        return(et)
+    }
+})
+
+# if(!is.null(opt$dcids)){
+#     TF_files <- TF_files[grepl(paste0(dcid_samples, collapse='|'), TF_files)]
+# }
+
+peak_files_paths <- peaks_files[file.info(peaks_files)$size != 0]
 
 if(length(peak_files_paths) == 0){
     print(glue('INFO - There are no valid peaks data for {opt$transcription_factor} in {opt$tissue}'))
@@ -146,7 +153,7 @@ pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_ind
     mf <- positive_dt %>%
         dplyr::select(chr, start, end) %>%
         dplyr::arrange(factor(chr, levels = valid_chromosomes), start)
-    data.table::fwrite(mf, file = glue('{opt$sorted_bedfiles_directory}/{dcid_samples[each_file_index]}.sorted.bed'), row.names=F, col.names = F, quote=F, sep='\t')
+    data.table::fwrite(mf, file = glue('{opt$sorted_bedfiles_directory}/peaks_{each_file_index}.sorted.bed'), row.names=F, col.names = F, quote=F, sep='\t')
     return(data)
 
 }, .progress=T)
@@ -168,15 +175,14 @@ purrr::map(pmi_dt_list, function(each_dt){
 #
 intersect_bed <- glue("{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.intersect.bed")
 
-if(!is.null(opt$dcids)){
-    pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
-    pfiles <- pfiles[grepl(paste0(dcid_samples, collapse = '|'), pfiles)]
-} else {
-    pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
-}
+# if(!is.null(opt$dcids)){
+#     pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
+#     pfiles <- pfiles[grepl(paste0(dcid_samples, collapse = '|'), pfiles)]
+# } else {
+pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '^peaks_\\d.sorted.bed', full.names = T)
 
 #pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
-cmd <- glue("bedtools intersect -c -a {query_bed} -g /project2/haky/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
+cmd <- glue("bedtools intersect -c -a {query_bed} -g /project/haky/users/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
 ptm <- proc.time()
 system(cmd)
 print(glue('INFO - Time to merge files: {as.vector(proc.time() - ptm)[1]} seconds'))
@@ -201,56 +207,53 @@ dt_neg <- purrr::map(pmi_dt_list, function(each_dt){
 dt_merged <- dplyr::bind_rows(dt_pos, dt_neg)
 data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
 
+test_chromosomes <- base::strsplit(opt$test_chromosomes, ',')[[1]]
 
-if(opt$train_by_chromosome == TRUE){
+train_dt_pos <- dt_pos %>%
+    dplyr::filter(!chr %in% test_chromosomes) %>%
+    dplyr::arrange(desc(binding_counts)) 
 
-    train_dt_pos <- dt_pos %>%
-        dplyr::filter(!chr %in% c('chr9', 'chr22')) %>%
-        dplyr::arrange(desc(binding_counts)) 
+test_dt_pos <- dt_pos %>%
+    dplyr::filter(chr %in% test_chromosomes) %>%
+    dplyr::arrange(desc(binding_counts))
 
-    test_dt_pos <- dt_pos %>%
-        dplyr::filter(chr %in% c('chr9', 'chr22')) %>%
-        dplyr::arrange(desc(binding_counts))
-
-    # select training data ===============
-    if(nrow(train_dt_pos) < (opt$num_predictors/2)){
-        npositives <- nrow(train_dt_pos)
-        nnegatives <- npositives
-    } else {
-        npositives <- ceiling(opt$num_predictors/2)
-        nnegatives <- npositives
-    }
-
-    # select test data
-    if(nrow(test_dt_pos) < 1000){
-        tpositives <- nrow(test_dt_pos)
-        tnegatives <- tpositives
-    } else {
-        tpositives <- 1000
-        tnegatives <- tpositives
-    }
-
-    ### training by splitting into chromosomes ###
-    trp_data <- train_dt_pos %>%
-        dplyr::slice_head(n=npositives)
-
-    tep_data <- test_dt_pos %>%
-        dplyr::slice_head(n=tpositives)
-
-    trn_data <- dt_neg %>%
-        dplyr::filter(!chr %in% c('chr9', 'chr22')) %>%
-        dplyr::slice_sample(n=nnegatives)
-
-    ten_data <- dt_neg %>%
-        dplyr::filter(chr %in% c('chr9', 'chr22')) %>%
-        dplyr::slice_sample(n=tnegatives)
-
-    set.seed(seed)
-    train_data <- rbind(trp_data, trn_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'train')
-    set.seed(seed)
-    test_data <- rbind(tep_data, ten_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'test')
-
+# select training data ===============
+if(nrow(train_dt_pos) < (opt$num_predictors/2)){
+    npositives <- nrow(train_dt_pos)
+    nnegatives <- npositives
+} else {
+    npositives <- ceiling(opt$num_predictors/2)
+    nnegatives <- npositives
 }
+
+# select test data
+if(nrow(test_dt_pos) < 1000){
+    tpositives <- nrow(test_dt_pos)
+    tnegatives <- tpositives
+} else {
+    tpositives <- 1000
+    tnegatives <- tpositives
+}
+
+### training by splitting into chromosomes ###
+trp_data <- train_dt_pos %>%
+    dplyr::slice_head(n=npositives)
+
+tep_data <- test_dt_pos %>%
+    dplyr::slice_head(n=tpositives)
+
+trn_data <- dt_neg %>%
+    dplyr::filter(!chr %in% test_chromosomes) %>%
+    dplyr::slice_sample(n=nnegatives)
+
+ten_data <- dt_neg %>%
+    dplyr::filter(chr %in% test_chromosomes) %>%
+    dplyr::slice_sample(n=tnegatives)
+
+set.seed(seed)
+train_data <- rbind(trp_data, trn_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'train')
+set.seed(seed)
+test_data <- rbind(tep_data, ten_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'test')
 
 set.seed(seed)
 dt <- rbind(train_data, test_data) %>%

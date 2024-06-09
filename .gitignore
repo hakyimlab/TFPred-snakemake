@@ -10,3 +10,4 @@ logs/*
 output/*
 cmd_*
 **/predictions_folder/
+__pycache__/

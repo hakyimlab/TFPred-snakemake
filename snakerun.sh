@@ -14,7 +14,7 @@ snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/
 # squeue --format="%.18i %.9P %.40j %.8u %.8T %.10M %.9l %.6D %R" --me
 screen
 conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools
-export PATH=$PATH:/project2/haky/temi/software/homer/bin
+export PATH=$PATH:/beagle3/haky/users/temi/software/homer/bin
 
 # export PATH=$PATH:/beagle3/haky/users/temi/software/homer/bin
 

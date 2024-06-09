@@ -10,7 +10,12 @@ Temi
 ### Date created: 
 Mon Apr 24 2023
 
+
+
 ## Usage: 
+
+### Input:
+    1. 
 1. Install the conda environment using the file:
     `conda env create -p <<path to env>> -f software/environment.yaml`
 2. Edit the `config/pipeline.yaml` file. Instructions are in here.
@@ -27,7 +32,7 @@ There are two accompanying txt files `info/data_db.txt` and `info/human_factor_f
 These contain analysis codes for the pipeline. They are not part of the pipeline itself. You can use these to make diagnostic plots and summaries of the models.
 
 ## To-do and Updates
-- [ ] Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 
+- [X] Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 
 - [X] Extend the pipeline to provide summary information of the models, including diagnostic plots.
 
 Tues Mar 27 2024
@@ -52,3 +57,7 @@ Tues Aug 22 2023
 - [X] Evaluation should be saved into a text file rather than a `.rds` file
 - [X] Pipeline can now send jobs to beagle3 (for GPU runs) or caslake as needed
 - [X] Added the option to delete ENFORMER predictions on-the-fly as soon as aggregation is done. This will save plenty of storage space when training many models.
+
+Sun Jun 9 2024
+
+- [X] Extensive modification to how the pipeline should run.

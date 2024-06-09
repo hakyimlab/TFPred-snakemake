@@ -1,18 +1,18 @@
 cluster:
-  mkdir -p logs/{rule} &&
+  mkdir -p logs/{params.run}/{rule} &&
   sbatch
     --partition={resources.partition}
     --nodes={resources.nodes}
     --time={resources.time}
     --account={resources.account}
     --job-name=smk-{rule}-{params.jobname}
-    --output=logs/{rule}/{params.jobname}.out
-    --error=logs/{rule}/{params.jobname}.err
+    --output=logs/{params.run}/{rule}/{params.jobname}.out
+    --error=logs/{params.run}/{rule}/{params.jobname}.err
     --gres=gpu:{resources.gpu}
     --mem-per-cpu={resources.mem_cpu}G
     --cpus-per-task={resources.cpu_task}
 default-resources:
-  - partition="broadwl" #caslake # beagle3 for gpus #bigmem   #- mem_mb=50000
+  - partition="beagle3" #caslake # beagle3 for gpus #bigmem   #- mem_mb=50000
   - time="02:00:00"
   - tmpdir="/scratch/midway3/temi"
   - account="pi-haky"

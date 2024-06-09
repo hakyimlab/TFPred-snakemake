@@ -18,7 +18,8 @@ option_list <- list(
     make_option("--train_split", type="double", default=0.8, help='proportion to be used as train'),
     make_option("--num_predictors", type="integer", default=40000, help='proportion to be used as train'),
     make_option("--test_chromosomes", type="character", default="chr9,chr22", help='should you randomly split or train by chromosome? num_predictors is ignored if training by chromosome'),
-    make_option("--peaks_files", type="character", default=NULL, help='how many bed samples should be used: will use all if NULL, will use the top n by FRiP otherwise')
+    make_option("--peaks_files", type="character", default=NULL, help='how many bed samples should be used: will use all if NULL, will use the top n by FRiP otherwise'),
+    make_option("--sorted_chrom_sizes", type="character", default="/project/haky/users/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted", help='The sorted chromosome sizes file')
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -182,7 +183,7 @@ intersect_bed <- glue("{opt$sorted_bedfiles_directory}/{opt$transcription_factor
 pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '^peaks_\\d.sorted.bed', full.names = T)
 
 #pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
-cmd <- glue("bedtools intersect -c -a {query_bed} -g /project/haky/users/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
+cmd <- glue("bedtools intersect -c -a {query_bed} -g {opt$sorted_chrom_sizes} -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
 ptm <- proc.time()
 system(cmd)
 print(glue('INFO - Time to merge files: {as.vector(proc.time() - ptm)[1]} seconds'))

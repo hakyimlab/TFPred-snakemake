@@ -1,5 +1,6 @@
 
-import os
+import os, subprocess
+
 
 
 def verify_model_details(model_details: tuple, model_config: dict, print_info = False) -> list:

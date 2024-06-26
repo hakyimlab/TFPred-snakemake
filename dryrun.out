@@ -1,9 +1,0 @@
-INFO - Verified 4 assays
-Building DAG of jobs...
-InputFunctionException in rule create_training_set in file /beagle3/haky/users/temi/projects/TFPred-snakemake/snakefile.smk, line 177:
-Error:
-  AttributeError: 'Wildcards' object has no attribute 'tf'
-Wildcards:
-
-Traceback:
-  File "/beagle3/haky/users/temi/projects/TFPred-snakemake/snakefile.smk", line 190, in <lambda>

@@ -10,12 +10,25 @@ Temi
 ### Date created: 
 Mon Apr 24 2023
 
-
-
 ## Usage: 
 
+### Notes:
+
+There are 2 ways to use this pipeline. 
+
+1. Train Enpact models using a reference epigenome (from Enformer): Here, the pipeline will not run Enformer and will instead make use of the reference epigenome provided. This is faster than the second approach below. To use this approach, you need to provide the reference epigenome in the [config/pipeline.yaml](./minimal/pipeline.minimal.yaml) file, and set the parameter `run_enformer` to `false`.
+
+2. Train Enpact models using Enformer: Here, the pipeline will run Enformer to generate the reference epigenome. This is slower than the first approach above. To use this approach, you need to set the parameter `run_enformer` to `true` in the [config/pipeline.yaml](./minimal/pipeline.minimal.yaml) file.
+
+
+### Helpers:
+
+There is a notebook [here](./notebooks/prepare_samples.qmd) to help generate the inputs. 
+
+Otherwise, you can look at minimal examples of the [models.data.yaml](./minimal/models.data.yaml) and [models.run.tsv](./minimal/models.run.tsv) files to recreate yours.
+
 ### Input:
-    1. 
+
 1. Install the conda environment using the file:
     `conda env create -p <<path to env>> -f software/environment.yaml`
 2. Edit the `config/pipeline.yaml` file. Instructions are in here.
@@ -24,9 +37,6 @@ Mon Apr 24 2023
     `conda activate <<path to env>>`
 5. Run:
     `snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/`
-
-## Notes:
-There are two accompanying txt files `info/data_db.txt` and `info/human_factor_full_QC.txt` that are important for this pipeline to find the TF and tissue and their peak locations bed files.
 
 ## Notebooks:
 These contain analysis codes for the pipeline. They are not part of the pipeline itself. You can use these to make diagnostic plots and summaries of the models.

@@ -1,4 +1,9 @@
+---
+title: "Prepare Enpact models to train"
+author: "Temi"
+date: "2024-06-26"
 
+---
 
 
 ```{r}
@@ -150,8 +155,8 @@ yaml::write_yaml(enlist[1:10], file = '/beagle3/haky/users/temi/projects/TFPred-
 ```
 
 ```{r}
-minimal_ex <- enlist[c('ASCL2', 'ATF4', 'SREBF2', 'GATA2', 'AR')]
-yaml::write_yaml(minimal_ex, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.minimal.yaml')
+minimal_ex <- enlist[c('ASCL2', 'ATF4', 'SREBF2', 'GATA2')]
+yaml::write_yaml(minimal_ex, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.data.yaml')
 ```
 
 ```{r}
@@ -168,7 +173,7 @@ colnames(mtdt) <- c('assay', 'context')
 
 ```{r}
 mtdt %>% dplyr::filter(assay %in% names(minimal_ex)) %>%
-    data.table::fwrite(file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.AR.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+    data.table::fwrite(file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.run.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
 ```
 
 ```{r}

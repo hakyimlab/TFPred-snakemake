@@ -1,8 +1,10 @@
 
 # Enpact pipeline
 
-### Description: 
+## Description: 
 This pipeline uses ENFORMER and elastic net to train weights for transcription factor binding in a tissue or cell_type, given the reference genome (fasta file) + intervals to predict on. The weights are the effects of the Enformer epigenetic feature on binding status. This method is called Enpact, named after Enformer + IMPACT.
+
+The models trained using this pipeline should work seamlessly with the [TFXcan pipeline](...).
 
 ### Author: 
 Temi
@@ -16,9 +18,9 @@ Mon Apr 24 2023
 
 There are 2 ways to use this pipeline. 
 
-1. Train Enpact models using a reference epigenome (from Enformer): Here, the pipeline will not run Enformer and will instead make use of the reference epigenome provided. This is faster than the second approach below. To use this approach, you need to provide the reference epigenome in the [config/pipeline.yaml](./minimal/pipeline.minimal.yaml) file, and set the parameter `run_enformer` to `false`.
+1. Train Enpact models using an available reference epigenome (from Enformer): Here, the pipeline will not run Enformer and will instead make use of the reference epigenome provided. This is faster than the second approach below. To use this approach, you need to provide the reference epigenome in the [config/pipeline.yaml](./minimal/pipeline.minimal.yaml) file, and set the parameter `run_enformer` to `false`.
 
-2. Train Enpact models using Enformer: Here, the pipeline will run Enformer to generate the reference epigenome. This is slower than the first approach above. To use this approach, you need to set the parameter `run_enformer` to `true` in the [config/pipeline.yaml](./minimal/pipeline.minimal.yaml) file.
+2. Train Enpact models using Enformer: Here, the pipeline will run Enformer on-the-fly to generate the reference epigenome. This is slower than the first approach above. To use this approach, you need to set the parameter `run_enformer` to `true` in the [config/pipeline.yaml](./minimal/pipeline.minimal.yaml) file.
 
 
 ### Helpers:
@@ -36,7 +38,7 @@ Otherwise, you can look at minimal examples of the [models.data.yaml](./minimal/
 4. Activate conda environment:
     `conda activate <<path to env>>`
 5. Run:
-    `snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/`
+    `snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ --stats reports/stats.json`
 
 ## Notebooks:
 These contain analysis codes for the pipeline. They are not part of the pipeline itself. You can use these to make diagnostic plots and summaries of the models.

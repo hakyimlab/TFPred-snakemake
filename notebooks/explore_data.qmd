@@ -154,3 +154,286 @@ myData %>%
     dplyr::summarize(avg_runtime = mean(runtime)) %>%
     pull(avg_runtime) %>% sum()
 ```
+
+
+```{r}
+arnt <- c(peakslist[2], motifslist[2])
+
+yaml::write_yaml(enlist[2], file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/arnt_config.yaml')
+```
+
+```{r}
+# /project2/haky/temi/software/homer/data/knownTFs/motifs
+```
+
+```{r}
+# for TF get the motif file
+homer_db <- "/project2/haky/temi/software/homer/motifs"
+
+ptrns <- unique(mt$Factor) |> tolower() |> sort()
+ptrns_cond <- paste("\\b", ptrns, "\\b\\.motif$", sep = '')
+
+
+mfiles <- sapply(ptrns_cond, function(ech){
+    mfile <- list.files(path = homer_db, pattern = ech, full.names = T)
+    return(mfile)
+})
+
+# ptrns_cond <- paste(ptrns_cond, collapse = '|')
+
+mfile <- list.files(path = homer_db, pattern = ptrns_cond[1], full.names = T)
+mfile
+
+# mfile <- list.files(path = homer_db, pattern = '*ar-half*.motif', full.names = T)
+# mfile
+```
+
+```{r}
+peaks_db <- "/project2/haky/Data/TFXcan/cistrome/raw/human_factor"
+bedfiles <- lapply(dcids, function(each_dcid){
+    list.files(path = peaks_db, pattern = glue('^{each_dcid}_sort_peaks.narrowPeak.bed$'), full.names = T)
+})
+bedfiles <- Filter(Negate(is.null), bedfiles)
+```
+
+```{r}
+config_list <- list()
+config_list[[tf]][[tiss]][['motifFile']] <- list(mfile)
+config_list[[tf]][[tiss]][['bedFiles']] <- bedfiles
+
+config_list
+```
+
+```{r}
+yaml::write_yaml(config_list, file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/config.yaml')
+```
+
+```{r}
+data.frame(assay = names(config_list), context = names(config_list[[1]]))
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+# with help from Haky
+cor2pval <- function(cc,nn) {
+  zz = atanh(cc) * sqrt(nn-3)
+  pnorm(-abs(zz))*2
+}
+
+reduce_calculate_pearson_correlations <- function(named_matrix_list){
+    names_matrix <- names(named_matrix_list)
+    combinations <- combn(names_matrix, 2)
+
+    out_list <- apply(combinations, 2, function(each_col){
+        comparison <- paste0(each_col[1], ' vs. ', each_col[2], sep='')
+        ma <- named_matrix_list[[each_col[1]]]
+        mb <- named_matrix_list[[each_col[2]]]
+        nterms <- nrow(ma)
+        cor_vec <- apply(scale(ma) * scale(mb), 2, sum)/nterms
+        p_vec <- cor2pval(cor_vec, nterms)
+        dt <- cbind(r=cor_vec, pvalue=p_vec) %>% as.data.frame() %>% tibble::rownames_to_column('locus')
+        dt$comparison <- comparison
+        return(dt)
+    })
+    return(do.call('rbind', out_list))
+}
+```
+
+
+```{r}
+mt <- data.table::fread('/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt')
+dcids <- mt %>%
+    dplyr::filter(Factor == 'AR' & Tissue_type == 'Prostate' & !is.na(PeaksUnionDHSRatio)) %>%
+    dplyr::arrange(desc(FRiP)) %>% pull(DCid)
+dcids
+```
+
+```{r}
+paste0(dcids[1:2], collapse = ',')
+```
+```{r}
+paste0(dcids[1:3], collapse = ',')
+```
+
+```{r}
+paste0(dcids[1:7], collapse = ',')
+```
+
+```{r}
+paste0(dcids[1:14], collapse = ',')
+```
+
+- multisample database
+```{r}
+ms_enpact_scores <- readRDS("/project2/haky/temi/projects/enpact-predict-snakemake/output/baca_multisample_2024-05-11/baca_multisample_2024-05-11.enpact_scores.array.rds.gz")
+```
+
+```{r}
+msnames <- dimnames(ms_enpact_scores)[3][[1]]
+ms_scores <- lapply(msnames, function(each_name){
+    ms_enpact_scores[, , each_name]#[1:5, 1:5]
+})
+names(ms_scores) <- msnames
+```
+
+- cwas scores
+```{r}
+project_dir <- '/project2/haky/temi/projects/lEnpact'
+
+# lEnpact_scores <- data.table::fread(file.path(project_dir, 'experiments', 'baca_lEnpact', 'output', 'EUR_AR_Prostate_logistic', 'baca_lEnpact_predict.txt')) %>%
+#     dplyr::select(-FID) %>%
+#     tibble::column_to_rownames('IID') %>% 
+#     setNames(., gsub(':|-', '_', colnames(.))) %>%
+#     t()
+cwas_scores <- data.table::fread(file.path(project_dir, 'experiments', 'baca_cwas', 'output', 'top1', 'baca_cwas_predict.txt')) %>%
+    dplyr::select(-FID) %>%
+    tibble::column_to_rownames('IID') %>% 
+    setNames(., gsub(':|-', '_', colnames(.))) %>%
+    t()
+```
+
+
+```{r}
+# choose one to define common names
+ms1 <- ms_scores[[1]]
+common_loci <- intersect(rownames(ms1), rownames(cwas_scores))
+common_ids <- intersect(colnames(ms1), colnames(cwas_scores))
+cwas_scores <- cwas_scores[common_loci, common_ids] |> t()
+
+# lapply, select and transpose
+ms_scores <- lapply(ms_scores, function(each_ms){
+    each_ms[common_loci, common_ids] |> t()
+})
+```
+
+
+```{r}
+# add cwas_scores
+ms_scores[['cwas_scores']] <- cwas_scores
+```
+
+
+```{r}
+cor_test <- reduce_calculate_pearson_correlations(ms_scores)
+cor_test[1:5, ]
+```
+
+
+```{r}
+cor_test %>%
+    dplyr::group_by(comparison) %>%
+    dplyr::summarize(avgR2 = mean(r**2)) %>%
+    dplyr::arrange(desc(avgR2))
+```
+
+- split
+
+```{r}
+comps <- c('AR_Prostate_1 vs. cwas_scores', 'AR_Prostate_2 vs. cwas_scores', 'AR_Prostate_3 vs. cwas_scores', 'AR_Prostate_7 vs. cwas_scores', 'AR_Prostate_14 vs. cwas_scores')
+gsplit <- base::split(cor_test, f = cor_test$comparison)
+gsplit <- gsplit[comps]
+```
+
+```{r}
+qq_generic(gsplit$`AR_Prostate_7 vs. cwas_scores`$pvalue, distribution = 'uniform', neg_log10_values=T, BH=T, params_to_legend=list(x='center', bty = "n"), params_to_plot=list(frame.plot=F, pch=21, cex.lab=1, col='black', ylim = c(0, 30)))
+
+qqpoints(sort(gsplit$`AR_Prostate_14 vs. cwas_scores`$pvalue), col = 'red')
+qqpoints(sort(gsplit$`AR_Prostate_3 vs. cwas_scores`$pvalue), col = 'blue')
+qqpoints(sort(gsplit$`AR_Prostate_2 vs. cwas_scores`$pvalue), col = 'grey')
+qqpoints(sort(gsplit$`AR_Prostate_1 vs. cwas_scores`$pvalue), col = 'green')
+
+legend('bottomright', legend = c(1,2,3,7,14), col = c('black', 'red', 'blue', 'grey', 'green'), pch = 19)
+```
+
+
+```{r}
+panel.hist <- function(x, ...)
+{
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(usr[1:2], 0, 1.5) )
+    h <- hist(x, plot = FALSE)
+    breaks <- h$breaks; nB <- length(breaks)
+    y <- h$counts; y <- y/max(y)
+    rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
+```
+
+
+```{r}
+ft <- lapply(gsplit, function(each_dt){
+    each_dt$r
+}) %>% do.call('cbind', .)
+```
+
+
+```{r}
+pairs(ft) #, diag.panel = panel.hist)
+```
+
+```{r}
+out <- lapply(gsplit, function(each_dt){
+    #mean((each_dt$r)^2)
+    mean(abs(each_dt$r))
+}) %>% do.call('cbind', .)
+
+```
+
+```{r}
+plot(out[, comps], type = 'b', ylab = 'average |r|', xaxt = 'n', xlab= 'Number of Samples used in training Enpact', cex = 4, pch = 21, bg = 'blue')
+axis(1, at=1:5, labels = gsub(' vs. cwas_scores', '', colnames(out)))
+legend('topleft', legend = c('Pearson r with CWAS genetic component of AR binding'), pch = 21, pt.bg = 'blue', pt.cex = 4, bty = 'n')
+text(1:5, out+0.0005, round(out, 3))
+```
+
+```{r}
+
+```
+
+
+
+```{r}
+par(mar = c(5, 5, 4, 3), oma=c(4,3,2,2), pty = 's')
+layout.matrix <- matrix(c(1:2), nrow = 1, ncol = 2, byrow=T)
+layout(mat = layout.matrix,
+       heights = c(4, 4), # Heights of the two rows
+       widths = c(4, 4)) # Widths of the two columns
+
+lbs <- gsub('AR_Prostate_', '', gsub(' vs. cwas_scores', '', colnames(out)))
+plot(out[, comps], type = 'b', ylab = 'average |r|', xaxt = 'n', xlab= '', cex = 2, pch = 21, bg = 'blue', frame.plot = F)
+axis(1, at=1:5, labels = lbs, las = 0)
+title(xlab='Number of Samples used in training Enpact', line = 2)
+legend('topleft', legend = c('Pearson r with \nCWAS genetic component of AR binding'), pch = 21, pt.bg = 'blue', pt.cex = 2, bty = 'n')
+text(1:5, out+0.0005, round(out, 3), cex = 0.8)
+
+colrs <- c('black', 'red', 'blue', 'grey', 'green')
+
+qq_generic(gsplit[[1]]$pvalue, distribution = 'uniform', neg_log10_values=T, BH=T, params_to_legend=list(x='center', bty = "n"), params_to_plot=list(frame.plot=F, pch='.', cex.lab=1, col=colrs[1], ylim = c(0, 30)))
+
+for(i in 2:length(gsplit)){
+    qqpoints(sort(gsplit[[i]]$pvalue), col = colrs[i], pch = '.')
+}
+legend('bottomright', legend = c(1,2,3,7,14), col = colrs, pch = 19)
+
+
+# mtext(expression("qqplot of" ~ italic(p)*"-values" ~ "(Mann–Whitney U test)"), side=3, line=2, adj=0.05, outer=TRUE, cex=1.5, las=0)
+# mtext("binding classification", side=1, line= 1, outer=TRUE, cex=1.5, las=0)
+
+par(mfrow=c(1,1))
+```
+
+```{r}
+
+```
+
+```{r}
+hist(gsplit$`AR_Prostate_14 vs. cwas_scores`$r)
+```

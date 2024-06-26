@@ -41,4 +41,4 @@ snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/
 
 
 
-snakemake -s snakefile2.smk --configfile config/pipeline.yaml --profile profiles/simple/ -np
+snakemake -s snakefile.smk --configfile config/pipeline.enpact.yaml --profile profiles/simple/ -np > dryrun.out

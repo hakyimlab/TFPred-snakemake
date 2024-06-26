@@ -7,12 +7,11 @@ library(magrittr)
 library(yaml)
 library(glue)
 library(dplyr)
+library(fpeek)
 ```
 
 ```{r}
-
-
-
+# source('/beagle3/haky/users/temi/projects/TFPred-snakemake/misc/wc.R')
 ```
 
 ```{r}
@@ -29,6 +28,10 @@ homerdb
 ```
 
 ```{r}
+peaks_dir <- '/project/haky/data/TFXcan/cistrome/raw/human_factor'
+```
+
+```{r}
 mt <- data.table::fread('/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt') %>%
     dplyr::filter(Tissue_type != 'None', !is.na(PeaksUnionDHSRatio)) %>%
     dplyr::filter(!grepl('-', Factor, fixed = T)) %>%
@@ -37,6 +40,9 @@ mt <- data.table::fread('/project2/haky/Data/TFXcan/cistrome/raw/human_factor_fu
 idt <- mt %>%
     dplyr::group_by(Factor, Tissue_type) %>%
     dplyr::group_split() 
+```
+
+```{r}
 
 ldt <- list()
 
@@ -51,6 +57,7 @@ for(i in seq_along(idt)){
         ldt[[as.name(tfname)]] <- list()
         ldt[[as.name(tfname)]][['peakFiles']] <- list()
         ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
+        
     } else {
         ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
     }
@@ -67,8 +74,40 @@ for(i in seq_along(idt)){
 #     et[[as.name(tfname)]][[as.name(tissuename)]] <- paste0(dcids, '_sort_peaks.narrowPeak.bed')
 #     return(et)
 # })
-```
 
+
+
+# for(i in seq_along(idt)){
+#     fdt <- idt[[i]]
+#     tissuename <- unique(fdt$Tissue_type)
+#     tissuename <- gsub(' ', '', tissuename)
+#     tfname <- unique(fdt$Factor)
+#     dcids <- fdt$DCid
+
+#     if(!tfname %in% names(ldt)){
+#         ff <- paste0(dcids, '_sort_peaks.narrowPeak.bed')
+#         pp <- file.path(peaks_dir, ff)
+#         wcl <- sapply(pp, fpeek::peek_count_lines) # count how many peaks are present in this file
+#         if(length(wcl) == 1){
+#             if(wcl[1] < 200){
+#                 next
+#             } else if(wcl[1] >= 200) {
+#                 ldt[[as.name(tfname)]] <- list()
+#                 ldt[[as.name(tfname)]][['peakFiles']] <- list()
+#                 ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
+#             }
+#         else {
+#             ldt[[as.name(tfname)]] <- list()
+#             ldt[[as.name(tfname)]][['peakFiles']] <- list()
+#             ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
+#         }
+        
+#     } else {
+#         ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
+#     }
+#     }
+# }
+```
 
 ```{r}
 factors_motifs <- homerdb %>%
@@ -106,20 +145,34 @@ cat_lists <- function(list1, list2) {
 }
 
 enlist <- reduce(list(motifslist, peakslist), cat_lists)
-yaml::write_yaml(enlist[1:10], file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.yaml')
+yaml::write_yaml(enlist, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.yaml')
+yaml::write_yaml(enlist[1:10], file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.yaml')
 ```
 
 ```{r}
-names(rapply(peakslist, function(x) head(x, 1)))
+minimal_ex <- enlist[c('ASCL2', 'ATF4', 'SREBF2', 'GATA2', 'AR')]
+yaml::write_yaml(minimal_ex, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.minimal.yaml')
 ```
+
+```{r}
+minimal_ex <- enlist[c('AR')]
+yaml::write_yaml(minimal_ex, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.AR.yaml')
+```
+
 
 ```{r}
 # prepare the metdata 
 mtdt <- sapply(gsub('.peakFiles.', '_', names(rapply(peakslist, function(x) head(x, 1)))), base::strsplit, '_') |> unname() %>% do.call('rbind', .) %>% as.data.frame()
 colnames(mtdt) <- c('assay', 'context')
+```
 
+```{r}
+mtdt %>% dplyr::filter(assay %in% names(minimal_ex)) %>%
+    data.table::fwrite(file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.AR.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+```
+
+```{r}
 data.table::fwrite(mtdt, file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
-
 
 data.table::fwrite(mtdt[1:10, ], file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
 ```

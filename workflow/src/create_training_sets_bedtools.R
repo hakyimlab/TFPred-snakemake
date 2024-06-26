@@ -19,7 +19,8 @@ option_list <- list(
     make_option("--num_predictors", type="integer", default=40000, help='proportion to be used as train'),
     make_option("--test_chromosomes", type="character", default="chr9,chr22", help='should you randomly split or train by chromosome? num_predictors is ignored if training by chromosome'),
     make_option("--peaks_files", type="character", default=NULL, help='how many bed samples should be used: will use all if NULL, will use the top n by FRiP otherwise'),
-    make_option("--sorted_chrom_sizes", type="character", default="/project/haky/users/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted", help='The sorted chromosome sizes file')
+    make_option("--sorted_chrom_sizes", type="character", default="/project/haky/users/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted", help='The sorted chromosome sizes file'),
+    make_option("--peaks_counts_threshold", type="integer", default=100, help='...')
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -36,13 +37,16 @@ library(plyranges)
 
 #  /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor AR --tissue MammaryGland --predicted_motif_file data/homer_instances/AR/merged_motif_file.txt --sorted_bedfiles_directory data/cistrome_2024-06-08/sortedbeds/AR_MammaryGland --bedlinks_directory /project/haky/data/TFXcan/cistrome/raw/human_factor' --predictors_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.predictors.txt --ground_truth_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.ground_truth.txt --info_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.info.txt.gz --peaks_files 36845_sort_peaks.narrowPeak.bed,57275_sort_peaks.narrowPeak.bed,57276_sort_peaks.narrowPeak.bed,57277_sort_peaks.narrowPeak.bed,57278_sort_peaks.narrowPeak.bed,57279_sort_peaks.narrowPeak.bed,57280_sort_peaks.narrowPeak.bed --train_by_chromosome chr9,chr22 --summary_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.summary.txt; sleep 5
 
-# setwd('/project/haky/users/temi/projects/TFPred-snakemake')
+
+# /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor MAFF --tissue Colon --predicted_motif_file data/homer_instances/MAFF/merged_motif_file.txt --sorted_bedfiles_directory data/ENPACT_275_2024-06-08/sortedbeds/MAFF_Colon --bedlinks_directory /project/haky/data/TFXcan/cistrome/raw/human_factor --predictors_file data/ENPACT_275_2024-06-08/predictor_files/MAFF_Colon.predictors.txt --ground_truth_file data/ENPACT_275_2024-06-08/predictor_files/MAFF_Colon.ground_truth.txt --info_file data/ENPACT_275_2024-06-08/predictor_files/MAFF_Colon.info.txt.gz --peaks_files 42840_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/ENPACT_275_2024-06-08/predictor_files/MAFF_Colon.summary.txt;
+
+# setwd('/beagle3/haky/users/temi/projects/TFPred-snakemake')
 # opt <- list()
-# opt$transcription_factor <- 'AR'
-# opt$tissue <- 'Prostate' 
-# opt$predicted_motif_file <- glue('data/homer_files/{opt$transcription_factor}/merged_motif_file.txt')
-# opt$sorted_bedfiles_directory <- glue('data/sortedbeds/{opt$transcription_factor}_{opt$tissue}')
-# opt$peaks_files <- "36845_sort_peaks.narrowPeak.bed,57275_sort_peaks.narrowPeak.bed,57276_sort_peaks.narrowPeak.bed,57277_sort_peaks.narrowPeak.bed,57278_sort_peaks.narrowPeak.bed,57279_sort_peaks.narrowPeak.bed,57280_sort_peaks.narrowPeak.bed"
+# opt$transcription_factor <- 'MAFF'
+# opt$tissue <- 'Colon' 
+# opt$predicted_motif_file <- glue('data/homer_instances/{opt$transcription_factor}/merged_motif_file.txt')
+# opt$sorted_bedfiles_directory <- glue('data/ENPACT_275_2024-06-08/sortedbeds/{opt$transcription_factor}_{opt$tissue}')
+# opt$peaks_files <- '42840_sort_peaks.narrowPeak.bed'
 # opt$bedlinks_directory <- '/project/haky/data/TFXcan/cistrome/raw/human_factor'
 # opt$predictors_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.predictors.txt')
 # opt$ground_truth_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.ground_truth.txt')
@@ -186,157 +190,166 @@ pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '^peaks_\\d.sorted
 cmd <- glue("bedtools intersect -c -a {query_bed} -g {opt$sorted_chrom_sizes} -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
 ptm <- proc.time()
 system(cmd)
-print(glue('INFO - Time to merge files: {as.vector(proc.time() - ptm)[1]} seconds'))
+message(glue('INFO - Time to merge files: {as.vector(proc.time() - ptm)[1]} seconds'))
 
-if(file.exists(intersect_bed)){
+
+if(!file.exists(intersect_bed) || file.info(intersect_bed)$size <= 0){
+    sapply(list(opt$ground_truth_file, opt$info_file,opt$predictors_file, opt$summary_file), file.create)
+    message(glue("WARNING - There are no peaks present after bedtools intersect."))
+} else if(file.exists(intersect_bed) && file.info(intersect_bed)$size != 0) {
+
     dt_pos <- data.table::fread(intersect_bed) %>%
         setNames(c('chr', 'start', 'end', 'binding_counts')) %>%
         dplyr::mutate(binding_class = 1)
-}
 
-# select negatives and merge
-dt_neg <- purrr::map(pmi_dt_list, function(each_dt){
-    each_dt %>%
-        filter(.[[4]] == 0) %>%
-        dplyr::select(chr, start, end) 
-}) %>%
-    do.call('rbind', .) %>%
-    dplyr::filter(chr %in% valid_chromosomes) %>%
-    dplyr::distinct(chr, start, end, .keep_all = FALSE) %>%
-    dplyr::mutate(binding_class = 0, binding_counts = 0)
-
-dt_merged <- dplyr::bind_rows(dt_pos, dt_neg)
-data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
-
-test_chromosomes <- base::strsplit(opt$test_chromosomes, ',')[[1]]
-
-train_dt_pos <- dt_pos %>%
-    dplyr::filter(!chr %in% test_chromosomes) %>%
-    dplyr::arrange(desc(binding_counts)) 
-
-test_dt_pos <- dt_pos %>%
-    dplyr::filter(chr %in% test_chromosomes) %>%
-    dplyr::arrange(desc(binding_counts))
-
-# select training data ===============
-if(nrow(train_dt_pos) < (opt$num_predictors/2)){
-    npositives <- nrow(train_dt_pos)
-    nnegatives <- npositives
-} else {
-    npositives <- ceiling(opt$num_predictors/2)
-    nnegatives <- npositives
-}
-
-# select test data
-if(nrow(test_dt_pos) < 1000){
-    tpositives <- nrow(test_dt_pos)
-    tnegatives <- tpositives
-} else {
-    tpositives <- 1000
-    tnegatives <- tpositives
-}
-
-### training by splitting into chromosomes ###
-trp_data <- train_dt_pos %>%
-    dplyr::slice_head(n=npositives)
-
-tep_data <- test_dt_pos %>%
-    dplyr::slice_head(n=tpositives)
-
-trn_data <- dt_neg %>%
-    dplyr::filter(!chr %in% test_chromosomes) %>%
-    dplyr::slice_sample(n=nnegatives)
-
-ten_data <- dt_neg %>%
-    dplyr::filter(chr %in% test_chromosomes) %>%
-    dplyr::slice_sample(n=tnegatives)
-
-set.seed(seed)
-train_data <- rbind(trp_data, trn_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'train')
-set.seed(seed)
-test_data <- rbind(tep_data, ten_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'test')
-
-set.seed(seed)
-dt <- rbind(train_data, test_data) %>%
-    as.data.frame() %>%
-    tidyr::unite('locus', c(chr, start, end), remove=T) %>% 
-    as.data.table() %>%
-    dplyr::sample_frac(size=1)
-
-
-### merge and split into train and test
-# dt <- rbind(dt_pos, dt_neg) %>% 
-#     as.data.frame() %>%
-#     tidyr::unite('locus', c(chr, start, end), remove=T) %>% 
-#     as.data.table() %>%
-#     dplyr::sample_frac(size=1)
-
-print(glue('INFO - There are {nrow(dt)} motifs to be trained and tested on after filtering'))
-print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(dt$binding_class), collapse=' & ')} respectively"))
-
-
-### splitting by chromosome 
-### I just need to make sure that I don't pick less than 200
-###
-print(glue('INFO - Writing out files...'))
-data.table::fwrite(as.data.frame(dt[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')
-data.table::fwrite(dt, glue('{opt$ground_truth_file}'), row.names=F, quote=F, col.names=T, sep='\t')
-
-#### statistics
-train_test_split <- dt$split %>% table()
-train_test_class <- dt$binding_class %>% table()
-
-train_class <- train_data %>%
-    dplyr::group_by(binding_class, chr) %>%
-    dplyr::summarise(n_loci = n()) %>%
-    tidyr::pivot_wider(id_cols = binding_class, names_from = chr, values_from = n_loci)
-
-test_class <- test_data %>%
-    dplyr::group_by(binding_class, chr) %>%
-    dplyr::summarise(n_loci = n()) %>%
-    tidyr::pivot_wider(id_cols = binding_class, names_from = chr, values_from = n_loci)
-
-
-train_counts <- train_data %>%
-    dplyr::group_by(binding_counts, chr) %>%
-    dplyr::summarise(n_loci = n()) %>%
-    tidyr::pivot_wider(id_cols = binding_counts, names_from = chr, values_from = n_loci)
-
-test_counts <- test_data %>%
-    dplyr::group_by(binding_counts, chr) %>%
-    dplyr::summarise(n_loci = n()) %>%
-    tidyr::pivot_wider(id_cols = binding_counts, names_from = chr, values_from = n_loci)
-
-# generate summary statistics ======
-if(!file.exists(opt$summary_file)){
-    if(!file.exists(dirname(opt$summary_file))){
-        if(!dir.exists(dirname(opt$summary_file))){
-            dir.create(dirname(opt$summary_file), recursive = TRUE)
-        }
+    if(nrow(dt_pos) < opt$peaks_counts_threshold){
+        message(glue("WARNING - There are less than {opt$peaks_counts_threshold} peaks after intersecting with motif instances. No model will be trained for {opt$transcription_factor}_{opt$tissue}. The peaks that are intersected will still be written out, but there will be no {opt$transcription_factor}_{opt$tissue}.predictors.txt file"))
     }
 
-    diagfile <- file(opt$summary_file, open = "a")
-    cat("## Training binding sites distribution", file = diagfile, sep = '\n')
-    cat("#### train-test split (split) binding sites distribution", file = diagfile, sep = '\n')
-    capture.output(train_test_split, file = diagfile, sep = '\n')
-    cat("#### train-test split (0s, 1s) binding sites distribution", file = diagfile, sep = '\n')
-    capture.output(train_test_class, file = diagfile, sep = '\n')
-    cat("#### training binding class distribution", file = diagfile, sep = '\n')
-    capture.output(train_class, file = diagfile, sep = '\n')
-    cat("#### test binding class distribution", file = diagfile, sep = '\n')
-    capture.output(test_class, file = diagfile, sep = '\n')
-    cat("#### training binding counts distribution", file = diagfile, sep = '\n')
-    capture.output(train_counts, file = diagfile, sep = '\n')
-    cat("#### test binding counts distribution", file = diagfile, sep = '\n')
-    capture.output(test_counts, file = diagfile, sep = '\n')
+    # select negatives and merge
+    dt_neg <- purrr::map(pmi_dt_list, function(each_dt){
+        each_dt %>%
+            filter(.[[4]] == 0) %>%
+            dplyr::select(chr, start, end) 
+    }) %>%
+        do.call('rbind', .) %>%
+        dplyr::filter(chr %in% valid_chromosomes) %>%
+        dplyr::distinct(chr, start, end, .keep_all = FALSE) %>%
+        dplyr::mutate(binding_class = 0, binding_counts = 0)
 
-} else {
-    diagfile <- NULL
+    dt_merged <- dplyr::bind_rows(dt_pos, dt_neg)
+    data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
+
+    test_chromosomes <- base::strsplit(opt$test_chromosomes, ',')[[1]]
+
+    train_dt_pos <- dt_pos %>%
+        dplyr::filter(!chr %in% test_chromosomes) %>%
+        dplyr::arrange(desc(binding_counts)) 
+
+    test_dt_pos <- dt_pos %>%
+        dplyr::filter(chr %in% test_chromosomes) %>%
+        dplyr::arrange(desc(binding_counts))
+
+    # select training data ===============
+    if(nrow(train_dt_pos) < (opt$num_predictors/2)){
+        npositives <- nrow(train_dt_pos)
+        nnegatives <- npositives
+    } else {
+        npositives <- ceiling(opt$num_predictors/2)
+        nnegatives <- npositives
+    }
+
+    # select test data
+    if(nrow(test_dt_pos) < 1000){
+        tpositives <- nrow(test_dt_pos)
+        tnegatives <- tpositives
+    } else {
+        tpositives <- 1000
+        tnegatives <- tpositives
+    }
+
+    ### training by splitting into chromosomes ###
+    trp_data <- train_dt_pos %>%
+        dplyr::slice_head(n=npositives)
+
+    tep_data <- test_dt_pos %>%
+        dplyr::slice_head(n=tpositives)
+
+    trn_data <- dt_neg %>%
+        dplyr::filter(!chr %in% test_chromosomes) %>%
+        dplyr::slice_sample(n=nnegatives)
+
+    ten_data <- dt_neg %>%
+        dplyr::filter(chr %in% test_chromosomes) %>%
+        dplyr::slice_sample(n=tnegatives)
+
+    set.seed(seed)
+    train_data <- rbind(trp_data, trn_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'train')
+    set.seed(seed)
+    test_data <- rbind(tep_data, ten_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'test')
+
+    set.seed(seed)
+    dt <- rbind(train_data, test_data) %>%
+        as.data.frame() %>%
+        tidyr::unite('locus', c(chr, start, end), remove=T) %>% 
+        as.data.table() %>%
+        dplyr::sample_frac(size=1)
+
+    print(glue('INFO - There are {nrow(dt)} motifs to be trained and tested on after filtering'))
+    print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(dt$binding_class), collapse=' & ')} respectively"))
+
+
+    ###
+    print(glue('INFO - Writing out files...'))
+    if(nrow(dt_pos) >= opt$peaks_counts_threshold){
+        data.table::fwrite(as.data.frame(dt[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')
+    } else {
+        file.create(opt$predictors_file)
+    }
+    data.table::fwrite(dt, glue('{opt$ground_truth_file}'), row.names=F, quote=F, col.names=T, sep='\t')
+
+
+    #### statistics
+    train_test_split <- dt$split %>% table()
+    train_test_class <- dt$binding_class %>% table()
+
+    train_class <- train_data %>%
+        dplyr::group_by(binding_class, chr) %>%
+        dplyr::summarise(n_loci = n()) %>%
+        tidyr::pivot_wider(id_cols = binding_class, names_from = chr, values_from = n_loci)
+
+    test_class <- test_data %>%
+        dplyr::group_by(binding_class, chr) %>%
+        dplyr::summarise(n_loci = n()) %>%
+        tidyr::pivot_wider(id_cols = binding_class, names_from = chr, values_from = n_loci)
+
+
+    train_counts <- train_data %>%
+        dplyr::group_by(binding_counts, chr) %>%
+        dplyr::summarise(n_loci = n()) %>%
+        tidyr::pivot_wider(id_cols = binding_counts, names_from = chr, values_from = n_loci)
+
+    test_counts <- test_data %>%
+        dplyr::group_by(binding_counts, chr) %>%
+        dplyr::summarise(n_loci = n()) %>%
+        tidyr::pivot_wider(id_cols = binding_counts, names_from = chr, values_from = n_loci)
+
+    # generate summary statistics ======
+    if(!file.exists(opt$summary_file)){
+        if(!file.exists(dirname(opt$summary_file))){
+            if(!dir.exists(dirname(opt$summary_file))){
+                dir.create(dirname(opt$summary_file), recursive = TRUE)
+            }
+        }
+
+        diagfile <- file(opt$summary_file, open = "a")
+        cat("## Training binding sites distribution", file = diagfile, sep = '\n')
+        cat("#### train-test split (split) binding sites distribution", file = diagfile, sep = '\n')
+        capture.output(train_test_split, file = diagfile, sep = '\n')
+        cat("#### train-test split (0s, 1s) binding sites distribution", file = diagfile, sep = '\n')
+        capture.output(train_test_class, file = diagfile, sep = '\n')
+        cat("#### training binding class distribution", file = diagfile, sep = '\n')
+        capture.output(train_class, file = diagfile, sep = '\n')
+        cat("#### test binding class distribution", file = diagfile, sep = '\n')
+        capture.output(test_class, file = diagfile, sep = '\n')
+        cat("#### training binding counts distribution", file = diagfile, sep = '\n')
+        capture.output(train_counts, file = diagfile, sep = '\n')
+        cat("#### test binding counts distribution", file = diagfile, sep = '\n')
+        capture.output(test_counts, file = diagfile, sep = '\n')
+
+    } else {
+        diagfile <- NULL
+    }
+
+    if(!is.null(opt$diagnostics_file)){
+        close(diagfile)
+    }
 }
 
-if(!is.null(opt$diagnostics_file)){
-    close(diagfile)
-}
+
+
+
+
 
 
 

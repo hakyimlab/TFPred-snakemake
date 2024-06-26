@@ -15,10 +15,12 @@ opt <- parse_args(OptionParser(option_list=option_list))
 
 # opt <- list()
 
-# bpath <- '/project2/haky/temi/projects/TFPred-snakemake'
-# opt$train_data_file <- file.path(bpath, 'data/aggregation_folder/train_cistrome_aggByCollect_AR_Breast.prepared.csv.gz')
+# bpath <- '/beagle3/haky/users/temi/projects/TFPred-snakemake'
+# opt$train_data_file <- file.path(bpath, 'data/ENPACT_5_2024-06-12/aggregation_folder/train_ENPACT_5_2024-06-12_aggByCollect.ARNTL_Bone.prepared.csv.gz')
 # opt$rds_file <- file.path(bpath, 'output/models/cistrome_AR_Breast_2023-08-10/aggByCollect_AR_Breast')
 # opt$nfolds <- 5
+
+# /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_enet.R --train_data_file data/ENPACT_5_2024-06-12/aggregation_folder/train_ENPACT_5_2024-06-12_aggByCollect.ARNTL_Bone.prepared.csv.gz --rds_file data/ENPACT_5_2024-06-12/models/ARNTL_Bone/ARNTL_Bone_2024-06-12 --nfolds 5
 
 library(glue)
 library(R.utils)
@@ -34,6 +36,10 @@ if(file.exists(opt$train_data_file)){
 } else {
     stop(glue('ERROR - Training data cannot be found.'))
 }
+
+# remove missing values
+cc <- complete.cases(dt_train)
+dt_train <- dt_train[cc, ]
 
 # split the data
 X_train <- dt_train[, -c(1,2,3)] |> as.matrix()

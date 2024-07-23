@@ -181,3 +181,132 @@ data.table::fwrite(mtdt, file = '/project2/haky/temi/projects/TFPred-snakemake/m
 data.table::fwrite(mtdt[1:10, ], file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
 ```
 
+
+## Prepare samples for experiment
+
+
+```{r}
+
+experiment_dir <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate'
+if(!dir.exists(experiment_dir)){
+    dir.create(experiment_dir)
+}
+
+minimal_ex <- enlist[c('AR')]
+# sselect 20 samples randomly
+ar_prostate_samples <- minimal_ex[['AR']][['peakFiles']][['Prostate']]
+
+set.seed(2024)
+ar_prostate_samples <- sample(ar_prostate_samples, 50, replace = F) |> sort()
+
+# set minimal_ex to the selected samples
+run_dt <- vector('character', length(ar_prostate_samples))
+samples_vec <- vector('character', length(ar_prostate_samples))
+
+data_list <- list()
+
+for(i in seq_along(ar_prostate_samples)){
+    nnm <- paste0('AR', i)
+    data_list[[nnm]] <- list()
+    data_list[[nnm]][['motifFiles']] <- minimal_ex[['AR']][['motifFiles']]
+    data_list[[nnm]][['peakFiles']] <- list()
+    data_list[[nnm]][['peakFiles']][['Prostate']] <- ar_prostate_samples[i]
+    nn <- gsub('.narrowPeak.bed', '.data.yaml', ar_prostate_samples[i], fixed = F)
+    print(nn); print(data_list)
+
+    run_dt[i] <- nnm
+    samples_vec[i] <- nn
+
+}
+
+run_dt <- as.data.frame(run_dt)
+run_dt$context <- 'Prostate'
+colnames(run_dt) <- c('assay', 'context')
+
+run_dt %>% data.table::fwrite(file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate/runs.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+
+yaml::write_yaml(data_list, file = file.path(experiment_dir, 'models.yaml'))
+```
+
+
+```{r}
+print(
+        glue("snakemake -s snakefile.smk --configfile experiments/AR_Prostate/pipeline.experiment.yaml --config 'models_config=experiments/AR_Prostate/models.yaml' 'models_metadata=experiments/AR_Prostate/runs.tsv' --profile profiles/simple/ -np > dryrun.out")
+    )
+# /beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate/pipeline.experiment.yaml
+```
+
+
+Gather the models
+
+```{r}
+models_dir <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/EXP_TWENTY_2024-07-22/models'
+```
+```{r}
+#valid_dates <- c('2023-11-14', '2023-12-01')
+
+valid_dates <- c('2024-07-22')
+
+logistic_models <- list.files(models_dir, full.names = TRUE, recursive = T) %>% sapply(., function(each_model){
+    if(endsWith(each_model, ".logistic.rds") && any(sapply(valid_dates, grepl, x=each_model, fixed=TRUE))){
+        if(file.info(each_model)$size > 0){
+            return(each_model)
+        }
+    }
+}) %>% Filter(Negate(is.null), .)
+```
+
+
+```{r}
+nn <- names(logistic_models) %>% base::strsplit(., split="/") %>% sapply(., function(each_name){
+    each_name[length(each_name)]
+}) %>% base::strsplit(., '\\.') %>% sapply(., function(each_name){
+    gsub('_Prostate_2024-07-22', '', each_name[1])
+})
+```
+
+
+```{r}
+if(length(unique(nn)) == length(nn)){
+    names(logistic_models) <- nn
+    do.call(rbind, logistic_models) %>%
+        as.data.frame() %>%
+        tibble::rownames_to_column('model') %>%
+        setNames(nm=c('model', 'path')) %>%
+        data.table::fwrite(., file='/project2/haky/temi/projects/enpact-predict-snakemake/metadata/exp_50_models.txt', row.names=F, col.names=T, quote=F, sep='\t')
+}
+```
+
+
+
+```{r}
+prediction_array <- readRDS('/project2/haky/temi/projects/enpact-predict-snakemake/output/baca_multisample_exp50_2024-07-22/baca_multisample_exp50_2024-07-22.enpact_scores.array.rds.gz')
+```
+
+
+```{r}
+dim(prediction_array)
+```
+
+
+```{r}
+prediction_array[,,'AR38'] |> dim()
+```
+
+
+```{r}
+dimnames(prediction_array)[[3]]
+```
+
+
+```{r}
+jt <- data.table::fread('/project2/haky/temi/projects/enpact-predict-snakemake/output/baca_multisample_exp50_2024-07-22/enpact_scores/DFCI_1239.enpact_scores.txt.gz')
+dim(jt)
+```
+
+
+```{r}
+list.files('/project2/haky/temi/projects/enpact-predict-snakemake/output/baca_multisample_exp50_2024-07-22/enpact_scores/', pattern ='*.txt.gz', full.names = T, recursive = T) %>% sapply(., function(each_file){
+    data.table::fread(each_file) %>% dim()
+})
+```

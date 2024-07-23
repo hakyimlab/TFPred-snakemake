@@ -73,12 +73,33 @@ homer_motifs_dict = helpers.collectMotifFiles(unique_TFs, model_config)
 TF_list, tissue_list = [d[0] for d in details], [d[1].replace(' ', '-') for d in details]
 motif_files = list(homer_motifs_dict.values())
 motif_inputs = helpers.createMotifInputs(homer_motifs_dict, config['homer']['motifs_database'])
-motif_outputs = helpers.createMotifOutputs(homer_motifs_dict, HOMERFILES_DIR)
+motif_outputs = helpers.createMotifOutputs(homer_motifs_dict, os.path.join(HOMERFILES_DIR, 'scannedMotifs'))
+
+
+rule all:
+    input:
+        motif_outputs,
+        expand(os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt'), tf = set(TF_list)),
+        expand(os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.predictors.txt'), zip, tf=TF_list, tissue=tissue_list),
+        expand(os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.ground_truth.txt'), zip, tf=TF_list, tissue=tissue_list),
+        expand(os.path.join(AGGREGATION_DIR, f'{runname}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(AGGREGATION_DIR, f'train_{run}_{config["enformer"]["aggtype"]}.{{tf}}_{{tissue}}.prepared.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(AGGREGATION_DIR, f'test_{run}_{config["enformer"]["aggtype"]}.{{tf}}_{{tissue}}.prepared.csv.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_DIR, "{tf}_{tissue}", f'{{tf}}_{{tissue}}_{config["date"]}.logistic.rds'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_DIR, "{tf}_{tissue}", f'{{tf}}_{{tissue}}_{config["date"]}.linear.rds'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
+        expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list)
+
+
 
 if config['run_enformer'] == True:
-    include: workflow/rules/train_enpact.slow.smk
+    print(f'INFO - Running ENFORMER is set to True. Running the pipeline with ENFORMER...')
+    include: 'workflow/rules/train_enpact.slow.smk'
 elif config['run_enformer'] == False:
-    include: workflow/rules/train_enpact.fast.smk
+    print(f'INFO - Running ENFORMER is set to False. Running the pipeline without ENFORMER...')
+    include: 'workflow/rules/train_enpact.fast.smk'
 else:
-    print("ERROR - [FATAL] Please specify whether to run ENFORMER or not. Exiting...")
+    print(f"ERROR - [FATAL] Please specify whether to run ENFORMER or not. Exiting...")
     sys.exit(1)

@@ -9,7 +9,8 @@ def verify_model_details(model_details: tuple, model_config: dict, print_info = 
         tf = det[0]
         tissue = det[1]
         if tf not in model_config:
-            raise ValueError(f'ERROR - TF {tf} not found in model config')
+            continue
+            #raise ValueError(f'ERROR - TF {tf} not found in model config')
         else:
             if tissue not in model_config[tf]['peakFiles']:
                 raise ValueError(f'ERROR - Tissue {tissue} not found in peakFiles for TF {tf}')
@@ -67,7 +68,9 @@ def createMotifOutputs(motifsDict, hdir):
     res = []
     for key, values in motifsDict.items():
         if isinstance(values, list):
-            res.extend([os.path.join(hdir, f'{key}', f'scanMotifsGenomeWide.{v}.txt') for v in values])
+            #res.extend([os.path.join(hdir, f'{key}', f'scanMotifsGenomeWide.{v}.txt') for v in values])
+            res.extend([os.path.join(hdir, f'scanMotifsGenomeWide.{v}.txt') for v in values])
         elif isinstance(values, str):
-            res.append(os.path.join(hdir, f'{key}', f'scanMotifsGenomeWide.{values}.txt'))
+            #res.append(os.path.join(hdir, f'{key}', f'scanMotifsGenomeWide.{values}.txt'))
+            res.append(os.path.join(hdir, f'scanMotifsGenomeWide.{values}.txt'))
     return(res)

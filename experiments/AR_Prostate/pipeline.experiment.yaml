@@ -1,0 +1,52 @@
+
+---
+# directories
+pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake'
+dataset: 'EXP_TWENTY' # give this dataset or run a name
+date: "2024-07-22" # this date will be used to create the directory structure
+
+scratch_dir: "/scratch/midway3/temi" # large files will be saved here
+train_by_chromosome: # by default, we train and test on different chromosomes
+  condition: True
+  test: ['chr9', 'chr22'] # logically, training will the done on the other chromosomes
+
+# data information
+## these are the peaks and motifs to be used in training the models
+# models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.data.yaml"
+# ## these are the models to be trained
+# models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.run.tsv"
+# models_config: experiments/AR_Prostate/37092_sort_peaks.data.yaml
+# models_metadata: experiments/AR_Prostate/runs.tsv
+
+# genome information
+genome:
+  fasta: "/project/haky/data/hg_sequences/hg38/Homo_sapiens_assembly38.fasta"
+
+# location of the peaks i.e. the bed files
+peaks:
+  directory: /project/haky/data/TFXcan/cistrome/raw/human_factor # where are the cistrome bed files
+
+# homer is used to find the motif instances
+homer:
+  dir: '/beagle3/haky/users/temi/software/homer'
+  motifs_database: /beagle3/haky/users/temi/software/homer/motifs
+  scanMotifsGenome: '/beagle3/haky/users/temi/software/homer/bin/scanMotifGenomeWide.pl'
+  genome: '/beagle3/haky/users/temi/software/homer/data/genomes/hg38'
+
+
+rscript: "/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript"
+
+# directives to use fast or exhaustive pipeline
+run_enformer: False # set to true if you want enformer to be run
+delete_enformer_outputs: True # should you delete enformer predictions after aggregating them? Saves disk space; this is only used if run_enformer is True
+enformer_epigenome_directory: '/beagle3/haky/data/enformer-reference-epigenome'
+
+# this won't be used if run_enformer is false since there is not need to run GPUs
+enformer: 
+  base_directives: "config/enformer_base.yaml"
+  model: "/project/haky/data/enformer/raw"
+  predict: "/beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py"
+  aggregate: "/beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/aggregate/aggregate.py"
+  aggtype: "aggByCollect"
+  ngpus: 4 # shouldn't request more than 4; 2 should start to run quite quickly
+...

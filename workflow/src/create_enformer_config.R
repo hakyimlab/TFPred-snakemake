@@ -15,7 +15,8 @@ option_list <- list(
     make_option("--model", help='enformer model'),
 	make_option("--fasta_file", help='fasta file, typically hg38'),
     make_option("--date", help='fasta file, typically hg38'),
-    make_option("--parameters_file", help='the json file that will be created')
+    make_option("--parameters_file", help='the json file that will be created'),
+    make_option("--personalized_directives", default = NULL, help='a yaml file for personalized predictions')
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -36,6 +37,20 @@ enformer_parameters_json[['fasta_file']] <- opt$fasta_file
 
 # chANGE the metadata dir
 enformer_parameters_json[['metadata_dir']] <- dirname(opt$parameters_file)
+
+
+
+# if personalized directives are provided, add them to the enformer_parameters_json
+if(!is.null(opt$personalized_directives)){
+    if(!file.exists(opt$personalized_directives)){
+        stop("ERROR - The personalized directives yaml file does not exist")
+    }
+    personalized_directives <- yaml::yaml.load_file(opt$personalized_directives)
+    enformer_parameters_json <- c(enformer_parameters_json, personalized_directives)
+    enformer_parameters_json[["sequence_source"]] <- "personalized"
+}
+
+print(enformer_parameters_json)
 
 write(
     jsonlite::toJSON(enformer_parameters_json, na='null', pretty=TRUE, auto_unbox=T),

@@ -1,0 +1,6 @@
+AR:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate: NKI_13_T.formattedInputPeaks.bed

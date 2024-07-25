@@ -1,106 +1,69 @@
-INFO - Verified 2 assays
-INFO - Running ENFORMER is set to False. Running the pipeline without ENFORMER...
+INFO - Verified 1 assays
+INFO - Running ENFORMER is set to True. Running the pipeline with ENFORMER...
 Building DAG of jobs...
 Job stats:
-job                      count    min threads    max threads
----------------------  -------  -------------  -------------
-aggregate_epigenomes         2              1              1
-all                          1              1              1
-create_training_set          2              1              1
-evaluate_TFPred              2              1              1
-merge_homer_motifs           2              1              1
-prepare_training_data        2              1              1
-train_TFPred_weights         2              1              1
-total                       13              1              1
+job                              count    min threads    max threads
+-----------------------------  -------  -------------  -------------
+aggregate_predictions                1              1              1
+all                                  1              1              1
+create_enformer_configuration        1              1              1
+predict_with_enformer                1              1              1
+total                                4              1              1
 
 
-[Mon Jul 22 12:57:54 2024]
-Job 4: working on data/homer_instances/scannedMotifs/scanMotifsGenomeWide.are.motif.txt data/homer_instances/scannedMotifs/scanMotifsGenomeWide.ar-half.motif.txt
-Reason: Set of input files has changed since last execution
-
-[Mon Jul 22 12:57:54 2024]
-Job 3: working on data/homer_instances/scannedMotifs/scanMotifsGenomeWide.are.motif.txt data/homer_instances/scannedMotifs/scanMotifsGenomeWide.ar-half.motif.txt
-Reason: Missing output files: data/homer_instances/AR2/merged_motif_file.txt
-
-[Mon Jul 22 12:57:54 2024]
-Job 5: working on tf=AR1,tissue=Prostate
-Reason: Input files updated by another job: data/homer_instances/AR1/merged_motif_file.txt
+[Wed Jul 24 13:19:54 2024]
+Job 7: working on tf=AR,tissue=Prostate
+Reason: Missing output files: data/NKI_13_2024-07-23/prediction_parameters/enformer_config_NKI_13_2024-07-23.AR_Prostate.json; Code has changed since last execution; Params have changed since last execution
+DAG of jobs will be updated after completion.
 
 
-        /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor AR1 --tissue Prostate --predicted_motif_file data/homer_instances/AR1/merged_motif_file.txt --sorted_bedfiles_directory data/EXP_TWENTY_2024-07-22/sortedbeds/AR1_Prostate --bedlinks_directory /project/haky/data/TFXcan/cistrome/raw/human_factor --predictors_file data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.predictors.txt --ground_truth_file data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.ground_truth.txt --info_file data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.info.txt.gz --peaks_files 37092_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.summary.txt; sleep 5
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_enformer_config.R --dataset NKI_13 --transcription_factor AR --tissue Prostate --base_directives experiments/bpnet/enformer.base.yaml --project_directory /scratch/midway3/temi --predictors_file data/NKI_13_2024-07-23/predictor_files/AR_Prostate.predictors.txt --model /project/haky/data/enformer/raw --fasta_file /project/haky/users/temi/projects/bpnet-AR/data/NKI_13.fa --parameters_file data/NKI_13_2024-07-23/prediction_parameters/enformer_config_NKI_13_2024-07-23.AR_Prostate.json --date 2024-07-23 --personalized_directives /beagle3/haky/users/temi/projects/TFPred-snakemake/config/personalized_base.yaml; sleep 5
         
 
-[Mon Jul 22 12:57:54 2024]
-Job 6: working on tf=AR2,tissue=Prostate
-Reason: Missing output files: data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.predictors.txt, data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.ground_truth.txt; Input files updated by another job: data/homer_instances/AR2/merged_motif_file.txt
+[Wed Jul 24 13:19:54 2024]
+Job 6: working on AR_Prostate
+Reason: Missing output files: data/NKI_13_2024-07-23/prediction_parameters/aggregation_config_NKI_13_AR_Prostate.json; Input files updated by another job: data/NKI_13_2024-07-23/prediction_parameters/enformer_config_NKI_13_2024-07-23.AR_Prostate.json
+DAG of jobs will be updated after completion.
 
 
-        /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor AR2 --tissue Prostate --predicted_motif_file data/homer_instances/AR2/merged_motif_file.txt --sorted_bedfiles_directory data/EXP_TWENTY_2024-07-22/sortedbeds/AR2_Prostate --bedlinks_directory /project/haky/data/TFXcan/cistrome/raw/human_factor --predictors_file data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.predictors.txt --ground_truth_file data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.ground_truth.txt --info_file data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.info.txt.gz --peaks_files 43856_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.summary.txt; sleep 5
+            sbatch workflow/src/run_enformer.sbatch /beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py data/NKI_13_2024-07-23/prediction_parameters/enformer_config_NKI_13_2024-07-23.AR_Prostate.json
         
 
-[Mon Jul 22 12:57:54 2024]
-Job 7: working on tf=AR1,tissue=Prostate
-Reason: Input files updated by another job: data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.predictors.txt
+[Wed Jul 24 13:19:54 2024]
+Job 5: working on tf=AR,tissue=Prostate
+Reason: Missing output files: data/NKI_13_2024-07-23/aggregation_folder/NKI_13_aggByCollect_AR_Prostate.csv.gz; Input files updated by another job: data/NKI_13_2024-07-23/prediction_parameters/aggregation_config_NKI_13_AR_Prostate.json
 
-[Mon Jul 22 12:57:54 2024]
-Job 8: working on tf=AR2,tissue=Prostate
-Reason: Missing output files: data/EXP_TWENTY_2024-07-22/aggregation_folder/EXP_TWENTY_aggByCollect_AR2_Prostate.csv.gz; Input files updated by another job: data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.predictors.txt
-
-[Mon Jul 22 12:57:54 2024]
-Job 10: preparing tf=AR2,tissue=Prostate training and test data
-Reason: Missing output files: data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/test_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz; Input files updated by another job: data/EXP_TWENTY_2024-07-22/aggregation_folder/EXP_TWENTY_aggByCollect_AR2_Prostate.csv.gz, data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.ground_truth.txt
-
-[Mon Jul 22 12:57:54 2024]
-Job 9: preparing tf=AR1,tissue=Prostate training and test data
-Reason: Input files updated by another job: data/EXP_TWENTY_2024-07-22/aggregation_folder/EXP_TWENTY_aggByCollect_AR1_Prostate.csv.gz, data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.ground_truth.txt
-
-[Mon Jul 22 12:57:54 2024]
-Job 11: training on tf=AR1,tissue=Prostate training data
-Reason: Input files updated by another job: data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR1_Prostate.prepared.csv.gz
-
-[Mon Jul 22 12:57:54 2024]
-Job 12: training on tf=AR2,tissue=Prostate training data
-Reason: Missing output files: data/EXP_TWENTY_2024-07-22/models/AR2_Prostate/AR2_Prostate_2024-07-22.linear.rds, data/EXP_TWENTY_2024-07-22/models/AR2_Prostate/AR2_Prostate_2024-07-22.logistic.rds; Input files updated by another job: data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz
-
-[Mon Jul 22 12:57:54 2024]
-Job 13: evaluating on tf=AR1,tissue=Prostate training and test data
-Reason: Input files updated by another job: data/EXP_TWENTY_2024-07-22/models/AR1_Prostate/AR1_Prostate_2024-07-22.linear.rds, data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR1_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/test_EXP_TWENTY_2024-07-22_aggByCollect.AR1_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/models/AR1_Prostate/AR1_Prostate_2024-07-22.logistic.rds
-
-[Mon Jul 22 12:57:54 2024]
-Job 14: evaluating on tf=AR2,tissue=Prostate training and test data
-Reason: Missing output files: data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.logistic.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.linear.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.logistic.test_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.linear.test_eval.txt.gz; Input files updated by another job: data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/models/AR2_Prostate/AR2_Prostate_2024-07-22.linear.rds, data/EXP_TWENTY_2024-07-22/models/AR2_Prostate/AR2_Prostate_2024-07-22.logistic.rds, data/EXP_TWENTY_2024-07-22/aggregation_folder/test_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz
-
-[Mon Jul 22 12:57:54 2024]
+[Wed Jul 24 13:19:54 2024]
 localrule all:
-    input: data/homer_instances/scannedMotifs/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/AR2/merged_motif_file.txt, data/homer_instances/AR1/merged_motif_file.txt, data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.predictors.txt, data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.predictors.txt, data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.ground_truth.txt, data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.ground_truth.txt, data/EXP_TWENTY_2024-07-22/aggregation_folder/EXP_TWENTY_aggByCollect_AR1_Prostate.csv.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/EXP_TWENTY_aggByCollect_AR2_Prostate.csv.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR1_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/test_EXP_TWENTY_2024-07-22_aggByCollect.AR1_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/test_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/models/AR1_Prostate/AR1_Prostate_2024-07-22.logistic.rds, data/EXP_TWENTY_2024-07-22/models/AR2_Prostate/AR2_Prostate_2024-07-22.logistic.rds, data/EXP_TWENTY_2024-07-22/models/AR1_Prostate/AR1_Prostate_2024-07-22.linear.rds, data/EXP_TWENTY_2024-07-22/models/AR2_Prostate/AR2_Prostate_2024-07-22.linear.rds, data/EXP_TWENTY_2024-07-22/evaluation/AR1_Prostate_2024-07-22.linear.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.linear.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR1_Prostate_2024-07-22.logistic.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.logistic.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR1_Prostate_2024-07-22.linear.test_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.linear.test_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR1_Prostate_2024-07-22.logistic.test_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.logistic.test_eval.txt.gz
+    input: data/homer_instances/scannedMotifs/scanMotifsGenomeWide.are.motif.txt, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.ar-half.motif.txt, data/homer_instances/AR/merged_motif_file.txt, data/NKI_13_2024-07-23/predictor_files/AR_Prostate.predictors.txt, data/NKI_13_2024-07-23/predictor_files/AR_Prostate.ground_truth.txt, data/NKI_13_2024-07-23/aggregation_folder/NKI_13_aggByCollect_AR_Prostate.csv.gz
     jobid: 0
-    reason: Input files updated by another job: data/EXP_TWENTY_2024-07-22/evaluation/AR1_Prostate_2024-07-22.linear.test_eval.txt.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/EXP_TWENTY_aggByCollect_AR1_Prostate.csv.gz, data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.predictors.txt, data/EXP_TWENTY_2024-07-22/models/AR2_Prostate/AR2_Prostate_2024-07-22.linear.rds, data/EXP_TWENTY_2024-07-22/evaluation/AR1_Prostate_2024-07-22.linear.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR1_Prostate_2024-07-22.logistic.test_eval.txt.gz, data/EXP_TWENTY_2024-07-22/predictor_files/AR1_Prostate.ground_truth.txt, data/EXP_TWENTY_2024-07-22/models/AR1_Prostate/AR1_Prostate_2024-07-22.logistic.rds, data/homer_instances/AR2/merged_motif_file.txt, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.logistic.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/EXP_TWENTY_aggByCollect_AR2_Prostate.csv.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.logistic.test_eval.txt.gz, data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.ground_truth.txt, data/EXP_TWENTY_2024-07-22/evaluation/AR1_Prostate_2024-07-22.logistic.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.linear.test_eval.txt.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/evaluation/AR2_Prostate_2024-07-22.linear.train_eval.txt.gz, data/EXP_TWENTY_2024-07-22/predictor_files/AR2_Prostate.predictors.txt, data/homer_instances/AR1/merged_motif_file.txt, data/EXP_TWENTY_2024-07-22/models/AR2_Prostate/AR2_Prostate_2024-07-22.logistic.rds, data/EXP_TWENTY_2024-07-22/aggregation_folder/train_EXP_TWENTY_2024-07-22_aggByCollect.AR1_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/aggregation_folder/test_EXP_TWENTY_2024-07-22_aggByCollect.AR1_Prostate.prepared.csv.gz, data/EXP_TWENTY_2024-07-22/models/AR1_Prostate/AR1_Prostate_2024-07-22.linear.rds, data/EXP_TWENTY_2024-07-22/aggregation_folder/test_EXP_TWENTY_2024-07-22_aggByCollect.AR2_Prostate.prepared.csv.gz
+    reason: Input files updated by another job: data/NKI_13_2024-07-23/aggregation_folder/NKI_13_aggByCollect_AR_Prostate.csv.gz
     resources: mem_mb=<TBD>, disk_mb=<TBD>, tmpdir=/scratch/midway3/temi, partition=caslake, time=02:00:00, account=pi-haky, nodes=1, gpu=0, mem_cpu=4, cpu_task=8
 
 Job stats:
-job                      count    min threads    max threads
----------------------  -------  -------------  -------------
-aggregate_epigenomes         2              1              1
-all                          1              1              1
-create_training_set          2              1              1
-evaluate_TFPred              2              1              1
-merge_homer_motifs           2              1              1
-prepare_training_data        2              1              1
-train_TFPred_weights         2              1              1
-total                       13              1              1
+job                              count    min threads    max threads
+-----------------------------  -------  -------------  -------------
+aggregate_predictions                1              1              1
+all                                  1              1              1
+create_enformer_configuration        1              1              1
+predict_with_enformer                1              1              1
+total                                4              1              1
 
 Reasons:
     (check individual jobs above for details)
+    code has changed since last execution:
+        create_enformer_configuration
     input files updated by another job:
-        aggregate_epigenomes, all, create_training_set, evaluate_TFPred, prepare_training_data, train_TFPred_weights
+        aggregate_predictions, all, predict_with_enformer
     missing output files:
-        aggregate_epigenomes, create_training_set, evaluate_TFPred, merge_homer_motifs, prepare_training_data, train_TFPred_weights
-    set of input files has changed since last execution:
-        merge_homer_motifs
+        aggregate_predictions, create_enformer_configuration, predict_with_enformer
+    params have changed since last execution:
+        create_enformer_configuration
 Some jobs were triggered by provenance information, see 'reason' section in the rule displays above.
 If you prefer that only modification time is used to determine whether a job shall be executed, use the command line option '--rerun-triggers mtime' (also see --help).
 If you are sure that a change for a certain output file (say, <outfile>) won't change the result (e.g. because you just changed the formatting of a script or environment definition), you can also wipe its metadata to skip such a trigger via 'snakemake --cleanup-metadata <outfile>'. 
-Rules with provenance triggered jobs: merge_homer_motifs
+Rules with provenance triggered jobs: create_enformer_configuration
 
 
 This was a dry-run (flag -n). The order of jobs does not reflect the order of execution.
+The run involves checkpoint jobs, which will result in alteration of the DAG of jobs (e.g. adding more jobs) after their completion.

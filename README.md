@@ -22,6 +22,8 @@ There are 2 ways to use this pipeline.
 
 2. Train Enpact models using Enformer: Here, the pipeline will run Enformer on-the-fly to generate the reference epigenome. This is slower than the first approach above. To use this approach, you need to set the parameter `run_enformer` to `true` in the [config/pipeline.yaml](./minimal/pipeline.minimal.yaml) file.
 
+3. The pipeline can also train an Enpact model given using a personal genome. Here you need to provide a VCF file and the reference fasta file. 
+
 
 ### Helpers:
 

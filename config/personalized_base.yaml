@@ -1,0 +1,29 @@
+sequence_source: personalized
+individuals: NKI_13
+n_individuals: -1.0
+batch_individuals: -1.0
+vcf_files:
+  folder: /project2/haky/Data/baca_cwas/vcfs/hg38/imputed_vcf_hg38_snps_only
+  files:
+    chr1: chr1.dose.vcf.gz
+    chr2: chr2.dose.vcf.gz
+    chr3: chr3.dose.vcf.gz
+    chr4: chr4.dose.vcf.gz
+    chr5: chr5.dose.vcf.gz
+    chr6: chr6.dose.vcf.gz
+    chr7: chr7.dose.vcf.gz
+    chr8: chr8.dose.vcf.gz
+    chr9: chr9.dose.vcf.gz
+    chr10: chr10.dose.vcf.gz
+    chr11: chr11.dose.vcf.gz
+    chr12: chr12.dose.vcf.gz
+    chr13: chr13.dose.vcf.gz
+    chr14: chr14.dose.vcf.gz
+    chr15: chr15.dose.vcf.gz
+    chr16: chr16.dose.vcf.gz
+    chr17: chr17.dose.vcf.gz
+    chr18: chr18.dose.vcf.gz
+    chr19: chr19.dose.vcf.gz
+    chr20: chr20.dose.vcf.gz
+    chr21: chr21.dose.vcf.gz
+    chr22: chr22.dose.vcf.gz

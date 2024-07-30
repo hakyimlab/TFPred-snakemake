@@ -205,3 +205,29 @@ rule evaluate_TFPred:
             shell("touch {output}")
         else:
             shell("{params.rscript} workflow/src/evaluate_enet.R --linear_model {input.linear_model} --logistic_model {input.logistic_model} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {params.basename}")
+
+rule compile_statistics:
+    input: 
+        f1 = expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
+        f2 = expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list)
+        # f1 = expand('{tf}', tf = TF_list),
+        # f2 = expand('{tissue}', tissue = tissue_list)
+    output:
+        os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt')
+    message:
+        "compiling statistics for {wildcards}"
+    params:
+        run = run,
+        jobname = run,
+        rscript = config['rscript'],
+        input_f1 = ','.join(TF_list),
+        input_f2 = ','.join(tissue_list),
+        path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz')
+    resources:
+        mem_mb= 100000,
+        partition="caslake",
+        time="06:00:00"
+    shell:
+        """
+            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output}
+        """

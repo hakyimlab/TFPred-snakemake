@@ -37,7 +37,7 @@ peaks_dir <- '/project/haky/data/TFXcan/cistrome/raw/human_factor'
 
 ```{r}
 mt <- data.table::fread('/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt') %>%
-    dplyr::filter(Tissue_type != 'None', !is.na(PeaksUnionDHSRatio)) %>%
+    dplyr::filter(Tissue_type != 'None', !is.na(PeaksUnionDHSRatio), FRiP > 0.01) %>%
     dplyr::filter(!grepl('-', Factor, fixed = T)) %>%
     dplyr::filter(Factor %in% homerdb$symbol)
 
@@ -176,9 +176,9 @@ mtdt %>% dplyr::filter(assay %in% names(minimal_ex)) %>%
 ```
 
 ```{r}
-data.table::fwrite(mtdt, file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+data.table::fwrite(mtdt, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
 
-data.table::fwrite(mtdt[1:10, ], file = '/project2/haky/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+data.table::fwrite(mtdt[1:10, ], file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
 ```
 
 

@@ -200,6 +200,7 @@ if(!file.exists(intersect_bed) || file.info(intersect_bed)$size <= 0){
 
     dt_pos <- data.table::fread(intersect_bed) %>%
         setNames(c('chr', 'start', 'end', 'binding_counts')) %>%
+        dplyr::filter(binding_counts > 0) %>%
         dplyr::mutate(binding_class = 1)
 
     if(nrow(dt_pos) < opt$peaks_counts_threshold){
@@ -221,6 +222,11 @@ if(!file.exists(intersect_bed) || file.info(intersect_bed)$size <= 0){
     data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
 
     test_chromosomes <- base::strsplit(opt$test_chromosomes, ',')[[1]]
+
+    if(!any(test_chromosomes %in% dt_pos$chr) || !any(test_chromosomes %in% dt_neg$chr)){
+        message(glue("WARNING - None of the test chromosomes are present in the positive set. Now trying for other chromosomes"))
+        test_chromosomes <- c('chr4', 'chr3')
+    }
 
     train_dt_pos <- dt_pos %>%
         dplyr::filter(!chr %in% test_chromosomes) %>%

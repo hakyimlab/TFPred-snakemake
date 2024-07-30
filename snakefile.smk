@@ -38,6 +38,7 @@ PREDICTIONS_DIR = os.path.join(config['scratch_dir'], 'predictions_folder') if o
 AGGREGATION_DIR = os.path.join(RUN_DIR, 'aggregation_folder')
 MODELS_DIR = os.path.join(RUN_DIR, 'models') #'output/models'
 MODELS_EVAL_DIR = os.path.join(RUN_DIR, 'evaluation') #'output/models_eval'
+STATISTICS_DIR = os.path.join(RUN_DIR, 'statistics') #'output/statistics'
 
 # prepare input ======
 metadata_dt = pd.read_table(config['models_metadata'], dtype={'assay': 'string', 'context': 'string'})
@@ -90,7 +91,8 @@ rule all:
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
-        expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list)
+        expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
+        os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt')
 
 
 

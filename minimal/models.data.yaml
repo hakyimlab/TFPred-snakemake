@@ -1,7 +1,4 @@
-ASCL2:
-  motifFiles: ascl2.motif
-  peakFiles:
-    Colon: 38812_sort_peaks.narrowPeak.bed
+NA: ~
 ATF4:
   motifFiles: atf4.motif
   peakFiles:
@@ -12,8 +9,6 @@ SREBF2:
   motifFiles: srebp2.motif
   peakFiles:
     Blood: 45607_sort_peaks.narrowPeak.bed
-    Colon: 38765_sort_peaks.narrowPeak.bed
-    Liver: 45812_sort_peaks.narrowPeak.bed
 GATA2:
   motifFiles: gata2.motif
   peakFiles:
@@ -32,16 +27,12 @@ GATA2:
     - 58872_sort_peaks.narrowPeak.bed
     - 58873_sort_peaks.narrowPeak.bed
     - 58874_sort_peaks.narrowPeak.bed
-    - 67761_sort_peaks.narrowPeak.bed
     - 68819_sort_peaks.narrowPeak.bed
     - 68820_sort_peaks.narrowPeak.bed
-    Colon: 38730_sort_peaks.narrowPeak.bed
-    Cordblood: 3276_sort_peaks.narrowPeak.bed
     Prostate:
     - 52057_sort_peaks.narrowPeak.bed
     - 54396_sort_peaks.narrowPeak.bed
     - 54397_sort_peaks.narrowPeak.bed
-    - 67732_sort_peaks.narrowPeak.bed
     - 67734_sort_peaks.narrowPeak.bed
     - 67737_sort_peaks.narrowPeak.bed
     - 67740_sort_peaks.narrowPeak.bed

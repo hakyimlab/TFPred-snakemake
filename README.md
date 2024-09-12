@@ -36,25 +36,30 @@ You will need to install Homer by yourself. Instructions are [here](http://homer
 
 We use conda for this pipeline. You will need to create the conda environment using [this yaml file](./software/TFXcan-pipeline-environment.yaml).
 
-### Input (To run the minimal example):
+### Input 
+
+#### To run the minimal example:
 
 1. Install the conda environment using the file:
     `conda env create -p <<path to env>> -f software/TFXcan-pipeline-environment.yaml`
 2. Activate conda environment:
     `conda activate <<path to env>>`
+3. Add Homer to your path: 
+    `export PATH=$PATH:<<path to homer>>/homer/bin`
 3. Run:
     `snakemake -s snakefile.smk --configfile minimal/pipeline.yaml --profile profiles/simple/ --stats reports/stats.json`
 
-### Input (To run on your own data):
+#### To run on your own data:
 1. Install the conda environment using the file:
     `conda env create -p <<path to env>> -f software/TFXcan-pipeline-environment.yaml`
 2. Edit the `config/pipeline.yaml` file. Instructions are in here.
 3. Edit the `config/enformer_base.yaml` file. Instructions are here.
 4. Activate conda environment:
     `conda activate <<path to env>>`
-5. Run:
+5. Add Homer to your path: 
+    `export PATH=$PATH:<<path to homer>>/homer/bin`
+6. Run:
     `snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ --stats reports/stats.json`
-
 
 ## Notebooks:
 These contain analysis codes for the pipeline. They are not part of the pipeline itself. You can use these to make diagnostic plots and summaries of the models.

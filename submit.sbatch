@@ -21,4 +21,3 @@ snakemake -s snakefile.smk --configfile config/pipeline.2.yaml --profile profile
 snakemake -s snakefile.smk --configfile config/pipeline.3.yaml --profile profiles/simple/ & \
 snakemake -s snakefile.smk --configfile config/pipeline.7.yaml --profile profiles/simple/ & \
 snakemake -s snakefile.smk --configfile config/pipeline.14.yaml --profile profiles/simple/
-

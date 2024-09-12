@@ -87,6 +87,7 @@ rule create_training_set:
         f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt'),
         mfile = rules.merge_homer_motifs.output
     message: "working on {wildcards}"
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.create_training_set.tsv")
     resources:
         partition = "caslake", #if params.nfiles > 200 else "caslake",
         #attempt: attempt * 100,
@@ -111,6 +112,7 @@ rule aggregate_epigenomes:
         os.path.join(AGGREGATION_DIR, f'{runname}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.csv.gz')
     message: 
         "working on {wildcards}"
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.aggregate_epigenomes.tsv")
     resources:
         partition="caslake",
         mem_cpu=8,
@@ -137,6 +139,7 @@ rule prepare_training_data:
         p2=os.path.join(AGGREGATION_DIR, f'test_{run}_{config["enformer"]["aggtype"]}.{{tf}}_{{tissue}}.prepared.csv.gz')
     message: 
         "preparing {wildcards} training and test data"
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.prepare_training_data.tsv")
     params:
         run = run,
         jobname = '{tf}_{tissue}',
@@ -159,6 +162,7 @@ rule train_TFPred_weights:
         mlinear=os.path.join(MODELS_DIR, "{tf}_{tissue}", f'{{tf}}_{{tissue}}_{config["date"]}.linear.rds')
     message:
         "training on {wildcards} training data"
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.train_TFPred_weights.tsv")
     params:
         run = run,
         jobname = '{tf}_{tissue}',
@@ -191,6 +195,7 @@ rule evaluate_TFPred:
         os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.test_eval.txt.gz')
     message:
         "evaluating on {wildcards} training and test data"
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.evaluate_TFPred.tsv")
     params:
         run = run,
         jobname = '{tf}_{tissue}',
@@ -222,7 +227,8 @@ rule compile_statistics:
         rscript = config['rscript'],
         input_f1 = ','.join(TF_list),
         input_f2 = ','.join(tissue_list),
-        path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz')
+        path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz'),
+        
     resources:
         mem_mb= 100000,
         partition="caslake",
@@ -231,3 +237,24 @@ rule compile_statistics:
         """
             {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output}
         """
+
+# rule onsuccess_statistics:
+#     input: rules.compile_statistics.output
+#     output: os.path.join('reports', f'{run}.report.html')
+#     message:
+#         "running report for {run}"
+#     params:
+#         run = run,
+#         jobname = run,
+#         cfile = config_file,
+#         pfile = profile_file
+#     shell:
+#         """
+#         snakemake -s ./snakefile.smk --configfile {params.cfile} --profile {params.pfile} --report reports/{params.run}.report.html
+#         """
+
+
+
+# onsuccess:
+#     print("SUCCESS - Workflow finished, no error")
+#     shell(f"snakemake -s ./snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/simple/ --report reports/report.html")

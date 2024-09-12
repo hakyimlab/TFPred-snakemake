@@ -1,0 +1,36 @@
+Tue Aug 13 23:05:41 2024       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.104.05             Driver Version: 535.104.05   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA A40                     On  | 00000000:31:00.0 Off |                    0 |
+|  0%   28C    P8              21W / 300W |      4MiB / 46068MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+|   1  NVIDIA A40                     On  | 00000000:B1:00.0 Off |                    0 |
+|  0%   30C    P8              21W / 300W |      4MiB / 46068MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+INFO - Sequence source is personalized. Using a reference genome + vcf files.
+INFO - Using parsl local configuration for beagle3: True
+INFO - Parsl version: 2023.04.17
+INFO - Found 1 individuals to predict on
+INFO - Found 8596 regions to be split into batches with at most 200 regions in each batch.
+INFO - No regions to exclude yet. You either did not supply a file, this is the first run, or there are truly no regions to exclude
+INFO - There seem to be just one sample i.e. [['NKI_13']]. No need to batch.
+INFO - Executing parsl futures for 55 parsl apps
+INFO - Finished predictions for all
+INFO - Check `data/NKI_13_2024-08-14/prediction_parameters` for successful and unsuccessful predictions.
+INFO - Writing `aggregation_config_NKI_13_AR_Prostate.json` file to data/NKI_13_2024-08-14/prediction_parameters
+INFO - Completed job in 10522.655744034797 seconds.

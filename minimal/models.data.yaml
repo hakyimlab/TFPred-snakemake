@@ -1,4 +1,3 @@
-NA: ~
 ATF4:
   motifFiles: atf4.motif
   peakFiles:
@@ -9,39 +8,3 @@ SREBF2:
   motifFiles: srebp2.motif
   peakFiles:
     Blood: 45607_sort_peaks.narrowPeak.bed
-GATA2:
-  motifFiles: gata2.motif
-  peakFiles:
-    Blood:
-    - 8412_sort_peaks.narrowPeak.bed
-    - 36250_sort_peaks.narrowPeak.bed
-    BoneMarrow:
-    - 2002_sort_peaks.narrowPeak.bed
-    - 7485_sort_peaks.narrowPeak.bed
-    - 8430_sort_peaks.narrowPeak.bed
-    - 8431_sort_peaks.narrowPeak.bed
-    - 45944_sort_peaks.narrowPeak.bed
-    - 46032_sort_peaks.narrowPeak.bed
-    - 46290_sort_peaks.narrowPeak.bed
-    - 58871_sort_peaks.narrowPeak.bed
-    - 58872_sort_peaks.narrowPeak.bed
-    - 58873_sort_peaks.narrowPeak.bed
-    - 58874_sort_peaks.narrowPeak.bed
-    - 68819_sort_peaks.narrowPeak.bed
-    - 68820_sort_peaks.narrowPeak.bed
-    Prostate:
-    - 52057_sort_peaks.narrowPeak.bed
-    - 54396_sort_peaks.narrowPeak.bed
-    - 54397_sort_peaks.narrowPeak.bed
-    - 67734_sort_peaks.narrowPeak.bed
-    - 67737_sort_peaks.narrowPeak.bed
-    - 67740_sort_peaks.narrowPeak.bed
-    - 67743_sort_peaks.narrowPeak.bed
-    - 67746_sort_peaks.narrowPeak.bed
-    - 67747_sort_peaks.narrowPeak.bed
-    - 67748_sort_peaks.narrowPeak.bed
-    - 67749_sort_peaks.narrowPeak.bed
-    UmbilicalVein:
-    - 1742_sort_peaks.narrowPeak.bed
-    - 1743_sort_peaks.narrowPeak.bed
-    - 45852_sort_peaks.narrowPeak.bed

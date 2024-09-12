@@ -6,3 +6,4 @@ cmd_*
 **/predictions_folder/
 __pycache__/
 misc/*
+*.tmp*

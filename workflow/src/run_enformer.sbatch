@@ -7,8 +7,10 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --job-name=enformer_predict
 #SBATCH --account=pi-haky
-#SBATCH --time=06:00:00
+#SBATCH --time=12:00:00
 #SBATCH --gres=gpu:2
+#SBATCH --output=slurm_logs/slurm-%j.out
+#SBATCH --error=slurm_logs/slurm-%j.err
 
 source ~/.bashrc
 conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools

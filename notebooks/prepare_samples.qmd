@@ -4,7 +4,6 @@ author: "Temi"
 date: "2024-06-26"
 ---
 
-
 ```{r}
 library(data.table)
 library(magrittr)
@@ -149,42 +148,50 @@ cat_lists <- function(list1, list2) {
 }
 
 enlist <- purrr::reduce(list(motifslist, peakslist), cat_lists)
+# minimal_ex <- base::Filter(Negate(is.null), minimal_ex)
+```
+
+```{r}
 yaml::write_yaml(enlist, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.yaml')
-yaml::write_yaml(enlist[1:10], file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.yaml')
-```
+#yaml::write_yaml(enlist[1:10], file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.yaml')
 
-```{r}
-minimal_ex <- enlist[c('ASCL2', 'ATF4', 'SREBF2', 'GATA2')]
-yaml::write_yaml(minimal_ex, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.data.yaml')
-```
-
-```{r}
-minimal_ex <- enlist[c('AR')]
-yaml::write_yaml(minimal_ex, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.AR.yaml')
-```
-
-
-```{r}
 # prepare the metdata 
 mtdt <- sapply(gsub('.peakFiles.', '_', names(rapply(peakslist, function(x) head(x, 1)))), base::strsplit, '_') |> unname() %>% do.call('rbind', .) %>% as.data.frame()
 colnames(mtdt) <- c('assay', 'context')
+
+data.table::fwrite(mtdt, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
 ```
 
 ```{r}
+minimal_ex <- enlist[c('ASCL2', 'ATF4', 'SREBF2')]
+minimal_ex <- base::Filter(Negate(is.null), minimal_ex)
+yaml::write_yaml(minimal_ex, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.data.yaml')
+
 mtdt %>% dplyr::filter(assay %in% names(minimal_ex)) %>%
     data.table::fwrite(file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.run.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
 ```
 
 ```{r}
-data.table::fwrite(mtdt, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+minimal_ex <- enlist[c('AR')]
+minimal_ex <- base::Filter(Negate(is.null), minimal_ex)
+yaml::write_yaml(minimal_ex, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.AR.yaml')
 
-data.table::fwrite(mtdt[1:10, ], file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.short.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+mtdt %>% dplyr::filter(assay %in% names(minimal_ex)) %>%
+    data.table::fwrite(file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.AR.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+```
+
+## Metadata
+
+```{r}
+enlist$AR$peakFiles$Prostate |> length()
+enlist$FOXA1$peakFiles$Prostate |> length()
+enlist$HOXB13$peakFiles$Prostate |> length()
+enlist$GATA2$peakFiles$Prostate |> length()
 ```
 
 
+
 ## Prepare samples for experiment
-
-
 ```{r}
 
 experiment_dir <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate'
@@ -448,4 +455,11 @@ pers_params[['vcf_files']][['files']] <- chr_vcfs
 
 ```{r}
 yaml::write_yaml(pers_params, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/config/personalized_base.yaml')
+```
+
+
+
+```{r}
+purl <- 'https://cran.r-project.org/src/contrib/Archive/roxygen2/roxygen2_7.2.0.tar.gz'
+install.packages(purl, repos=NULL, type="source")
 ```

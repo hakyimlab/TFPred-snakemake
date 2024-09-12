@@ -2,8 +2,8 @@
 ---
 # directories
 pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake'
-dataset: 'NKI_13' # give this dataset or run a name
-date: "2024-08-14" # this date will be used to create the directory structure
+dataset: 'AR_Prostate_Benchmark' # give this dataset or run a name
+date: "2024-08-29" # this date will be used to create the directory structure
 
 scratch_dir: "/scratch/midway3/temi" # large files will be saved here
 train_by_chromosome: # by default, we train and test on different chromosomes
@@ -12,11 +12,9 @@ train_by_chromosome: # by default, we train and test on different chromosomes
 
 # data information
 ## these are the peaks and motifs to be used in training the models
-# models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.data.yaml"
-# ## these are the models to be trained
-# models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/minimal/models.run.tsv"
-models_config: experiments/bpnet/models.yaml
-models_metadata: experiments/bpnet/runs.tsv
+models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate_only/enpact_models_to_train.AR.yaml"
+## these are the models to be trained
+models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate_only/enpact_models_to_train.AR.tsv"
 
 # genome information
 genome:
@@ -24,7 +22,7 @@ genome:
 
 # location of the peaks i.e. the bed files
 peaks:
-  directory: /beagle3/haky/users/temi/data/bpnet-personalized/data # where are the cistrome bed files
+  directory: /project/haky/data/TFXcan/cistrome/raw/human_factor # where are the cistrome bed files
 
 # homer is used to find the motif instances
 homer:
@@ -37,19 +35,16 @@ homer:
 rscript: "/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript"
 
 # directives to use fast or exhaustive pipeline
-run_enformer: True # set to true if you want enformer to be run
-delete_enformer_outputs: False # should you delete enformer predictions after aggregating them? Saves disk space; this is only used if run_enformer is True
+run_enformer: False # set to true if you want enformer to be run
+delete_enformer_outputs: True # should you delete enformer predictions after aggregating them? Saves disk space; this is only used if run_enformer is True
 enformer_epigenome_directory: '/beagle3/haky/data/enformer-reference-epigenome'
 
 # this won't be used if run_enformer is false since there is not need to run GPUs
 enformer: 
-  base_directives: "experiments/bpnet/enformer.base.yaml"
+  base_directives: "config/enformer_base.yaml"
   model: "/project/haky/data/enformer/raw"
   predict: "/beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py"
   aggregate: "/beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/aggregate/aggregate.py"
   aggtype: "aggByCollect"
   ngpus: 4 # shouldn't request more than 4; 2 should start to run quite quickly
-
-personalized:
-  directives: "/beagle3/haky/users/temi/projects/TFPred-snakemake/config/personalized_base.yaml"
 ...

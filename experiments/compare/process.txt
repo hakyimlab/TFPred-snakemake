@@ -1,0 +1,8 @@
+1 sample: NKI_13
+
+Enpact method
+1. Train AR-Prostate in Enpact
+
+
+BPNet method
+1. 

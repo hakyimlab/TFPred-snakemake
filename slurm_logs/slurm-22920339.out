@@ -1,0 +1,24 @@
+Tue Aug 13 16:39:16 2024       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.104.05             Driver Version: 535.104.05   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA A40                     On  | 00000000:31:00.0 Off |                    0 |
+|  0%   31C    P8              31W / 300W |      4MiB / 46068MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+INFO - Sequence source is personalized. Using a reference genome + vcf files.
+INFO - Using parsl local configuration for beagle3: True
+INFO - Parsl version: 2023.04.17
+slurmstepd: error: *** JOB 22920339 ON beagle3-0036 CANCELLED AT 2024-08-13T22:39:10 DUE TO TIME LIMIT ***

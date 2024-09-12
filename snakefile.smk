@@ -17,6 +17,28 @@ import helpers
 
 print_progress = False
 
+# print(snakemake.config)
+
+# print(snakemake.params)
+
+# global config_file, profile_file
+
+# parameter_list = sys.argv[0:]
+# print(f'INFO - Running with parameters: {parameter_list}')
+
+# args = sys.argv
+# config_file = args[args.index("--configfile") + 1]
+# print(config_file)
+# # # if '--configfile' in sys.argv:
+# # i = sys.argv.index('--configfiles')
+# # config_file = sys.argv[i+1]
+# # print(f'INFO - Reading configuration file: {config_file}')
+
+# # if '--profile' in sys.argv:
+# i = sys.argv.index('--profile')
+# profile_file = sys.argv[i+1]
+# print(f'INFO - Reading profile file: {profile_file}')
+
 runname = config['dataset']
 rundate = config['date']
 run = f'{runname}_{rundate}'
@@ -92,7 +114,8 @@ rule all:
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
-        os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt')
+        os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt'),
+        # os.path.join('reports', f'{run}.report.html')
 
 
 

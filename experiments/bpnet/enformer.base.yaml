@@ -10,7 +10,7 @@ enformer:
     tracks_to_save: -1
     bins_to_save: -1
     n_regions: 40000
-    batch_regions: 500
+    batch_regions: 200
     use_parsl: True
     write_log:
       logdir: "job_logs"
@@ -22,7 +22,7 @@ enformer:
     aggregate_by_width: 1
     parsl_parameters:
       num_of_full_nodes: 1
-      walltime: "06:00:00"
+      walltime: "12:00:00"
       init_blocks: 1
       min_num_blocks: 0
       max_num_blocks: 2

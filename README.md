@@ -31,10 +31,23 @@ There is a notebook [here](./notebooks/prepare_samples.qmd) to help generate the
 
 Otherwise, you can look at minimal examples of the [models.data.yaml](./minimal/models.data.yaml) and [models.run.tsv](./minimal/models.run.tsv) files to recreate yours.
 
-### Input:
+### Software:
+You will need to install Homer by yourself. Instructions are [here](http://homer.ucsd.edu/homer/download.html).
+
+We use conda for this pipeline. You will need to create the conda environment using [this yaml file](./software/TFXcan-pipeline-environment.yaml).
+
+### Input (To run the minimal example):
 
 1. Install the conda environment using the file:
-    `conda env create -p <<path to env>> -f software/environment.yaml`
+    `conda env create -p <<path to env>> -f software/TFXcan-pipeline-environment.yaml`
+2. Activate conda environment:
+    `conda activate <<path to env>>`
+3. Run:
+    `snakemake -s snakefile.smk --configfile minimal/pipeline.yaml --profile profiles/simple/ --stats reports/stats.json`
+
+### Input (To run on your own data):
+1. Install the conda environment using the file:
+    `conda env create -p <<path to env>> -f software/TFXcan-pipeline-environment.yaml`
 2. Edit the `config/pipeline.yaml` file. Instructions are in here.
 3. Edit the `config/enformer_base.yaml` file. Instructions are here.
 4. Activate conda environment:
@@ -42,8 +55,14 @@ Otherwise, you can look at minimal examples of the [models.data.yaml](./minimal/
 5. Run:
     `snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ --stats reports/stats.json`
 
+
 ## Notebooks:
 These contain analysis codes for the pipeline. They are not part of the pipeline itself. You can use these to make diagnostic plots and summaries of the models.
+
+## Data:
+There are some data we do not directly provide in this repo and you will need to [download them here](...). These include:
+1. A reference genome fasta file
+
 
 ## To-do and Updates
 - [X] Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 

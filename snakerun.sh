@@ -20,7 +20,6 @@ export PATH=$PATH:/beagle3/haky/users/temi/software/homer/bin
 
 snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ --resources load=50 -F >> run.txt 2>&1  
 
-
 snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ --resources load=50 --report reports/report.html -F >> run.txt 2>&1  
 
 # Generate report
@@ -39,12 +38,10 @@ snakemake -s snakefile.smk --configfile config/pipeline_2023-12-01_enformer_vs_t
 
 snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ -np
 
-
-
 snakemake -s snakefile.smk --configfile config/pipeline.enpact.yaml --profile profiles/simple/ -np > dryrun.out
-
 
 snakemake -s snakefile.smk --configfile experiments/bpnet/pipeline.bpnet.yaml --profile profiles/simple/ -np > dryrun.out
 
-
 snakemake -s snakefile.smk --configfile config/pipeline.734.yaml --profile profiles/simple/ -np > dryrun.out
+
+snakemake -s snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/simple/ -np > dryrun.out

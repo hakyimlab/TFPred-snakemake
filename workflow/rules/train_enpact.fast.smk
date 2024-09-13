@@ -228,6 +228,7 @@ rule compile_statistics:
         input_f1 = ','.join(TF_list),
         input_f2 = ','.join(tissue_list),
         path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz'),
+        model_path = lambda wildcards: os.path.join(MODELS_DIR, f'{{1}}_{{2}}', f'{{1}}_{{2}}_{config["date"]}.logistic.rds')
         
     resources:
         mem_mb= 100000,
@@ -235,7 +236,7 @@ rule compile_statistics:
         time="06:00:00"
     shell:
         """
-            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output}
+            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output} --model_path {params.model_path}
         """
 
 # rule onsuccess_statistics:

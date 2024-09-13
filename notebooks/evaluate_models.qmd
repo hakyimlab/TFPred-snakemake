@@ -435,3 +435,20 @@ enpact_scores_db[1:5, 1:5]
 ```{r}
 data.table::fwrite(enpact_scores_db, file = "/project2/haky/temi/projects/lEnpact/data/tfpred_scores/1KG_EUR.enpact_scores.txt", sep='\t', row.names = F, col.names=T, quote = F)
 ```
+
+# Minimal examples
+
+```{r}
+summary_fast <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_MINIMAL_FAST_2024-09-12/statistics/ENPACT_MINIMAL_FAST_2024-09-12.compiled_stats.txt')
+summary_slow <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_MINIMAL_SLOW_2024-09-12/statistics/ENPACT_MINIMAL_SLOW_2024-09-12.compiled_stats.txt')
+summary_fast$pipeline <- 'ENPACT_MINIMAL_FAST'
+summary_slow$pipeline <- 'ENPACT_MINIMAL_SLOW'
+
+summary_both <- rbind(summary_fast, summary_slow) %>% dplyr::filter(!is.na(auc))
+summary_both
+```
+
+
+```{r}
+
+```

@@ -2,7 +2,7 @@
 ---
 # directories
 pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake'
-dataset: 'ENPACT_MINIMAL_SLOW' # give this dataset or run a name
+dataset: 'ENPACT_MINIMAL_FAST' # give this dataset or run a name e.g ENPACT_MINIMAL_FAST
 date: "2024-09-12" # this date will be used to create the directory structure
 
 scratch_dir: "/scratch/midway3/temi" # large files will be saved here
@@ -34,7 +34,7 @@ homer:
 rscript: "/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript"
 
 # directives to use fast or exhaustive pipeline
-run_enformer: True # set to true if you want enformer to be run
+run_enformer: False # set to true if you want enformer to be run
 delete_enformer_outputs: True # should you delete enformer predictions after aggregating them? Saves disk space; this is only used if run_enformer is True
 enformer_epigenome_directory: '/beagle3/haky/data/enformer-reference-epigenome'
 

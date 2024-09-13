@@ -122,10 +122,11 @@ checkpoint create_enformer_configuration:
         ddate = rundate,
         jobname = '{tf}_{tissue}',
         personalized_directives = None if 'personalized' not in config.keys() else config['personalized']['directives'] #None if not config['personalized']['directives'] else config['personalized']['directives']
-    shell:
-        """
-            {params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate} --personalized_directives {params.personalized_directives}
-        """
+    run:
+        if params.personalized_directives is None:
+            shell("{params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate}")
+        elif params.personalized_directives is not None: # don't delete the outputs
+            shell("{params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate} --personalized_directives {params.personalized_directives}")
         #printf 'INFO: This is the input file %s\n' "{input}";
 
 checkpoint predict_with_enformer:
@@ -143,14 +144,19 @@ checkpoint predict_with_enformer:
         run = run,
         jobname = '{tf}_{tissue}',
         enformer_predict_script = config['enformer']['predict'],
-        
+        nlines = count_number_of_lines
     message: 
         "working on {params.jobname}"
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.predict_with_enformer.tsv")
-    shell:
-        """
-            sbatch workflow/src/run_enformer.sbatch {params.enformer_predict_script} {input}
-        """
+    # shell:
+    #     """
+    #         sbatch workflow/src/run_enformer.sbatch {params.enformer_predict_script} {input}
+    #     """
+    run:
+        if params.nlines < 100:
+            shell("touch {output}")
+        else:
+            shell("sbatch workflow/src/run_enformer.sbatch {params.enformer_predict_script} {input}")
 
 rule aggregate_predictions:
     input:
@@ -173,12 +179,16 @@ rule aggregate_predictions:
         output_folder = AGGREGATION_DIR,
         hpc = "caslake",
         parsl_executor = "local",
-        delete_enformer_outputs = config["delete_enformer_outputs"]
+        delete_enformer_outputs = config["delete_enformer_outputs"],
+        nlines = count_number_of_lines
     run:
-        if params.delete_enformer_outputs == True:
-            shell("python3 {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor} --delete_enformer_outputs")
-        elif params.delete_enformer_outputs == False: # don't delete the outputs
-            shell("python3 {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor}")
+        if params.nlines < 100:
+            shell("touch {output}")
+        else:
+            if params.delete_enformer_outputs == True:
+                shell("python3 {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor} --delete_enformer_outputs")
+            elif params.delete_enformer_outputs == False: # don't delete the outputs
+                shell("python3 {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor}")
 
 rule prepare_training_data:
     input:
@@ -277,12 +287,13 @@ rule compile_statistics:
         rscript = config['rscript'],
         input_f1 = ','.join(TF_list),
         input_f2 = ','.join(tissue_list),
-        path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz')
+        path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz'),
+        model_path = lambda wildcards: os.path.join(MODELS_DIR, f'{{1}}_{{2}}', f'{{1}}_{{2}}_{config["date"]}.logistic.rds')
     resources:
         mem_mb= 100000,
         partition="caslake",
         time="06:00:00"
     shell:
         """
-            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output}
+            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output} --model_path {params.model_path}
         """

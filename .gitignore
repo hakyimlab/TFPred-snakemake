@@ -7,3 +7,4 @@ cmd_*
 __pycache__/
 misc/*
 *.tmp*
+slurm_logs/*

@@ -1,175 +1,129 @@
 INFO - Verified 2 assays
-INFO - Running ENFORMER is set to True. Running the pipeline with ENFORMER...
+INFO - Running ENFORMER is set to False. Running the pipeline without ENFORMER...
 Building DAG of jobs...
 Job stats:
-job                              count    min threads    max threads
------------------------------  -------  -------------  -------------
-aggregate_predictions                2              1              1
-all                                  1              1              1
-compile_statistics                   1              1              1
-create_enformer_configuration        2              1              1
-create_training_set                  2              1              1
-evaluate_TFPred                      2              1              1
-find_homer_motifs                    2              1              1
-merge_homer_motifs                   2              1              1
-predict_with_enformer                2              1              1
-prepare_training_data                2              1              1
-train_TFPred_weights                 2              1              1
-total                               20              1              1
+job                      count    min threads    max threads
+---------------------  -------  -------------  -------------
+aggregate_epigenomes         2              1              1
+all                          1              1              1
+compile_statistics           1              1              1
+create_training_set          2              1              1
+evaluate_TFPred              2              1              1
+find_homer_motifs            2              1              1
+merge_homer_motifs           2              1              1
+prepare_training_data        2              1              1
+train_TFPred_weights         2              1              1
+total                       16              1              1
 
 
-[Thu Sep 12 15:41:17 2024]
-Job 1: working on motif_file=atf4.motif
-Reason: Params have changed since last execution
-
-
-        perl /beagle3/haky/users/temi/software/homer/bin/scanMotifGenomeWide.pl minimal/data/motifs/atf4.motif /beagle3/haky/users/temi/software/homer/data/genomes/hg38 > data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt
-        
-
-[Thu Sep 12 15:41:17 2024]
+[Fri Sep 13 10:59:03 2024]
 Job 2: working on motif_file=srebp2.motif
-Reason: Params have changed since last execution
+Reason: Forced execution
 
 
         perl /beagle3/haky/users/temi/software/homer/bin/scanMotifGenomeWide.pl minimal/data/motifs/srebp2.motif /beagle3/haky/users/temi/software/homer/data/genomes/hg38 > data/homer_instances/scannedMotifs/scanMotifsGenomeWide.srebp2.motif.txt
         
 
-[Thu Sep 12 15:41:17 2024]
-Job 3: working on data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt
-Reason: Input files updated by another job: data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt
+[Fri Sep 13 10:59:03 2024]
+Job 1: working on motif_file=atf4.motif
+Reason: Forced execution
 
-[Thu Sep 12 15:41:17 2024]
+
+        perl /beagle3/haky/users/temi/software/homer/bin/scanMotifGenomeWide.pl minimal/data/motifs/atf4.motif /beagle3/haky/users/temi/software/homer/data/genomes/hg38 > data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt
+        
+
+[Fri Sep 13 10:59:03 2024]
 Job 4: working on data/homer_instances/scannedMotifs/scanMotifsGenomeWide.srebp2.motif.txt
 Reason: Input files updated by another job: data/homer_instances/scannedMotifs/scanMotifsGenomeWide.srebp2.motif.txt
 
-[Thu Sep 12 15:41:17 2024]
+[Fri Sep 13 10:59:03 2024]
+Job 3: working on data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt
+Reason: Input files updated by another job: data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt
+
+[Fri Sep 13 10:59:03 2024]
 Job 5: working on tf=ATF4,tissue=Liver
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.predictors.txt; Input files updated by another job: data/homer_instances/ATF4/merged_motif_file.txt
+Reason: Input files updated by another job: data/homer_instances/ATF4/merged_motif_file.txt
 
 
-        /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor ATF4 --tissue Liver --predicted_motif_file data/homer_instances/ATF4/merged_motif_file.txt --sorted_bedfiles_directory data/ENPACT_MINIMAL_SLOW_2024-09-12/sortedbeds/ATF4_Liver --bedlinks_directory minimal/data/chippeaks --predictors_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.predictors.txt --ground_truth_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt --info_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.info.txt.gz --peaks_files 64175_sort_peaks.narrowPeak.bed,64176_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.summary.txt
+        /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor ATF4 --tissue Liver --predicted_motif_file data/homer_instances/ATF4/merged_motif_file.txt --sorted_bedfiles_directory data/ENPACT_MINIMAL_FAST_2024-09-12/sortedbeds/ATF4_Liver --bedlinks_directory minimal/data/chippeaks --predictors_file data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.predictors.txt --ground_truth_file data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt --info_file data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.info.txt.gz --peaks_files 64175_sort_peaks.narrowPeak.bed,64176_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.summary.txt; sleep 5
         
 
-[Thu Sep 12 15:41:17 2024]
+[Fri Sep 13 10:59:03 2024]
 Job 6: working on tf=SREBF2,tissue=Blood
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt; Input files updated by another job: data/homer_instances/SREBF2/merged_motif_file.txt
+Reason: Input files updated by another job: data/homer_instances/SREBF2/merged_motif_file.txt
 
 
-        /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor SREBF2 --tissue Blood --predicted_motif_file data/homer_instances/SREBF2/merged_motif_file.txt --sorted_bedfiles_directory data/ENPACT_MINIMAL_SLOW_2024-09-12/sortedbeds/SREBF2_Blood --bedlinks_directory minimal/data/chippeaks --predictors_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt --ground_truth_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt --info_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.info.txt.gz --peaks_files 45607_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.summary.txt
+        /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor SREBF2 --tissue Blood --predicted_motif_file data/homer_instances/SREBF2/merged_motif_file.txt --sorted_bedfiles_directory data/ENPACT_MINIMAL_FAST_2024-09-12/sortedbeds/SREBF2_Blood --bedlinks_directory minimal/data/chippeaks --predictors_file data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt --ground_truth_file data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt --info_file data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.info.txt.gz --peaks_files 45607_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.summary.txt; sleep 5
         
 
-[Thu Sep 12 15:41:17 2024]
-Job 9: working on tf=ATF4,tissue=Liver
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/enformer_config_ENPACT_MINIMAL_SLOW_2024-09-12.ATF4_Liver.json; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.predictors.txt
-DAG of jobs will be updated after completion.
-
-
-            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_enformer_config.R --dataset ENPACT_MINIMAL_SLOW --transcription_factor ATF4 --tissue Liver --base_directives config/enformer_base.yaml --project_directory /scratch/midway3/temi --predictors_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.predictors.txt --model /project/haky/data/enformer/raw --fasta_file /project/haky/data/hg_sequences/hg38/Homo_sapiens_assembly38.fasta --parameters_file data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/enformer_config_ENPACT_MINIMAL_SLOW_2024-09-12.ATF4_Liver.json --date 2024-09-12 --personalized_directives None
-        
-
-[Thu Sep 12 15:41:17 2024]
-Job 12: working on tf=SREBF2,tissue=Blood
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/enformer_config_ENPACT_MINIMAL_SLOW_2024-09-12.SREBF2_Blood.json; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt
-DAG of jobs will be updated after completion.
-
-
-            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_enformer_config.R --dataset ENPACT_MINIMAL_SLOW --transcription_factor SREBF2 --tissue Blood --base_directives config/enformer_base.yaml --project_directory /scratch/midway3/temi --predictors_file data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt --model /project/haky/data/enformer/raw --fasta_file /project/haky/data/hg_sequences/hg38/Homo_sapiens_assembly38.fasta --parameters_file data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/enformer_config_ENPACT_MINIMAL_SLOW_2024-09-12.SREBF2_Blood.json --date 2024-09-12 --personalized_directives None
-        
-
-[Thu Sep 12 15:41:17 2024]
-Job 8: working on ATF4_Liver
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/aggregation_config_ENPACT_MINIMAL_SLOW_ATF4_Liver.json; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/enformer_config_ENPACT_MINIMAL_SLOW_2024-09-12.ATF4_Liver.json
-DAG of jobs will be updated after completion.
-
-
-            sbatch workflow/src/run_enformer.sbatch /beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/enformer_config_ENPACT_MINIMAL_SLOW_2024-09-12.ATF4_Liver.json
-        
-
-[Thu Sep 12 15:41:17 2024]
-Job 11: working on SREBF2_Blood
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/aggregation_config_ENPACT_MINIMAL_SLOW_SREBF2_Blood.json; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/enformer_config_ENPACT_MINIMAL_SLOW_2024-09-12.SREBF2_Blood.json
-DAG of jobs will be updated after completion.
-
-
-            sbatch workflow/src/run_enformer.sbatch /beagle3/haky/users/shared_pipelines/enformer_pipeline_aggregate/scripts/enformer_predict.py data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/enformer_config_ENPACT_MINIMAL_SLOW_2024-09-12.SREBF2_Blood.json
-        
-
-[Thu Sep 12 15:41:17 2024]
+[Fri Sep 13 10:59:03 2024]
 Job 7: working on tf=ATF4,tissue=Liver
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/ENPACT_MINIMAL_SLOW_aggByCollect_ATF4_Liver.csv.gz; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/aggregation_config_ENPACT_MINIMAL_SLOW_ATF4_Liver.json
+Reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.predictors.txt
 
-[Thu Sep 12 15:41:17 2024]
-Job 10: working on tf=SREBF2,tissue=Blood
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/ENPACT_MINIMAL_SLOW_aggByCollect_SREBF2_Blood.csv.gz; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/prediction_parameters/aggregation_config_ENPACT_MINIMAL_SLOW_SREBF2_Blood.json
+[Fri Sep 13 10:59:03 2024]
+Job 8: working on tf=SREBF2,tissue=Blood
+Reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt
 
-[Thu Sep 12 15:41:17 2024]
-Job 13: preparing tf=ATF4,tissue=Liver training and test data
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/ENPACT_MINIMAL_SLOW_aggByCollect_ATF4_Liver.csv.gz
+[Fri Sep 13 10:59:03 2024]
+Job 10: preparing tf=SREBF2,tissue=Blood training and test data
+Reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/ENPACT_MINIMAL_FAST_aggByCollect_SREBF2_Blood.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt
 
-[Thu Sep 12 15:41:17 2024]
-Job 14: preparing tf=SREBF2,tissue=Blood training and test data
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/ENPACT_MINIMAL_SLOW_aggByCollect_SREBF2_Blood.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt
+[Fri Sep 13 10:59:03 2024]
+Job 9: preparing tf=ATF4,tissue=Liver training and test data
+Reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/ENPACT_MINIMAL_FAST_aggByCollect_ATF4_Liver.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt
 
-[Thu Sep 12 15:41:17 2024]
-Job 15: training on tf=ATF4,tissue=Liver training data
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.linear.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.logistic.rds; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz
+[Fri Sep 13 10:59:03 2024]
+Job 11: training on tf=ATF4,tissue=Liver training data
+Reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz
 
-[Thu Sep 12 15:41:17 2024]
-Job 16: training on tf=SREBF2,tissue=Blood training data
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.linear.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.logistic.rds; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz
+[Fri Sep 13 10:59:03 2024]
+Job 12: training on tf=SREBF2,tissue=Blood training data
+Reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz
 
-[Thu Sep 12 15:41:17 2024]
-Job 17: evaluating on tf=ATF4,tissue=Liver training and test data
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.test_eval.txt.gz; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.linear.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.logistic.rds
+[Fri Sep 13 10:59:03 2024]
+Job 13: evaluating on tf=ATF4,tissue=Liver training and test data
+Reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.linear.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz
 
-[Thu Sep 12 15:41:17 2024]
-Job 18: evaluating on tf=SREBF2,tissue=Blood training and test data
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.test_eval.txt.gz; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.linear.rds
+[Fri Sep 13 10:59:03 2024]
+Job 14: evaluating on tf=SREBF2,tissue=Blood training and test data
+Reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.linear.rds
 
-[Thu Sep 12 15:41:17 2024]
-Job 19: compiling statistics for 
-Reason: Missing output files: data/ENPACT_MINIMAL_SLOW_2024-09-12/statistics/ENPACT_MINIMAL_SLOW_2024-09-12.compiled_stats.txt; Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.train_eval.txt.gz
+[Fri Sep 13 10:59:03 2024]
+Job 15: compiling statistics for 
+Reason: Missing output files: data/ENPACT_MINIMAL_FAST_2024-09-12/statistics/ENPACT_MINIMAL_FAST_2024-09-12.compiled_stats.txt; Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.test_eval.txt.gz
 
 
-            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/compile_statistics.R --transcription_factors ATF4,SREBF2 --tissues Liver,Blood --path_pattern data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/{1}_{2}_2024-09-12.logistic.{3}_eval.txt.gz --statistics_file data/ENPACT_MINIMAL_SLOW_2024-09-12/statistics/ENPACT_MINIMAL_SLOW_2024-09-12.compiled_stats.txt
+            /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/compile_statistics.R --transcription_factors ATF4,SREBF2 --tissues Liver,Blood --path_pattern data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/{1}_{2}_2024-09-12.logistic.{3}_eval.txt.gz --statistics_file data/ENPACT_MINIMAL_FAST_2024-09-12/statistics/ENPACT_MINIMAL_FAST_2024-09-12.compiled_stats.txt --model_path data/ENPACT_MINIMAL_FAST_2024-09-12/models/{1}_{2}/{1}_{2}_2024-09-12.logistic.rds
         
 
-[Thu Sep 12 15:41:17 2024]
+[Fri Sep 13 10:59:03 2024]
 localrule all:
-    input: data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.srebp2.motif.txt, data/homer_instances/ATF4/merged_motif_file.txt, data/homer_instances/SREBF2/merged_motif_file.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.predictors.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/ENPACT_MINIMAL_SLOW_aggByCollect_ATF4_Liver.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/ENPACT_MINIMAL_SLOW_aggByCollect_SREBF2_Blood.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.linear.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.linear.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/statistics/ENPACT_MINIMAL_SLOW_2024-09-12.compiled_stats.txt
+    input: data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.srebp2.motif.txt, data/homer_instances/ATF4/merged_motif_file.txt, data/homer_instances/SREBF2/merged_motif_file.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.predictors.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/ENPACT_MINIMAL_FAST_aggByCollect_ATF4_Liver.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/ENPACT_MINIMAL_FAST_aggByCollect_SREBF2_Blood.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.linear.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.linear.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/statistics/ENPACT_MINIMAL_FAST_2024-09-12.compiled_stats.txt
     jobid: 0
-    reason: Input files updated by another job: data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.srebp2.motif.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/homer_instances/ATF4/merged_motif_file.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.linear.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/ENPACT_MINIMAL_SLOW_aggByCollect_SREBF2_Blood.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.linear.rds, data/homer_instances/SREBF2/merged_motif_file.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/ENPACT_MINIMAL_SLOW_aggByCollect_ATF4_Liver.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/statistics/ENPACT_MINIMAL_SLOW_2024-09-12.compiled_stats.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_SLOW_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_SLOW_2024-09-12/predictor_files/ATF4_Liver.predictors.txt, data/ENPACT_MINIMAL_SLOW_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.train_eval.txt.gz
+    reason: Input files updated by another job: data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/ENPACT_MINIMAL_FAST_aggByCollect_ATF4_Liver.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.linear.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/test_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.SREBF2_Blood.prepared.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.logistic.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/train_ENPACT_MINIMAL_FAST_2024-09-12_aggByCollect.ATF4_Liver.prepared.csv.gz, data/homer_instances/ATF4/merged_motif_file.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.predictors.txt, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.srebp2.motif.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.predictors.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/models/SREBF2_Blood/SREBF2_Blood_2024-09-12.logistic.rds, data/homer_instances/scannedMotifs/scanMotifsGenomeWide.atf4.motif.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/ATF4_Liver.ground_truth.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.test_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.logistic.train_eval.txt.gz, data/homer_instances/SREBF2/merged_motif_file.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/models/ATF4_Liver/ATF4_Liver_2024-09-12.linear.rds, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/SREBF2_Blood_2024-09-12.linear.train_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/statistics/ENPACT_MINIMAL_FAST_2024-09-12.compiled_stats.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.logistic.train_eval.txt.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/predictor_files/SREBF2_Blood.ground_truth.txt, data/ENPACT_MINIMAL_FAST_2024-09-12/aggregation_folder/ENPACT_MINIMAL_FAST_aggByCollect_SREBF2_Blood.csv.gz, data/ENPACT_MINIMAL_FAST_2024-09-12/evaluation/ATF4_Liver_2024-09-12.linear.train_eval.txt.gz
     resources: mem_mb=<TBD>, disk_mb=<TBD>, tmpdir=/scratch/midway3/temi, partition=caslake, time=02:00:00, account=pi-haky, nodes=1, gpu=0, mem_cpu=4, cpu_task=8
 
 Job stats:
-job                              count    min threads    max threads
------------------------------  -------  -------------  -------------
-aggregate_predictions                2              1              1
-all                                  1              1              1
-compile_statistics                   1              1              1
-create_enformer_configuration        2              1              1
-create_training_set                  2              1              1
-evaluate_TFPred                      2              1              1
-find_homer_motifs                    2              1              1
-merge_homer_motifs                   2              1              1
-predict_with_enformer                2              1              1
-prepare_training_data                2              1              1
-train_TFPred_weights                 2              1              1
-total                               20              1              1
+job                      count    min threads    max threads
+---------------------  -------  -------------  -------------
+aggregate_epigenomes         2              1              1
+all                          1              1              1
+compile_statistics           1              1              1
+create_training_set          2              1              1
+evaluate_TFPred              2              1              1
+find_homer_motifs            2              1              1
+merge_homer_motifs           2              1              1
+prepare_training_data        2              1              1
+train_TFPred_weights         2              1              1
+total                       16              1              1
 
 Reasons:
     (check individual jobs above for details)
-    input files updated by another job:
-        aggregate_predictions, all, compile_statistics, create_enformer_configuration, create_training_set, evaluate_TFPred, merge_homer_motifs, predict_with_enformer, prepare_training_data, train_TFPred_weights
-    missing output files:
-        aggregate_predictions, compile_statistics, create_enformer_configuration, create_training_set, evaluate_TFPred, predict_with_enformer, prepare_training_data, train_TFPred_weights
-    params have changed since last execution:
+    forced:
         find_homer_motifs
-Some jobs were triggered by provenance information, see 'reason' section in the rule displays above.
-If you prefer that only modification time is used to determine whether a job shall be executed, use the command line option '--rerun-triggers mtime' (also see --help).
-If you are sure that a change for a certain output file (say, <outfile>) won't change the result (e.g. because you just changed the formatting of a script or environment definition), you can also wipe its metadata to skip such a trigger via 'snakemake --cleanup-metadata <outfile>'. 
-Rules with provenance triggered jobs: find_homer_motifs
-
+    input files updated by another job:
+        aggregate_epigenomes, all, compile_statistics, create_training_set, evaluate_TFPred, merge_homer_motifs, prepare_training_data, train_TFPred_weights
+    missing output files:
+        compile_statistics
 
 This was a dry-run (flag -n). The order of jobs does not reflect the order of execution.
-The run involves checkpoint jobs, which will result in alteration of the DAG of jobs (e.g. adding more jobs) after their completion.

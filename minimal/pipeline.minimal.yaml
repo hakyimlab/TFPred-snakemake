@@ -1,20 +1,18 @@
 
 ---
 # directories
-pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake'
-dataset: 'ENPACT_MINIMAL_FAST' # give this dataset or run a name e.g ENPACT_MINIMAL_FAST
+pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake' # not necessary anymore
+dataset: 'ENPACT_MINIMAL_FAST' # give this dataset or run a name e.g MY PREDICTIONS
 date: "2024-09-12" # this date will be used to create the directory structure
 
-scratch_dir: "/scratch/midway3/temi" # large files will be saved here
+scratch_dir: "/scratch/midway3/temi" # large files will be saved here; very important if you will be generating large files with Enformer
 train_by_chromosome: # by default, we train and test on different chromosomes
-  condition: True
+  condition: True # add this but will be removed
   test: ['chr9', 'chr22'] # logically, training will the done on the other chromosomes
 
 # data information
-## these are the peaks and motifs to be used in training the models
-models_config: "minimal/models.data.yaml"
-## these are the models to be trained
-models_metadata: "minimal/models.run.tsv"
+models_config: "minimal/models.data.yaml" ## these are the peaks and motifs to be used in training the models
+models_metadata: "minimal/models.run.tsv" ## these are the models to be trained
 
 # genome fasta file
 genome:
@@ -22,22 +20,21 @@ genome:
 
 # location of the peaks i.e. the bed files
 peaks:
-  directory: minimal/data/chippeaks # where are the cistrome bed files
+  directory: minimal/data/chippeaks # where are the bed files
 
 # homer is used to find the motif instances
 homer:
-  dir: '/beagle3/haky/users/temi/software/homer'
+  dir: '/beagle3/haky/users/temi/software/homer' # directory to the homer software you, hopefully, have installed
   motifs_database: minimal/data/motifs # where are the .motif files
-  scanMotifsGenome: '/beagle3/haky/users/temi/software/homer/bin/scanMotifGenomeWide.pl'
-  genome: '/beagle3/haky/users/temi/software/homer/data/genomes/hg38'
+  scanMotifsGenome: '/beagle3/haky/users/temi/software/homer/bin/scanMotifGenomeWide.pl' # will be removed 
+  genome: '/beagle3/haky/users/temi/software/homer/data/genomes/hg38' # should ideally be the same fasta file used in training (should be removed)
 
-rscript: "/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript"
+rscript: "/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript" # the Rscript
 
 # directives to use fast or exhaustive pipeline
 run_enformer: False # set to true if you want enformer to be run
 delete_enformer_outputs: True # should you delete enformer predictions after aggregating them? Saves disk space; this is only used if run_enformer is True
-enformer_epigenome_directory: '/beagle3/haky/data/enformer-reference-epigenome'
-
+enformer_epigenome_directory: '/beagle3/haky/data/enformer-reference-epigenome' # In case you have access to a directory with a reference epigenome data, you can use it here
 
 # this won't be used if run_enformer is false since there is not need to run GPUs
 enformer: 

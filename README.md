@@ -1,16 +1,12 @@
-
 # Enpact pipeline
 
 ## Description: 
 This pipeline uses ENFORMER and elastic net to train weights for transcription factor binding in a tissue or cell_type, given the reference genome (fasta file) + intervals to predict on. The weights are the effects of the Enformer epigenetic feature on binding status. This method is called Enpact, named after Enformer + IMPACT.
 
-The models trained using this pipeline should work seamlessly with the [TFXcan pipeline](...).
+The models trained using this pipeline should work seamlessly with the [TFXcan pipeline](https://github.com/hakyimlab/TFXcan-snakemake).
 
-### Author: 
-Temi
-
-### Date created: 
-Mon Apr 24 2023
+### Author and Date: 
+Temi on Mon Apr 24 2023
 
 ## Usage: 
 
@@ -24,19 +20,21 @@ There are 2 ways to use this pipeline.
 
 3. The pipeline can also train an Enpact model given using a personal genome. Here you need to provide a VCF file and the reference fasta file. 
 
-
-### Helpers:
-
-There is a notebook [here](./notebooks/prepare_samples.qmd) to help generate the inputs. 
-
-Otherwise, you can look at minimal examples of the [models.data.yaml](./minimal/models.data.yaml) and [models.run.tsv](./minimal/models.run.tsv) files to recreate yours.
-
 ### Software:
 You will need to install Homer by yourself. Instructions are [here](http://homer.ucsd.edu/homer/download.html).
 
 We use conda for this pipeline. You will need to create the conda environment using [this yaml file](./software/TFXcan-pipeline-environment.yaml).
 
-### Input 
+### Input:
+There is a notebook [here](./notebooks/prepare_samples.qmd) to help generate the inputs. 
+
+Otherwise, you can look at minimal examples of the [models.data.yaml](./minimal/models.data.yaml) and [models.run.tsv](./minimal/models.run.tsv) files to recreate yours.
+
+#### Data:
+There are some data we do not directly provide in this repo and you will need to [download them here](...). These include:
+1. A reference genome fasta file
+
+### Commands: 
 
 #### To run the minimal example:
 
@@ -61,12 +59,14 @@ We use conda for this pipeline. You will need to create the conda environment us
 6. Run:
     `snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/simple/ --stats reports/stats.json`
 
-## Notebooks:
+### Output:
+The output will be in the `data/<<dataset..>>/` folder. All information you need will be in here. If you need to use these models to make predictions, the only file you need will be in the `statistics/` folder.
+
+## Notebooks and helpers:
 These contain analysis codes for the pipeline. They are not part of the pipeline itself. You can use these to make diagnostic plots and summaries of the models.
 
-## Data:
-There are some data we do not directly provide in this repo and you will need to [download them here](...). These include:
-1. A reference genome fasta file
+
+
 
 
 ## To-do and Updates

@@ -1,0 +1,36 @@
+cluster:
+  mkdir -p logs/{params.run}/{rule} &&
+  sbatch
+    --partition={resources.partition}
+    --nodes={resources.nodes}
+    --time={resources.time}
+    --account={resources.account}
+    --job-name=smk-{rule}-{params.jobname}
+    --output=logs/{params.run}/{rule}/{params.jobname}.out
+    --error=logs/{params.run}/{rule}/{params.jobname}.err
+    --gres=gpu:{resources.gpu}
+    --mem-per-cpu={resources.mem_cpu}G
+    --cpus-per-task={resources.cpu_task}
+default-resources:
+  - partition="caslake" #caslake # beagle3 for gpus #bigmem   #- mem_mb=50000
+  - time="02:00:00"
+  - tmpdir="/scratch/midway3/temi"
+  - account="pi-haky"
+  - nodes=1
+  - gpu=0
+  - mem_cpu=4
+  - cpu_task=8
+
+restart-times: 0
+max-jobs-per-second: 20
+max-status-checks-per-second: 1
+local-cores: 1
+latency-wait: 43200
+jobs: 200
+keep-going: True
+rerun-incomplete: True
+printshellcmds: True
+scheduler: greedy
+use-conda: True
+use-singularity: True
+# singularity-args: "--bind /scratch/midway3/temi,/beagle3/haky/data/enformer-reference-epigenome"

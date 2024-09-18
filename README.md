@@ -21,9 +21,30 @@ There are 2 ways to use this pipeline.
 3. The pipeline can also train an Enpact model given using a personal genome. Here you need to provide a VCF file and the reference fasta file. 
 
 ### Software:
+
+#### Conda:
 You will need to install Homer by yourself. Instructions are [here](http://homer.ucsd.edu/homer/download.html).
 
 We use conda for this pipeline. You will need to create the conda environment using [this yaml file](./software/TFXcan-pipeline-environment.yaml).
+
+#### Singularity:
+We provide a way to use Singularity to run the pipeline. You can use the [Singularity profile](./profiles/singularity/) to run the pipeline.
+
+1. Activate singularity if you have it on your cluster:
+    `module load singularity`
+
+2. Pull the singularity image:
+    `singularity pull <<add link>>`
+
+3. Install a conda environment with Snakemake in it:
+    `conda env create -p ./snakemake -f software/TFXcan-pipeline-environment.yaml`;
+    `conda install bioconda::snakemake=7.25.0`
+
+4. Run the pipeline:
+    `snakemake -s snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/singularity/`
+
+By default, the snakemake pipeline directory will be visible to the singularity container. However, if there are external folders that you need to mount, you can add them to the `profiles/singularity/config.yaml` file, or use the `--singularity-args "--bind <<paths>>` flag in the snakemake command above. i.e.
+    `snakemake -s snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/singularity/ --singularity-args "--bind <<path1>>,<<path2>>"`
 
 ### Input:
 There is a notebook [here](./notebooks/prepare_samples.qmd) to help generate the inputs. 

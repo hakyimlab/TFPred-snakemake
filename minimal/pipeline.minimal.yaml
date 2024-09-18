@@ -1,9 +1,12 @@
 
 ---
-# directories
-pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake' # not necessary anymore
+usage:
+  offline: True # i.e you have donwloa
+  software: "singularity" # or conda
+  location: "/beagle3/haky/users/temi/projects/build_singularity/sif_files/tfxcan-v1.0.sif" # or the conda environment.yaml file
+
 dataset: 'ENPACT_MINIMAL_FAST' # give this dataset or run a name e.g MY PREDICTIONS
-date: "2024-09-12" # this date will be used to create the directory structure
+date: "2024-09-18" # this date will be used to create the directory structure
 
 scratch_dir: "/scratch/midway3/temi" # large files will be saved here; very important if you will be generating large files with Enformer
 train_by_chromosome: # by default, we train and test on different chromosomes
@@ -16,20 +19,21 @@ models_metadata: "minimal/models.run.tsv" ## these are the models to be trained
 
 # genome fasta file
 genome:
-  fasta: "/project/haky/data/hg_sequences/hg38/Homo_sapiens_assembly38.fasta"
+  fasta: "files/Homo_sapiens_assembly38.fasta"
+  chrom_sizes: "info/hg38.chrom.sizes.sorted"
 
 # location of the peaks i.e. the bed files
 peaks:
   directory: minimal/data/chippeaks # where are the bed files
 
-# homer is used to find the motif instances
-homer:
-  dir: '/beagle3/haky/users/temi/software/homer' # directory to the homer software you, hopefully, have installed
-  motifs_database: minimal/data/motifs # where are the .motif files
-  scanMotifsGenome: '/beagle3/haky/users/temi/software/homer/bin/scanMotifGenomeWide.pl' # will be removed 
-  genome: '/beagle3/haky/users/temi/software/homer/data/genomes/hg38' # should ideally be the same fasta file used in training (should be removed)
+# homer is used to find the motif instances; not compulsory to provide these if the singularity container is being used
+# homer:
+#   dir: '/beagle3/haky/users/temi/software/homer' # directory to the homer software you, hopefully, have installed
+#   motifs_database: minimal/data/motifs # where are the .motif files
+#   #scanMotifsGenome: 'bin/scanMotifGenomeWide.pl' # will be removed 
+#   genome: 'data/genomes/hg38' # should ideally be the same fasta file used in training (should be removed)
 
-rscript: "/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript" # the Rscript
+rscript: Rscript # the  "/software/conda_envs/TFXcan-snakemake/bin/Rscript"
 
 # directives to use fast or exhaustive pipeline
 run_enformer: False # set to true if you want enformer to be run

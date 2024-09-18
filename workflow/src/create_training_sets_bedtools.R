@@ -19,7 +19,7 @@ option_list <- list(
     make_option("--num_predictors", type="integer", default=40000, help='proportion to be used as train'),
     make_option("--test_chromosomes", type="character", default="chr9,chr22", help='should you randomly split or train by chromosome? num_predictors is ignored if training by chromosome'),
     make_option("--peaks_files", type="character", default=NULL, help='how many bed samples should be used: will use all if NULL, will use the top n by FRiP otherwise'),
-    make_option("--sorted_chrom_sizes", type="character", default="/project/haky/users/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted", help='The sorted chromosome sizes file'),
+    make_option("--sorted_chrom_sizes", type="character", default=NULL, help='The sorted chromosome sizes file'),
     make_option("--peaks_counts_threshold", type="integer", default=100, help='...')
 )
 

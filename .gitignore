@@ -8,3 +8,5 @@ __pycache__/
 misc/*
 *.tmp*
 slurm_logs/*
+files/*
+software/conda_envs/*

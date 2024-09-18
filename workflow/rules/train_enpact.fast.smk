@@ -25,9 +25,9 @@ rule find_homer_motifs:
         os.path.join(HOMERFILES_DIR, 'scannedMotifs', 'scanMotifsGenomeWide.{motif_file}.txt')
     params:
         run = run,
-        homer_cmd = config['homer']['scanMotifsGenome'],
-        genome = config['homer']['genome'],
-        mfile = os.path.join(config['homer']['motifs_database'], '{motif_file}'),
+        homer_cmd = HOMERSCAN, #os.path.join(config['homer']['dir'], 'bin', 'scanMotifGenomeWide.pl'),
+        genome = HOMERGENOME, #config['genome']['fasta'],
+        mfile = os.path.join(HOMERMOTIFSDATABASE, '{motif_file}'),
         #ofile = lambda output: os.path.join(output, 'scanMotifsGenomeWide_{motif_file}.txt'),
         jobname = '{motif_file}'
     message: "working on {wildcards}" 
@@ -35,6 +35,7 @@ rule find_homer_motifs:
         mem_mb = 10000
     shell:
         """
+        whereis homer;
         perl {params.homer_cmd} {params.mfile} {params.genome} > {output}
         """
 
@@ -73,7 +74,7 @@ rule create_training_set:
         # f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt')
     params:
         run = run,
-        rscript = config['rscript'],
+        rscript = RSCRIPT,
         tf_tissue = '{tf}_{tissue}',
         bedfiles_dir = config['peaks']['directory'],
         sortedbeds_dir = os.path.join(SORTEDBEDS_DIR, '{tf}_{tissue}'),
@@ -85,7 +86,8 @@ rule create_training_set:
         # f2=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.ground_truth.txt'),
         f3=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.info.txt.gz'),
         f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt'),
-        mfile = rules.merge_homer_motifs.output
+        mfile = rules.merge_homer_motifs.output,
+        genome_sizes = config['genome']['chrom_sizes']
     message: "working on {wildcards}"
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.create_training_set.tsv")
     resources:
@@ -98,8 +100,8 @@ rule create_training_set:
         #load= 50 #if resources.partition == 'bigmem' else 1
     threads: 8
     shell:
-        """
-        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {params.mfile} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4}; sleep 5
+        """ 
+        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {params.mfile} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4} --sorted_chrom_sizes {params.genome_sizes}; sleep 5
         """
 
 rule aggregate_epigenomes:
@@ -123,12 +125,12 @@ rule aggregate_epigenomes:
         jobname = '{tf}_{tissue}',
         enformer_epigenome_directory = config['enformer_epigenome_directory'],
         nlines = count_number_of_lines,
+        PYTHON3 = PYTHON3 # "/software/conda_envs/TFXcan-snakemake/bin/python" if config['usage']['software'] == 'singularity' else 
     run:
         if params.nlines < 100:
             shell("touch {output}")
         else:
-            shell("python3 workflow/src/aggregate_epigenomes.py --loci_file {input} --reference_epigenome_dir {params.enformer_epigenome_directory} --output_file {output} --use_multiprocessing")
-
+            shell("/usr/bin/which {params.PYTHON3}; {params.PYTHON3} workflow/src/aggregate_epigenomes.py --loci_file {input} --reference_epigenome_dir {params.enformer_epigenome_directory} --output_file {output} --use_multiprocessing")
 
 rule prepare_training_data:
     input:
@@ -143,7 +145,7 @@ rule prepare_training_data:
     params:
         run = run,
         jobname = '{tf}_{tissue}',
-        rscript = config['rscript'],
+        rscript = RSCRIPT,
         aggtype = config['enformer']['aggtype'],
         nlines = count_number_of_lines
     resources:
@@ -166,7 +168,7 @@ rule train_TFPred_weights:
     params:
         run = run,
         jobname = '{tf}_{tissue}',
-        rscript = config['rscript'],
+        rscript = RSCRIPT,
         nfolds=5,
         basename=os.path.join(MODELS_DIR, "{tf}_{tissue}", f'{{tf}}_{{tissue}}_{config["date"]}'),
         nlines = count_number_of_lines
@@ -199,7 +201,7 @@ rule evaluate_TFPred:
     params:
         run = run,
         jobname = '{tf}_{tissue}',
-        rscript = config['rscript'],
+        rscript = RSCRIPT,
         basename=os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}'),
         nlines = count_number_of_lines
     resources:
@@ -224,7 +226,7 @@ rule compile_statistics:
     params:
         run = run,
         jobname = run,
-        rscript = config['rscript'],
+        rscript = RSCRIPT,
         input_f1 = ','.join(TF_list),
         input_f2 = ','.join(tissue_list),
         path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz'),

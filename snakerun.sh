@@ -9,7 +9,7 @@ snakemake -s snakefile.smk --configfile config/pipeline.yaml --profile profiles/
 # snakemake -s predict/snakefile.smk --configfile config/pipeline.yaml --cores 32 --profile profiles/gpu/
 
 # snakemake -s predict/snakefile.smk --configfile config/pipeline.yaml --profile profiles/gpu/
-
+# Python 3.9.17
 
 # squeue --format="%.18i %.9P %.40j %.8u %.8T %.10M %.9l %.6D %R" --me
 screen
@@ -43,5 +43,8 @@ snakemake -s snakefile.smk --configfile config/pipeline.enpact.yaml --profile pr
 snakemake -s snakefile.smk --configfile experiments/bpnet/pipeline.bpnet.yaml --profile profiles/simple/ -np > dryrun.out
 
 snakemake -s snakefile.smk --configfile config/pipeline.734.yaml --profile profiles/simple/ -np > dryrun.out
+
+snakemake -s snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/simple/ -np > dryrun.out
+
 
 snakemake -s snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/simple/ -np > dryrun.out

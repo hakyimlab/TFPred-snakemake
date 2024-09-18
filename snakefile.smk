@@ -55,15 +55,12 @@ STATISTICS_DIR = os.path.join(RUN_DIR, 'statistics') #'output/statistics'
 
 # ====== software ======
 RSCRIPT = config['rscript'] if 'rscript' in config.keys() else 'Rscript'
-
-print(os.system('echo $PATH'))
-
+# print(os.system('echo $PATH'))
 HOMERDIR = config['homer']['dir'] if 'homer' in config.keys() else '/software/conda_envs/TFXcan-snakemake/share/homer' # if using singularity
 # print(os.path.isdir(HOMERDIR))
 HOMERSCAN = os.path.join(HOMERDIR, 'bin', 'scanMotifGenomeWide.pl')
 HOMERGENOME = os.path.join(HOMERDIR, 'data', 'genomes', 'hg38')
-HOMERMOTIFSDATABASE = os.path.join(HOMERDIR, 'motifs') if 'homer' not in config.keys() else config['homer']['motifs_database']
-
+HOMERMOTIFSDATABASE = os.path.join(HOMERDIR, 'motifs') if not 'homer' in config.keys() else config['homer']['motifs_database']
 PYTHON3 = '/software/conda_envs/TFXcan-snakemake/bin/python3' if config['usage']['software'] == 'singularity' else 'python3'
 
 #& 'motifs_database' not in config['homer'].keys() 
@@ -119,17 +116,40 @@ motif_files = list(homer_motifs_dict.values())
 motif_inputs = helpers.createMotifInputs(homer_motifs_dict, HOMERMOTIFSDATABASE)
 motif_outputs = helpers.createMotifOutputs(homer_motifs_dict, os.path.join(HOMERFILES_DIR, 'scannedMotifs'))
 # check if the motif files are available so you don't have to re-run them with Homer, which takes some time
-motifs_available = [os.path.exists(m) for m in motif_outputs]
+#motifs_available = [os.path.exists(m) for m in motif_outputs]
 # which ones are not 
 motifs_unavailable = [m for m in motif_outputs if not os.path.exists(m)]
 
 # print(motifs_available)
-# print(motifs_unavailable)
+
 # if not all([os.path.exists(m) for m in motif_files]):
 #     print(f"ERROR - [FATAL] Please check the motif files. Exiting...")
 #     sys.exit(1)
 
-print(f'INFO - TFs: {TF_list}')
+onstart:
+    print(f"INFO - Found Rscript at: {RSCRIPT}")
+    print(f"INFO - Found Homer at: {HOMERDIR}")
+    print(f"INFO - Found python3 at: {PYTHON3}")
+
+    if len(TF_list) < 5:
+        print(f'INFO - Assays to train Enpact models for: {TF_list}')
+    else:
+        print(f"INFO - Verified {len(TF_list)} assays to train Enpact models for.")
+
+    if not motifs_unavailable:
+        print("INFO - All scanned motif files are available. Skipping Homer motif scanning...")
+    else:
+        print("INFO - Some scanned motif files are not available. Running Homer motif scanning...")
+
+    if config['run_enformer'] == True:
+        print(f'INFO - Running ENFORMER is set to True. Running the pipeline with ENFORMER...')
+        include: 'workflow/rules/train_enpact.slow.smk'
+    elif config['run_enformer'] == False:
+        print(f'INFO - Running ENFORMER is set to False. Running the pipeline without ENFORMER...')
+        include: 'workflow/rules/train_enpact.fast.smk'
+    else:
+        print(f"ERROR - [FATAL] Please specify whether to run ENFORMER or not. Exiting...")
+        sys.exit(1)
 
 rule all:
     input:
@@ -148,15 +168,3 @@ rule all:
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt'),
         # os.path.join('reports', f'{run}.report.html')
-
-
-
-if config['run_enformer'] == True:
-    print(f'INFO - Running ENFORMER is set to True. Running the pipeline with ENFORMER...')
-    include: 'workflow/rules/train_enpact.slow.smk'
-elif config['run_enformer'] == False:
-    print(f'INFO - Running ENFORMER is set to False. Running the pipeline without ENFORMER...')
-    include: 'workflow/rules/train_enpact.fast.smk'
-else:
-    print(f"ERROR - [FATAL] Please specify whether to run ENFORMER or not. Exiting...")
-    sys.exit(1)

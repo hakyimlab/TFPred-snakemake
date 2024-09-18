@@ -1,5 +1,7 @@
-/beagle3/haky/users/temi/software/conda_envs/snakemake/bin:/software/python-3.8.0-el8-x86_64/bin:/software/singularity-3.9.2-el8-x86_64/bin:/project/haky/users/temi/software/opt/bin:/project/haky/users/temi/software/bin:/home/temi/opt/cmake/bin:/home/temi/.local/bin:/home/temi/bin:/project/haky/users/temi/software/opt/bin:/project/haky/users/temi/software/bin:/home/temi/opt/cmake/bin:/home/temi/.local/bin:/home/temi/bin:.:/project/haky/users/temi/software/quarto/1.4.554/bin:/home/temi/.vscode-server/cli/servers/Stable-4849ca9bdf9666755eb463db297b69e5385090e3/server/bin/remote-cli:/project/haky/users/temi/software/opt/bin:/project/haky/users/temi/software/bin:/home/temi/opt/cmake/bin:/home/temi/.local/bin:/home/temi/bin:/project/haky/users/temi/software/opt/bin:/project/haky/users/temi/software/bin:/home/temi/opt/cmake/bin:/home/temi/miniconda3/condabin:/home/temi/.local/bin:/home/temi/bin:/software/bin:/software/slurm-current-el8-x86_64/bin:/software/modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/thinlinc/bin:/beagle3/haky/users/temi/software/homer/bin:/beagle3/haky/users/temi/software/homer/bin
-0
 INFO - Verified 2 assays
-INFO - TFs: ['ATF4', 'SREBF2']
+INFO - Found Rscript at: Rscript
+INFO - Found Homer at: /software/conda_envs/TFXcan-snakemake/share/homer
+INFO - Found python3 at: /software/conda_envs/TFXcan-snakemake/bin/python3
+INFO - Assays to train Enpact models for: ['ATF4', 'SREBF2']
+INFO - All scanned motif files are available. Skipping Homer motif scanning...
 INFO - Running ENFORMER is set to False. Running the pipeline without ENFORMER...

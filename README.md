@@ -91,12 +91,15 @@ These contain analysis codes for the pipeline. They are not part of the pipeline
 
 
 ## To-do and Updates
-- [X] Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 
-- [X] Extend the pipeline to provide summary information of the models, including diagnostic plots.
+
+Wed Sep 18 2024
+- [X] Verified that snakemake + singularity works when using the fast option for the pipeline.
 
 Tues Mar 27 2024
 
 - [X] Added the option to test models on an held-out chromosome. This is the default option. Set to false if you want to use random motifs across the genome.
+- [X] Remove the need for the  `info/data_db.txt` and `info/human_factor_full_QC.txt` file. The user should supply a csv file of the TF, context (tissue) and location of bed files. 
+- [X] Extend the pipeline to provide summary information of the models, including diagnostic plots.
 
 Tues Mar 26 2024
 

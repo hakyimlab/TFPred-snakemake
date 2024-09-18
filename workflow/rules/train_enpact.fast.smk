@@ -16,7 +16,6 @@ def count_number_of_lines(wildcards):
         return(0)
     return(nlines)
 
-
 rule find_homer_motifs:
     # input:
     #     os.path.join(config["homer"]['motifs_database'], '{motif_file}')
@@ -35,7 +34,6 @@ rule find_homer_motifs:
         mem_mb = 10000
     shell:
         """
-        whereis homer;
         perl {params.homer_cmd} {params.mfile} {params.genome} > {output}
         """
 
@@ -87,7 +85,8 @@ rule create_training_set:
         f3=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.info.txt.gz'),
         f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt'),
         mfile = rules.merge_homer_motifs.output,
-        genome_sizes = config['genome']['chrom_sizes']
+        genome_sizes = config['genome']['chrom_sizes'],
+        PYTHON3 = PYTHON3
     message: "working on {wildcards}"
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.create_training_set.tsv")
     resources:
@@ -100,7 +99,7 @@ rule create_training_set:
         #load= 50 #if resources.partition == 'bigmem' else 1
     threads: 8
     shell:
-        """ 
+        """
         {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {params.mfile} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4} --sorted_chrom_sizes {params.genome_sizes}; sleep 5
         """
 
@@ -117,20 +116,24 @@ rule aggregate_epigenomes:
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.aggregate_epigenomes.tsv")
     resources:
         partition="caslake",
-        mem_cpu=8,
-        cpu_task=8,
-        mem_mb=24000
+        mem_cpu=4,
+        cpu_task=4,
+        mem_mb=1000
+    singularity: config["usage"]['location']
     params:
         run = run,
         jobname = '{tf}_{tissue}',
         enformer_epigenome_directory = config['enformer_epigenome_directory'],
         nlines = count_number_of_lines,
         PYTHON3 = PYTHON3 # "/software/conda_envs/TFXcan-snakemake/bin/python" if config['usage']['software'] == 'singularity' else 
-    run:
-        if params.nlines < 100:
-            shell("touch {output}")
-        else:
-            shell("/usr/bin/which {params.PYTHON3}; {params.PYTHON3} workflow/src/aggregate_epigenomes.py --loci_file {input} --reference_epigenome_dir {params.enformer_epigenome_directory} --output_file {output} --use_multiprocessing")
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output}
+        else
+            {params.PYTHON3} workflow/src/aggregate_epigenomes.py --loci_file {input} --reference_epigenome_dir {params.enformer_epigenome_directory} --output_file {output} --use_multiprocessing
+        fi
+        """
 
 rule prepare_training_data:
     input:
@@ -151,11 +154,14 @@ rule prepare_training_data:
     resources:
         mem_mb=24000,
         partition="caslake",
-    run:
-        if params.nlines < 100:
-            shell("touch {output.p1} && touch {output.p2}")
-        else:
-            shell("{params.rscript} workflow/src/train_test_split.R --data_file {input.p1} --ground_truth_file {input.p2} --aggregation_method {params.aggtype} --train_prepared_file {output.p1} --test_prepared_file {output.p2}")
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output.p1} && touch {output.p2}
+        else
+            {params.rscript} workflow/src/train_test_split.R --data_file {input.p1} --ground_truth_file {input.p2} --aggregation_method {params.aggtype} --train_prepared_file {output.p1} --test_prepared_file {output.p2}
+        fi
+        """
 
 rule train_TFPred_weights:
     input: rules.prepare_training_data.output.p1
@@ -178,11 +184,14 @@ rule train_TFPred_weights:
         partition = helpers.get_cluster_allocation,
         cpu_task=12,
         mem_cpu=12
-    run:
-        if params.nlines < 100:
-            shell("touch {output.mlogistic} && touch {output.mlinear}")
-        else:
-            shell("{params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {params.basename} --nfolds {params.nfolds}; sleep 12")
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output.mlogistic} && touch {output.mlinear}
+        else
+            {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {params.basename} --nfolds {params.nfolds}; sleep 12
+        fi
+        """
 
 rule evaluate_TFPred:
     input: 
@@ -207,11 +216,14 @@ rule evaluate_TFPred:
     resources:
         mem_mb= 100000,
         partition="caslake"
-    run:
-        if params.nlines < 100:
-            shell("touch {output}")
-        else:
-            shell("{params.rscript} workflow/src/evaluate_enet.R --linear_model {input.linear_model} --logistic_model {input.logistic_model} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {params.basename}")
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output}
+        else
+            {params.rscript} workflow/src/evaluate_enet.R --linear_model {input.linear_model} --logistic_model {input.logistic_model} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {params.basename}
+        fi
+        """
 
 rule compile_statistics:
     input: 

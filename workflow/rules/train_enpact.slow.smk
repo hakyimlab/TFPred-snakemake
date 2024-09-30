@@ -32,9 +32,9 @@ rule find_homer_motifs:
         os.path.join(HOMERFILES_DIR, 'scannedMotifs', 'scanMotifsGenomeWide.{motif_file}.txt')
     params:
         run = run,
-        homer_cmd = config['homer']['scanMotifsGenome'],
-        genome = config['homer']['genome'],
-        mfile = os.path.join(config['homer']['motifs_database'], '{motif_file}'),
+        homer_cmd = HOMERSCAN,
+        genome = HOMERGENOME,
+        mfile = os.path.join(HOMERMOTIFSDATABASE, '{motif_file}'),
         #ofile = lambda output: os.path.join(output, 'scanMotifsGenomeWide_{motif_file}.txt'),
         jobname = '{motif_file}'
     message: "working on {wildcards}"
@@ -55,9 +55,6 @@ rule merge_homer_motifs:
     params:
         jobname = '{tf}',
         run = run,
-        # ifiles = lambda wildcards: expand(os.path.join(HOMERFILES_DIR, '{tf}','scanMotifsGenomeWide.{motif_file}.txt'), tf = set(TF_list), motif_file = homer_motifs_dict[wildcards.tf]),
-        #ifiles = gatherMotifFiles,
-
     resources:
         mem_mb = 10000
     run:
@@ -77,7 +74,7 @@ rule create_training_set:
         f2=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.ground_truth.txt')
     params:
         run = run,
-        rscript = config['rscript'],
+        rscript = RSCRIPT,
         tf_tissue = '{tf}_{tissue}',
         bedfiles_dir = config['peaks']['directory'],
         sortedbeds_dir = os.path.join(SORTEDBEDS_DIR, '{tf}_{tissue}'),
@@ -87,7 +84,8 @@ rule create_training_set:
         peaks_files = lambda wildcards: ','.join(model_config[wildcards.tf]["peakFiles"][wildcards.tissue]) if isinstance(model_config[wildcards.tf]["peakFiles"][wildcards.tissue], list) else model_config[wildcards.tf]["peakFiles"][wildcards.tissue],
         f3=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.info.txt.gz'),
         f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt'),
-        mfile = rules.merge_homer_motifs.output
+        mfile = rules.merge_homer_motifs.output,
+        genome_sizes = config['genome']['chrom_sizes']
     message: "working on {wildcards}"
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.create_training_set.tsv")
     resources:
@@ -101,7 +99,7 @@ rule create_training_set:
     threads: 8
     shell:
         """
-        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {params.mfile} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4}
+        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {params.mfile} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4} --sorted_chrom_sizes {params.genome_sizes}
         """
 
 checkpoint create_enformer_configuration:
@@ -121,13 +119,20 @@ checkpoint create_enformer_configuration:
         pdir = config['scratch_dir'], #DATA_DIR,
         ddate = rundate,
         jobname = '{tf}_{tissue}',
-        personalized_directives = None if 'personalized' not in config.keys() else config['personalized']['directives'] #None if not config['personalized']['directives'] else config['personalized']['directives']
-    run:
-        if params.personalized_directives is None:
-            shell("{params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate}")
-        elif params.personalized_directives is not None: # don't delete the outputs
-            shell("{params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate} --personalized_directives {params.personalized_directives}")
-        #printf 'INFO: This is the input file %s\n' "{input}";
+        personalized_directives = 0 if 'personalized' not in config.keys() else config['personalized']['directives'] #None if not config['personalized']['directives'] else config['personalized']['directives']
+    shell:
+        """
+        if [[ {params.personalized_directives} -eq 0 ]]; then
+            {params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate}
+        else 
+            {params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate} --personalized_directives {params.personalized_directives}
+        fi
+        """
+        # run:
+        # if params.personalized_directives is None:
+        #     shell("{params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate}")
+        # elif params.personalized_directives is not None: # don't delete the outputs
+        #     shell("{params.rscript} workflow/src/create_enformer_config.R --dataset {params.dset} --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --base_directives {params.bdirectives} --project_directory {params.pdir} --predictors_file {input} --model {params.model} --fasta_file {params.fasta_file} --parameters_file {output} --date {params.ddate} --personalized_directives {params.personalized_directives}")
 
 checkpoint predict_with_enformer:
     input:
@@ -136,7 +141,7 @@ checkpoint predict_with_enformer:
     output:
         os.path.join(PREDICTION_PARAMS_DIR, f'aggregation_config_{runname}_{{tf}}_{{tissue}}.json')
     resources:
-        partition = "caslake",
+        partition = "beagle3",
         time="12:00:00", 
         mem_cpu=2,
         cpu_task=2
@@ -148,24 +153,25 @@ checkpoint predict_with_enformer:
     message: 
         "working on {params.jobname}"
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.predict_with_enformer.tsv")
-    # shell:
-    #     """
-    #         sbatch workflow/src/run_enformer.sbatch {params.enformer_predict_script} {input}
-    #     """
-    run:
-        if params.nlines < 100:
-            shell("touch {output}")
-        else:
-            shell("sbatch workflow/src/run_enformer.sbatch {params.enformer_predict_script} {input}")
+    #singularity: config["usage"]['location']
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output}
+        else
+            
+            /software/slurm-current-el8-x86_64/bin/sbatch workflow/src/run_enformer.sbatch {params.enformer_predict_script} {input}
+        fi
+        """
 
-rule aggregate_predictions:
+rule aggregate_epigenomes:
     input:
         lambda wildcards: checkpoints.predict_with_enformer.get(tf=wildcards.tf, tissue=wildcards.tissue).output
     output:
         os.path.join(AGGREGATION_DIR, f'{runname}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.csv.gz')
     message: 
         "working on {wildcards}"
-    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.aggregate_predictions.tsv")
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.aggregate_epigenomes.tsv")
     resources:
         partition="caslake",
         mem_cpu=8,
@@ -179,20 +185,25 @@ rule aggregate_predictions:
         output_folder = AGGREGATION_DIR,
         hpc = "caslake",
         parsl_executor = "local",
-        delete_enformer_outputs = config["delete_enformer_outputs"],
-        nlines = count_number_of_lines
-    run:
-        if params.nlines < 100:
-            shell("touch {output}")
-        else:
-            if params.delete_enformer_outputs == True:
-                shell("python3 {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor} --delete_enformer_outputs")
-            elif params.delete_enformer_outputs == False: # don't delete the outputs
-                shell("python3 {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor}")
+        delete_enformer_outputs = 0 if config["delete_enformer_outputs"] == False else 1,
+        nlines = count_number_of_lines,
+        PYTHON3 = PYTHON3
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output}
+        else
+            if [[ {params.delete_enformer_outputs} -eq 1 ]]; then
+                {params.PYTHON3} {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor} --delete_enformer_outputs
+            elif [[ {params.delete_enformer_outputs} -eq 0 ]]; then
+                {params.PYTHON3} {params.aggregation_script} --metadata_file {input} --agg_types {params.aggtype} --output_directory {params.output_folder} --hpc {params.hpc} --parsl_executor {params.parsl_executor}
+            fi
+        fi
+        """
 
 rule prepare_training_data:
     input:
-        p1 = rules.aggregate_predictions.output,# os.path.join(AGGREGATION_DIR, f'{runname}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.csv.gz'), #rules.aggregate_predictions.output,
+        p1 = rules.aggregate_epigenomes.output,# os.path.join(AGGREGATION_DIR, f'{runname}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.csv.gz'), #rules.aggregate_epigenomes.output,
         p2 = rules.create_training_set.output.f2
     output:
         p1=os.path.join(AGGREGATION_DIR, f'train_{run}_{config["enformer"]["aggtype"]}.{{tf}}_{{tissue}}.prepared.csv.gz'),
@@ -209,20 +220,23 @@ rule prepare_training_data:
     resources:
         mem_mb=24000,
         partition="caslake",
-    run:
-        if params.nlines < 100:
-            shell("touch {output.p1} && touch {output.p2}")
-        else:
-            shell("{params.rscript} workflow/src/train_test_split.R --data_file {input.p1} --ground_truth_file {input.p2} --aggregation_method {params.aggtype} --train_prepared_file {output.p1} --test_prepared_file {output.p2}")
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output.p1} && touch {output.p2}
+        else
+            {params.rscript} workflow/src/train_test_split.R --data_file {input.p1} --ground_truth_file {input.p2} --aggregation_method {params.aggtype} --train_prepared_file {output.p1} --test_prepared_file {output.p2}
+        fi
+        """
 
-rule train_TFPred_weights:
+rule train_Enpact_weights:
     input: rules.prepare_training_data.output.p1
     output: 
         mlogistic=os.path.join(MODELS_DIR, "{tf}_{tissue}", f'{{tf}}_{{tissue}}_{config["date"]}.logistic.rds'),
         mlinear=os.path.join(MODELS_DIR, "{tf}_{tissue}", f'{{tf}}_{{tissue}}_{config["date"]}.linear.rds')
     message:
         "training on {wildcards} training data"
-    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.train_TFPred_weights.tsv")
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.train_Enpact_weights.tsv")
     params:
         run = run,
         jobname = '{tf}_{tissue}',
@@ -236,16 +250,19 @@ rule train_TFPred_weights:
         partition = helpers.get_cluster_allocation,
         cpu_task=12,
         mem_cpu=12
-    run:
-        if params.nlines < 100:
-            shell("touch {output.mlogistic} && touch {output.mlinear}")
-        else:
-            shell("{params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {params.basename} --nfolds {params.nfolds}; sleep 3")
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output.mlogistic} && touch {output.mlinear}
+        else
+            {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {params.basename} --nfolds {params.nfolds}; sleep 12
+        fi
+        """
 
-rule evaluate_TFPred:
+rule evaluate_Enpact:
     input: 
-        linear_model = rules.train_TFPred_weights.output.mlinear,
-        logistic_model = rules.train_TFPred_weights.output.mlogistic,
+        linear_model = rules.train_Enpact_weights.output.mlinear,
+        logistic_model = rules.train_Enpact_weights.output.mlogistic,
         train_data = rules.prepare_training_data.output.p1,
         test_data = rules.prepare_training_data.output.p2
     output: 
@@ -255,7 +272,7 @@ rule evaluate_TFPred:
         os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.test_eval.txt.gz')
     message:
         "evaluating on {wildcards} training and test data"
-    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.evaluate_TFPred.tsv")
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.evaluate_Enpact.tsv")
     params:
         run = run,
         jobname = '{tf}_{tissue}',
@@ -265,11 +282,14 @@ rule evaluate_TFPred:
     resources:
         mem_mb= 100000,
         partition="caslake"
-    run:
-        if params.nlines < 100:
-            shell("touch {output}")
-        else:
-            shell("{params.rscript} workflow/src/evaluate_enet.R --linear_model {input.linear_model} --logistic_model {input.logistic_model} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {params.basename}")
+    shell:
+        """
+        if [[ {params.nlines} -lt 100 ]]; then
+            touch {output}
+        else
+            {params.rscript} workflow/src/evaluate_enet.R --linear_model {input.linear_model} --logistic_model {input.logistic_model} --train_data_file {input.train_data} --test_data_file {input.test_data} --eval_output {params.basename}
+        fi
+        """
 
 rule compile_statistics:
     input: 

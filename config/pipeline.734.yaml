@@ -1,5 +1,10 @@
 
 ---
+
+usage:
+  offline: True # i.e you have donwloa
+  software: "conda" # or conda
+  location: "/beagle3/haky/users/temi/projects/build_singularity/sif_files/tfxcan-v1.0.sif" # or the conda environment.yaml file
 # directories
 pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake'
 dataset: 'ENPACT_734' # give this dataset or run a name
@@ -21,6 +26,7 @@ models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/en
 # genome information
 genome:
   fasta: "/project/haky/data/hg_sequences/hg38/Homo_sapiens_assembly38.fasta"
+  chrom_sizes: "info/hg38.chrom.sizes.sorted"
 
 # location of the peaks i.e. the bed files
 peaks:

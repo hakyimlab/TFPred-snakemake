@@ -35,7 +35,7 @@ homer:
 rscript: "/beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript"
 
 # directives to use fast or exhaustive pipeline
-run_enformer: False # set to true if you want enformer to be run
+run_enformer: True # set to true if you want enformer to be run
 delete_enformer_outputs: True # should you delete enformer predictions after aggregating them? Saves disk space; this is only used if run_enformer is True
 enformer_epigenome_directory: '/beagle3/haky/data/enformer-reference-epigenome'
 

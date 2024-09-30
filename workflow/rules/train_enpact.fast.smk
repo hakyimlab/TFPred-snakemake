@@ -48,9 +48,6 @@ rule merge_homer_motifs:
     params:
         jobname = '{tf}',
         run = run,
-        # ifiles = lambda wildcards: expand(os.path.join(HOMERFILES_DIR, '{tf}','scanMotifsGenomeWide.{motif_file}.txt'), tf = set(TF_list), motif_file = homer_motifs_dict[wildcards.tf]),
-        #ifiles = gatherMotifFiles,
-
     resources:
         mem_mb = 10000
     run:
@@ -68,8 +65,6 @@ rule create_training_set:
         #directory(PREDICTORS_DIR)
         f1=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.predictors.txt'),
         f2=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.ground_truth.txt'),
-        # f3=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.info.txt.gz'),
-        # f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt')
     params:
         run = run,
         rscript = RSCRIPT,
@@ -85,8 +80,7 @@ rule create_training_set:
         f3=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.info.txt.gz'),
         f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt'),
         mfile = rules.merge_homer_motifs.output,
-        genome_sizes = config['genome']['chrom_sizes'],
-        PYTHON3 = PYTHON3
+        genome_sizes = config['genome']['chrom_sizes']
     message: "working on {wildcards}"
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.create_training_set.tsv")
     resources:
@@ -100,7 +94,7 @@ rule create_training_set:
     threads: 8
     shell:
         """
-        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {params.mfile} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4} --sorted_chrom_sizes {params.genome_sizes}; sleep 5
+        {params.rscript} workflow/src/create_training_sets_bedtools.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {params.mfile} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4} --sorted_chrom_sizes {params.genome_sizes}
         """
 
 rule aggregate_epigenomes:
@@ -163,14 +157,14 @@ rule prepare_training_data:
         fi
         """
 
-rule train_TFPred_weights:
+rule train_Enpact_weights:
     input: rules.prepare_training_data.output.p1
     output: 
         mlogistic=os.path.join(MODELS_DIR, "{tf}_{tissue}", f'{{tf}}_{{tissue}}_{config["date"]}.logistic.rds'),
         mlinear=os.path.join(MODELS_DIR, "{tf}_{tissue}", f'{{tf}}_{{tissue}}_{config["date"]}.linear.rds')
     message:
         "training on {wildcards} training data"
-    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.train_TFPred_weights.tsv")
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.train_Enpact_weights.tsv")
     params:
         run = run,
         jobname = '{tf}_{tissue}',
@@ -193,10 +187,10 @@ rule train_TFPred_weights:
         fi
         """
 
-rule evaluate_TFPred:
+rule evaluate_Enpact:
     input: 
-        linear_model = rules.train_TFPred_weights.output.mlinear,
-        logistic_model = rules.train_TFPred_weights.output.mlogistic,
+        linear_model = rules.train_Enpact_weights.output.mlinear,
+        logistic_model = rules.train_Enpact_weights.output.mlogistic,
         train_data = rules.prepare_training_data.output.p1,
         test_data = rules.prepare_training_data.output.p2
     output: 
@@ -206,7 +200,7 @@ rule evaluate_TFPred:
         os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.test_eval.txt.gz')
     message:
         "evaluating on {wildcards} training and test data"
-    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.evaluate_TFPred.tsv")
+    benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.evaluate_Enpact.tsv")
     params:
         run = run,
         jobname = '{tf}_{tissue}',
@@ -232,7 +226,8 @@ rule compile_statistics:
         # f1 = expand('{tf}', tf = TF_list),
         # f2 = expand('{tissue}', tissue = tissue_list)
     output:
-        os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt')
+        compiled_statistics = os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt'),
+        compiled_weights = os.path.join(STATISTICS_DIR, f'{run}.compiled_weights.txt.gz')
     message:
         "compiling statistics for {wildcards}"
     params:
@@ -242,15 +237,15 @@ rule compile_statistics:
         input_f1 = ','.join(TF_list),
         input_f2 = ','.join(tissue_list),
         path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz'),
-        model_path = lambda wildcards: os.path.join(MODELS_DIR, f'{{1}}_{{2}}', f'{{1}}_{{2}}_{config["date"]}.logistic.rds')
-        
+        model_path = lambda wildcards: os.path.join(MODELS_DIR, f'{{1}}_{{2}}', f'{{1}}_{{2}}_{config["date"]}.logistic.rds'),
+        training_peaks_directory = SORTEDBEDS_DIR
     resources:
         mem_mb= 100000,
         partition="caslake",
         time="06:00:00"
     shell:
         """
-            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output} --model_path {params.model_path}
+            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output.compiled_stats} --model_path {params.model_path} --weights_file {output.compiled_weights} --training_peaks_directory {params.training_peaks_directory} 
         """
 
 # rule onsuccess_statistics:

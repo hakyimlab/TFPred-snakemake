@@ -9,10 +9,7 @@ if config["usage"]['offline'] == True:
     elif config["usage"]['software'] == 'conda':
         conda: config["usage"]['location']
 elif config["usage"]['offline'] == False:
-    sys.exit(1)
-
-#"/beagle3/haky/users/temi/projects/build_singularity/def_files/tfxcan_sha256.c9195e1a359cee360f3743d68326208238257e584cbbee36ac6240acba8c0613.sif"
-#"library://temi/collection/tfxcan:v1.0" #"/beagle3/haky/users/temi/projects/build_singularity/rb-66e869a3e9e27d2c5140ef22_latest.sif"
+    pass
 
 import pandas as pd
 import os, glob, sys, re, yaml, subprocess
@@ -28,7 +25,6 @@ import helpers
 
 print_progress = False
 
-
 runname = config['dataset']
 rundate = config['date']
 run = f'{runname}_{rundate}'
@@ -38,9 +34,7 @@ run = f'{runname}_{rundate}'
 #DATA_DIR = os.path.join('data') 
 DATA_DIR = 'data' # here I want to have some common files (like the motif files; this should not need to run everytime if already available)
 HOMERFILES_DIR = os.path.join(DATA_DIR, 'homer_instances')
-
 METADATA_DIR = 'metadata'
-
 RUN_DIR = os.path.join(DATA_DIR, f"{runname}_{rundate}") 
 BEDLINKS_DIR = os.path.join(RUN_DIR, 'bed_links')
 SORTEDBEDS_DIR = os.path.join(RUN_DIR, 'sortedbeds')
@@ -63,23 +57,6 @@ HOMERGENOME = os.path.join(HOMERDIR, 'data', 'genomes', 'hg38')
 HOMERMOTIFSDATABASE = os.path.join(HOMERDIR, 'motifs') if not 'homer' in config.keys() else config['homer']['motifs_database']
 PYTHON3 = '/software/conda_envs/TFXcan-snakemake/bin/python3' if config['usage']['software'] == 'singularity' else 'python3'
 
-#& 'motifs_database' not in config['homer'].keys() 
-
-
-# try:
-#     HOMERDIR = config['homer']['dir'] if 'homer' in config.keys() else '/software/conda_envs/TFXcan-snakemake/share/homer' # if using singularity
-#     print(os.path.isdir(HOMERDIR))
-#     HOMERSCAN = os.path.join(HOMERDIR, 'bin', 'scanMotifGenomeWide.pl')
-#     HOMERGENOME = os.path.join(HOMERDIR, 'data', 'genomes', 'hg38')
-#     HOMERMOTIFSDATABASE = os.path.join(HOMERDIR, 'motifs') if 'motifs_database' not in config['homer'].keys() else config['homer']['motifs_database']
-# except Exception as e:
-#     print("ERROR - [FATAL] Please specify the path to the homer data software. Exiting...")
-#     sys.exit(1)
-
-# print(HOMERSCAN)
-# print(HOMERGENOME)
-# print(HOMERMOTIFSDATABASE)
-
 # prepare input ======
 metadata_dt = pd.read_table(config['models_metadata'], dtype={'assay': 'string', 'context': 'string'})
 metadata_dt = metadata_dt.fillna('none')
@@ -94,7 +71,7 @@ with open(config['models_config']) as stream:
 
 # verify details
 tp = tuple(metadata_dt.itertuples(index=False, name = None))
-vfy = helpers.verify_model_details(tp, model_config, print_info = True)
+vfy = helpers.verify_model_details(tp, model_config, print_info = False)
 
 if not vfy:
     print("ERROR - [FATAL] Please check the metadata file and the model configuration file for consistency. The assay column should be present in the models configuration yaml file. Exiting...")
@@ -116,15 +93,31 @@ motif_files = list(homer_motifs_dict.values())
 motif_inputs = helpers.createMotifInputs(homer_motifs_dict, HOMERMOTIFSDATABASE)
 motif_outputs = helpers.createMotifOutputs(homer_motifs_dict, os.path.join(HOMERFILES_DIR, 'scannedMotifs'))
 # check if the motif files are available so you don't have to re-run them with Homer, which takes some time
-#motifs_available = [os.path.exists(m) for m in motif_outputs]
-# which ones are not 
 motifs_unavailable = [m for m in motif_outputs if not os.path.exists(m)]
 
-# print(motifs_available)
+print(f"INFO - Found Rscript at: {RSCRIPT}")
+print(f"INFO - Found Homer at: {HOMERDIR}")
+print(f"INFO - Found python3 at: {PYTHON3}")
 
-# if not all([os.path.exists(m) for m in motif_files]):
-#     print(f"ERROR - [FATAL] Please check the motif files. Exiting...")
-#     sys.exit(1)
+if len(TF_list) < 5:
+    print(f'INFO - Assays to train Enpact models for: {TF_list}')
+else:
+    print(f"INFO - Verified {len(TF_list)} assays to train Enpact models for.")
+
+if not motifs_unavailable:
+    print("INFO - All scanned motif files are available. Skipping Homer motif scanning...")
+else:
+    print("INFO - Some scanned motif files are not available. Running Homer motif scanning...")
+
+if config['run_enformer'] == True:
+    print(f'INFO - Running ENFORMER is set to True. Running the pipeline with ENFORMER...')
+    include: 'workflow/rules/train_enpact.slow.smk'
+elif config['run_enformer'] == False:
+    print(f'INFO - Running ENFORMER is set to False. Running the pipeline without ENFORMER...')
+    include: 'workflow/rules/train_enpact.fast.smk'
+else:
+    print(f"ERROR - [FATAL] Please specify whether to run ENFORMER or not. Exiting...")
+    sys.exit(1)
 
 onstart:
     print(f"INFO - Found Rscript at: {RSCRIPT}")
@@ -167,4 +160,27 @@ rule all:
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt'),
-        # os.path.join('reports', f'{run}.report.html')
+        os.path.join(STATISTICS_DIR, f'{run}.compiled_weightst.txt.gz')
+
+onsuccess:
+    print("INFO - Enpact training completed successfully.")
+
+
+
+
+#& 'motifs_database' not in config['homer'].keys() 
+
+
+# try:
+#     HOMERDIR = config['homer']['dir'] if 'homer' in config.keys() else '/software/conda_envs/TFXcan-snakemake/share/homer' # if using singularity
+#     print(os.path.isdir(HOMERDIR))
+#     HOMERSCAN = os.path.join(HOMERDIR, 'bin', 'scanMotifGenomeWide.pl')
+#     HOMERGENOME = os.path.join(HOMERDIR, 'data', 'genomes', 'hg38')
+#     HOMERMOTIFSDATABASE = os.path.join(HOMERDIR, 'motifs') if 'motifs_database' not in config['homer'].keys() else config['homer']['motifs_database']
+# except Exception as e:
+#     print("ERROR - [FATAL] Please specify the path to the homer data software. Exiting...")
+#     sys.exit(1)
+
+# print(HOMERSCAN)
+# print(HOMERGENOME)
+# print(HOMERMOTIFSDATABASE)

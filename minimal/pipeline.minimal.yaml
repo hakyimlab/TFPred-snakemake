@@ -5,7 +5,7 @@ usage:
   software: "singularity" # or conda
   location: "/beagle3/haky/users/temi/projects/build_singularity/sif_files/tfxcan-v1.0.sif" # or the conda environment.yaml file
 
-dataset: 'ENPACT_MINIMAL_FAST' # give this dataset or run a name e.g MY PREDICTIONS
+dataset: 'ENPACT_MINIMAL_SLOW' # give this dataset or run a name e.g MY PREDICTIONS
 date: "2024-09-18" # this date will be used to create the directory structure
 
 scratch_dir: "/scratch/midway3/temi" # large files will be saved here; very important if you will be generating large files with Enformer
@@ -36,7 +36,7 @@ peaks:
 rscript: Rscript # the  "/software/conda_envs/TFXcan-snakemake/bin/Rscript"
 
 # directives to use fast or exhaustive pipeline
-run_enformer: False # set to true if you want enformer to be run
+run_enformer: True # set to true if you want enformer to be run
 delete_enformer_outputs: True # should you delete enformer predictions after aggregating them? Saves disk space; this is only used if run_enformer is True
 enformer_epigenome_directory: '/beagle3/haky/data/enformer-reference-epigenome' # In case you have access to a directory with a reference epigenome data, you can use it here
 

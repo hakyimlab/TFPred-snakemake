@@ -93,7 +93,8 @@ These contain analysis codes for the pipeline. They are not part of the pipeline
 ## To-do and Updates
 
 Wed Sep 18 2024
-- [X] Verified that snakemake + singularity works when using the fast option for the pipeline.
+- [X] Verify that snakemake + singularity works when using the fast option for the pipeline.
+- [ ] Verify that snakemake + singularity works when using the slow option for the pipeline.
 
 Tues Mar 27 2024
 

@@ -19,3 +19,5 @@ nvidia-smi
 
 # make sure that in your config, provider is set to "local" before running this script
 python ${1} --parameters ${2}
+
+

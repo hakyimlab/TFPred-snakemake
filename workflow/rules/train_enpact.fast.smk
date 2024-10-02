@@ -227,7 +227,8 @@ rule compile_statistics:
         # f2 = expand('{tissue}', tissue = tissue_list)
     output:
         compiled_statistics = os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt'),
-        compiled_weights = os.path.join(STATISTICS_DIR, f'{run}.compiled_weights.txt.gz')
+        compiled_weights_lambda_1se = os.path.join(STATISTICS_DIR, f'{run}.compiled_weights.lambda.1se.txt.gz'),
+        compiled_weights_lambda_min = os.path.join(STATISTICS_DIR, f'{run}.compiled_weights.lambda.min.txt.gz')
     message:
         "compiling statistics for {wildcards}"
     params:
@@ -238,14 +239,15 @@ rule compile_statistics:
         input_f2 = ','.join(tissue_list),
         path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz'),
         model_path = lambda wildcards: os.path.join(MODELS_DIR, f'{{1}}_{{2}}', f'{{1}}_{{2}}_{config["date"]}.logistic.rds'),
-        training_peaks_directory = SORTEDBEDS_DIR
+        training_peaks_directory = SORTEDBEDS_DIR,
+        compiled_weights_basename = os.path.join(STATISTICS_DIR, f'{run}.compiled_weights')
     resources:
         mem_mb= 100000,
         partition="caslake",
         time="06:00:00"
     shell:
         """
-            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output.compiled_stats} --model_path {params.model_path} --weights_file {output.compiled_weights} --training_peaks_directory {params.training_peaks_directory} 
+            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output.compiled_stats} --model_path {params.model_path} --weights_file_basename {params.compiled_weights_basename} --training_peaks_directory {params.training_peaks_directory} 
         """
 
 # rule onsuccess_statistics:

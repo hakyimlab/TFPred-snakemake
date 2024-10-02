@@ -11,7 +11,7 @@ option_list <- list(
     make_option("--path_pattern", help='pattern to match path e.g. /beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/evaluation/{1}_{2}_2024-07-26.logistic.{3}_eval.txt.gz'),
     make_option("--model_path", help='pattern to match path e.g. /beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/models/{1}_{2}/{1}_{2}_2024-07-26.logistic.rds'),
     make_option("--statistics_file", help='file to write statistics to'),
-    make_option("--weights_file", help='file to write weights to'),
+    make_option("--weights_file_basename", help='file to write weights to'),
     make_option("--training_peaks_directory", help='file to write training statistics to')
 )
 
@@ -22,11 +22,12 @@ library(pROC)
 library(stringr)
 library(foreach)
 library(glmnet)
+library(glue)
 
 # NFYA_BoneMarrow
 # opt <- list()
-# opt$transcription_factors <- 'AR,CTCF,SREBF2,NFYA'
-# opt$tissues <- 'Prostate,Breast,Blood,BoneMarrow'
+# opt$transcription_factors <- 'AR,AR,CTCF,SREBF2,NFYA,ATF3'
+# opt$tissues <- 'Prostate,Breast,Breast,Blood,BoneMarrow,Blood'
 # opt$path_pattern <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/evaluation/{1}_{2}_2024-07-26.logistic.{3}_eval.txt.gz'
 # opt$statistics_file <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/misc/evaluation_statistics.txt'
 # opt$model_path <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/models/{1}_{2}/{1}_{2}_2024-07-26.logistic.rds'
@@ -61,11 +62,12 @@ calculate_metrics <- function(dt, transcription_factor, tissue, type){
 
         # t-test
         ttest <- t.test(TFPred_score ~ binding_class, data=dt)
-        if(ttest$p.value == 0){
-            ttest_pvalue <- 'p < 2.2e-16'
-        } else {
-            ttest_pvalue <- paste('p =', format(ttest$p.value, digits = 2))
-        }
+        ttest_pvalue <- ttest$p.value
+        # if(ttest$p.value == 0){
+        #     ttest_pvalue <- 'p < 2.2e-16'
+        # } else {
+        #     ttest_pvalue <- paste('p =', format(ttest$p.value, digits = 2))
+        # }
         
         return(cbind(transcription_factor, tissue, type, pp_auc, pp_var, low, upp, ttest_pvalue))
     }, error = function(e){
@@ -74,7 +76,7 @@ calculate_metrics <- function(dt, transcription_factor, tissue, type){
    
 }
 
-# dt <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/evaluation/AR_Prostate_2024-07-26.logistic.train_eval.txt.gz')
+# dt <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/evaluation/ATF3_Blood_2024-07-26.logistic.train_eval.txt.gz')
 # tt <- t.test(TFPred_score ~ binding_class, data=dt)
 # tt$p.value
 
@@ -142,12 +144,26 @@ models_weights <- foreach::foreach(i=seq_len(nrow(models_mtdt)), .combine='rbind
     setNames(models_mtdt$model) %>% 
     dplyr::mutate(feature = paste0('f_', seq_len(nrow(.)))) %>% dplyr::relocate(feature)
 
-data.table::fwrite(models_weights, file=opt$weights_file, sep='\t', row.names=F, col.names=T, quote=F, compress = 'gzip')
+data.table::fwrite(models_weights, file=glue("{opt$weights_file}.lambda.1se.txt.gz"), sep='\t', row.names=F, col.names=T, quote=F, compress = 'gzip')
+
+
+models_weights <- foreach::foreach(i=seq_len(nrow(models_mtdt)), .combine='rbind', .inorder=T) %do% {
+    mtdt <- models_mtdt[i, ] |> unlist()
+    mpath <- mtdt[2]; model <- mtdt[1]
+    model <- readRDS(mpath)
+    weights <- coef(model, s = 'lambda.min')[-1] #|> as.data.frame() |> setNames(model)
+    return(weights)
+} %>% t() %>% as.data.frame() %>% 
+    setNames(models_mtdt$model) %>% 
+    dplyr::mutate(feature = paste0('f_', seq_len(nrow(.)))) %>% dplyr::relocate(feature)
+
+data.table::fwrite(models_weights, file=glue("{opt$weights_file}.lambda.min.txt.gz"), sep='\t', row.names=F, col.names=T, quote=F, compress = 'gzip')
 
 doParallel::stopImplicitCluster()
 # m <- readRDS('/project/haky/users/temi/Enpact-figures/data/aggByCollect_AR_Prostate.logistic.rds')
 
 # coef(m, s = m$lambda.min)[-1] %>% as.data.frame() %>% setNames('AR_Prostate') %>% dplyr::mutate(feature = paste0('f_', seq_len(nrow(.)))) %>% dplyr::arrange(desc(abs(AR_Prostate))) %>% dplyr::relocate(feature) %>% head(10)
+
 
 
 

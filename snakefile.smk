@@ -160,7 +160,8 @@ rule all:
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.linear.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt'),
-        os.path.join(STATISTICS_DIR, f'{run}.compiled_weightst.txt.gz')
+        os.path.join(STATISTICS_DIR, f'{run}.compiled_weights.lambda.min.txt.gz'),
+        os.path.join(STATISTICS_DIR, f'{run}.compiled_weights.lambda.1se.txt.gz')
 
 onsuccess:
     print("INFO - Enpact training completed successfully.")

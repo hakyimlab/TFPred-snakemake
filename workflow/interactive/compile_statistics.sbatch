@@ -21,5 +21,5 @@ conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools
     --path_pattern data/ENPACT_734_2024-07-26/evaluation/{1}_{2}_2024-07-26.logistic.{3}_eval.txt.gz \
     --statistics_file data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_stats.txt \
     --model_path data/ENPACT_734_2024-07-26/models/{1}_{2}/{1}_{2}_2024-07-26.logistic.rds \
-    --weights_file data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_weights.txt.gz \
+    --weights_file_basename data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_weights \
     --training_peaks_directory data/ENPACT_734_2024-07-26/sortedbeds

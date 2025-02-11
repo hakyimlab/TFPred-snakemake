@@ -14,6 +14,7 @@ parser.add_argument("--loci_file", type = str, help="the path to the txt files o
 parser.add_argument("--reference_epigenome_directory", type = str, help="the path to the per-chromosome hdf5 reference epigenomes")
 parser.add_argument("--output_file", type = str, help="the path to the output file for aggregated values", default=None)
 parser.add_argument("--use_multiprocessing", action=argparse.BooleanOptionalAction, help="use the pool attribute in multiprocessing", default=False)
+parser.add_argument("--pad_bins", type = int, help="the number of bins to pad the center bin with", default=1)
 
 args = parser.parse_args()
 
@@ -30,11 +31,11 @@ except pd.errors.EmptyDataError as pe:
 if args.use_multiprocessing is True:
     print(f'INFO - Using multiprocessing to aggregate epigenomic predictions')
     pool = multiprocessing.Pool(32)
-    outputs_list = pool.starmap(extract_epigenome.aggregate_and_collect_epigenome, itertools.product(query_loci, [args.reference_epigenome_directory]))
+    outputs_list = pool.starmap(extract_epigenome.aggregate_and_collect_epigenome, itertools.product(query_loci, [args.reference_epigenome_directory], [args.pad_bins]))
     loci = [d['locus'] for d in outputs_list]
     values = np.array([d['values'] for d in outputs_list])
 else:
-    outputs_list = [extract_epigenome.aggregate_and_collect_epigenome(q, args.reference_epigenome_directory) for q in query_loci]
+    outputs_list = [extract_epigenome.aggregate_and_collect_epigenome(q, args.reference_epigenome_directory, pad_bins = args.pad_bins) for q in query_loci]
     loci = [d['locus'] for d in outputs_list]
     values = np.array([d['values'] for d in outputs_list])
 

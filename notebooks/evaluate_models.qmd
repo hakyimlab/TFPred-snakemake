@@ -452,3 +452,17 @@ summary_both
 ```{r}
 
 ```
+
+### Copy models to a new directory
+
+```{r}
+st_file <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_stats.txt', na.strings = '') %>%
+  dplyr::filter(!is.na(model)) %>%
+    dplyr::select(model, path) %>%
+    dplyr::distinct()
+```
+
+
+```{r}
+file.copy(from = file.path("/beagle3/haky/users/temi/projects/TFPred-snakemake", st_file$path), to = '/beagle3/haky/users/temi/data/enpact_models/models734/', overwrite = T)
+```

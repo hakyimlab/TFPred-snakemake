@@ -31,7 +31,7 @@ homerdb
 ```
 
 ```{r}
-peaks_dir <- '/project/haky/data/TFXcan/cistrome/raw/human_factor'
+peaks_dir <- '/project2/haky/Data/TFXcan/cistrome/raw'
 ```
 
 ```{r}
@@ -193,11 +193,8 @@ enlist$HOXB13$peakFiles$Prostate |> length()
 enlist$GATA2$peakFiles$Prostate |> length()
 ```
 
-
-
-## Prepare samples for experiment
+## Prepare samples for multisample experiment
 ```{r}
-
 experiment_dir <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate'
 if(!dir.exists(experiment_dir)){
     dir.create(experiment_dir)
@@ -233,7 +230,10 @@ for(i in seq_along(ar_prostate_samples)){
 run_dt <- as.data.frame(run_dt)
 run_dt$context <- 'Prostate'
 colnames(run_dt) <- c('assay', 'context')
+```
 
+
+```{r}
 run_dt %>% data.table::fwrite(file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate/runs.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
 
 yaml::write_yaml(data_list, file = file.path(experiment_dir, 'models.yaml'))
@@ -246,6 +246,57 @@ print(
     )
 # /beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/AR_Prostate/pipeline.experiment.yaml
 ```
+
+
+## Prepare samples for incremental samples experiment
+```{r}
+experiment_dir <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/experiments/incremental'
+if(!dir.exists(experiment_dir)){
+    dir.create(experiment_dir)
+}
+```
+```{r}
+minimal_ex <- enlist[c('AR')]
+# sselect 50 samples randomly
+set.seed(2024)
+ar_prostate_samples <- sample(enlist[c('AR')][['AR']][['peakFiles']][['Prostate']])
+#minimal_ex <- base::Filter(Negate(is.null), minimal_ex)
+nsamples <- 1:50
+experiment_samples <- sapply(nsamples, function(n){
+    ar_prostate_samples[1:n]
+})
+
+# set minimal_ex to the selected samples
+run_dt <- vector('character', length(experiment_samples))
+samples_vec <- vector('character', length(experiment_samples))
+
+data_list <- list()
+
+for(i in seq_along(experiment_samples)){
+    nnm <- paste0('AR', i)
+    data_list[[nnm]] <- list()
+    data_list[[nnm]][['motifFiles']] <- enlist[c('AR')][['AR']][['motifFiles']]
+    data_list[[nnm]][['peakFiles']] <- list()
+    data_list[[nnm]][['peakFiles']][['Prostate']] <- experiment_samples[[i]]
+    run_dt[i] <- nnm
+    samples_vec[i] <- nn
+}
+
+# nn <- gsub('.narrowPeak.bed', '.data.yaml', experiment_samples[i], fixed = F)
+# print(nn); print(data_list)
+
+run_dt <- as.data.frame(run_dt)
+run_dt$context <- 'Prostate'
+colnames(run_dt) <- c('assay', 'context')
+```
+
+
+```{r}
+run_dt %>% data.table::fwrite(file = file.path(experiment_dir, 'runs.tsv'), sep = '\t', row.names =F, col.names =T, quote = F)
+
+yaml::write_yaml(data_list, file = file.path(experiment_dir, 'models.yaml'))
+```
+
 
 
 Gather the models

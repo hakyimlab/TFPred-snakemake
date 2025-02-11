@@ -1,0 +1,1574 @@
+AR1:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate: 50044_sort_peaks.narrowPeak.bed
+AR2:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+AR3:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+AR4:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+AR5:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+AR6:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+AR7:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+AR8:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+AR9:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+AR10:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+AR11:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+AR12:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+AR13:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+AR14:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+AR15:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+AR16:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+AR17:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+AR18:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+AR19:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+AR20:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+AR21:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+AR22:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+AR23:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+AR24:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+AR25:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+AR26:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+AR27:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+AR28:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+AR29:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+AR30:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+AR31:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+AR32:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+AR33:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+AR34:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+AR35:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+AR36:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+AR37:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+AR38:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+AR39:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+AR40:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+AR41:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+AR42:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+AR43:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+    - 44576_sort_peaks.narrowPeak.bed
+AR44:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+    - 44576_sort_peaks.narrowPeak.bed
+    - 44581_sort_peaks.narrowPeak.bed
+AR45:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+    - 44576_sort_peaks.narrowPeak.bed
+    - 44581_sort_peaks.narrowPeak.bed
+    - 51737_sort_peaks.narrowPeak.bed
+AR46:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+    - 44576_sort_peaks.narrowPeak.bed
+    - 44581_sort_peaks.narrowPeak.bed
+    - 51737_sort_peaks.narrowPeak.bed
+    - 56390_sort_peaks.narrowPeak.bed
+AR47:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+    - 44576_sort_peaks.narrowPeak.bed
+    - 44581_sort_peaks.narrowPeak.bed
+    - 51737_sort_peaks.narrowPeak.bed
+    - 56390_sort_peaks.narrowPeak.bed
+    - 68239_sort_peaks.narrowPeak.bed
+AR48:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+    - 44576_sort_peaks.narrowPeak.bed
+    - 44581_sort_peaks.narrowPeak.bed
+    - 51737_sort_peaks.narrowPeak.bed
+    - 56390_sort_peaks.narrowPeak.bed
+    - 68239_sort_peaks.narrowPeak.bed
+    - 2910_sort_peaks.narrowPeak.bed
+AR49:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+    - 44576_sort_peaks.narrowPeak.bed
+    - 44581_sort_peaks.narrowPeak.bed
+    - 51737_sort_peaks.narrowPeak.bed
+    - 56390_sort_peaks.narrowPeak.bed
+    - 68239_sort_peaks.narrowPeak.bed
+    - 2910_sort_peaks.narrowPeak.bed
+    - 71108_sort_peaks.narrowPeak.bed
+AR50:
+  motifFiles:
+  - are.motif
+  - ar-half.motif
+  peakFiles:
+    Prostate:
+    - 50044_sort_peaks.narrowPeak.bed
+    - 44315_sort_peaks.narrowPeak.bed
+    - 44335_sort_peaks.narrowPeak.bed
+    - 74411_sort_peaks.narrowPeak.bed
+    - 68078_sort_peaks.narrowPeak.bed
+    - 56112_sort_peaks.narrowPeak.bed
+    - 69276_sort_peaks.narrowPeak.bed
+    - 56108_sort_peaks.narrowPeak.bed
+    - 56206_sort_peaks.narrowPeak.bed
+    - 43856_sort_peaks.narrowPeak.bed
+    - 8652_sort_peaks.narrowPeak.bed
+    - 35766_sort_peaks.narrowPeak.bed
+    - 69273_sort_peaks.narrowPeak.bed
+    - 48097_sort_peaks.narrowPeak.bed
+    - 68075_sort_peaks.narrowPeak.bed
+    - 69278_sort_peaks.narrowPeak.bed
+    - 43853_sort_peaks.narrowPeak.bed
+    - 69289_sort_peaks.narrowPeak.bed
+    - 44577_sort_peaks.narrowPeak.bed
+    - 68240_sort_peaks.narrowPeak.bed
+    - 43859_sort_peaks.narrowPeak.bed
+    - 56265_sort_peaks.narrowPeak.bed
+    - 44311_sort_peaks.narrowPeak.bed
+    - 85857_sort_peaks.narrowPeak.bed
+    - 50258_sort_peaks.narrowPeak.bed
+    - 43855_sort_peaks.narrowPeak.bed
+    - 44575_sort_peaks.narrowPeak.bed
+    - 50268_sort_peaks.narrowPeak.bed
+    - 71167_sort_peaks.narrowPeak.bed
+    - 69288_sort_peaks.narrowPeak.bed
+    - 56121_sort_peaks.narrowPeak.bed
+    - 37094_sort_peaks.narrowPeak.bed
+    - 51049_sort_peaks.narrowPeak.bed
+    - 56109_sort_peaks.narrowPeak.bed
+    - 56254_sort_peaks.narrowPeak.bed
+    - 56391_sort_peaks.narrowPeak.bed
+    - 56670_sort_peaks.narrowPeak.bed
+    - 50254_sort_peaks.narrowPeak.bed
+    - 50045_sort_peaks.narrowPeak.bed
+    - 43396_sort_peaks.narrowPeak.bed
+    - 44310_sort_peaks.narrowPeak.bed
+    - 47323_sort_peaks.narrowPeak.bed
+    - 44576_sort_peaks.narrowPeak.bed
+    - 44581_sort_peaks.narrowPeak.bed
+    - 51737_sort_peaks.narrowPeak.bed
+    - 56390_sort_peaks.narrowPeak.bed
+    - 68239_sort_peaks.narrowPeak.bed
+    - 2910_sort_peaks.narrowPeak.bed
+    - 71108_sort_peaks.narrowPeak.bed
+    - 67745_sort_peaks.narrowPeak.bed

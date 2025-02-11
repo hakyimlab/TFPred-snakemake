@@ -247,7 +247,7 @@ rule compile_statistics:
         time="06:00:00"
     shell:
         """
-            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output.compiled_stats} --model_path {params.model_path} --weights_file_basename {params.compiled_weights_basename} --training_peaks_directory {params.training_peaks_directory} 
+            {params.rscript} workflow/src/compile_statistics.R --transcription_factors {params.input_f1} --tissues {params.input_f2} --path_pattern {params.path_pattern} --statistics_file {output.compiled_statistics} --model_path {params.model_path} --weights_file_basename {params.compiled_weights_basename} --training_peaks_directory {params.training_peaks_directory} 
         """
 
 # rule onsuccess_statistics:

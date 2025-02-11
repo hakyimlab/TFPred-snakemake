@@ -58,6 +58,7 @@ def slice_bins(locus, bin_size=128, nbins=896):
     elif len(out) == 2:
         if out[0] == out[1]:
             out[1] = out[1] + 1
+    #print(f"INFO - Bins to take: {out}")
     return(out)
     
 
@@ -74,6 +75,7 @@ def aggregate_and_collect_epigenome(locus, reference_epigenome_dir, pad_bins = 1
     enf_pred = extract_enformer_predictions(enfref_dir=reference_epigenome_dir, chr_num=chrom, locs=bins_coords)
     bins_to_take = slice_bins(locus)
     bins_to_aggregate = [bins_to_take[0] - pad_bins, bins_to_take[1] + pad_bins] # add one more bin upstream and downstrea
+    print(f"INFO - After padding bins with {pad_bins}: {bins_to_aggregate}")
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=RuntimeWarning)
         try:

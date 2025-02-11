@@ -155,26 +155,86 @@ pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_ind
         dplyr::rename(!!quo_name(cname) := class, !!quo_name(iname) := intensity)
 
     # creating bedfiles to merge with bedtools
-    mf <- positive_dt %>%
-        dplyr::select(chr, start, end) %>%
-        dplyr::arrange(factor(chr, levels = valid_chromosomes), start)
-    data.table::fwrite(mf, file = glue('{opt$sorted_bedfiles_directory}/peaks_{each_file_index}.sorted.bed'), row.names=F, col.names = F, quote=F, sep='\t')
+    # mf <- positive_dt %>%
+    #     dplyr::select(chr, start, end) %>%
+    #     dplyr::arrange(factor(chr, levels = valid_chromosomes), start)
+    # data.table::fwrite(mf, file = glue('{opt$sorted_bedfiles_directory}/peaks_{each_file_index}.sorted.bed'), row.names=F, col.names = F, quote=F, sep='\t')
     return(data)
 
 }, .progress=T)
 
-query_bed <- glue('{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.ALL.query.bed')
-
 ft_dt <- lapply(pmi_dt_list, function(x) x %>% dplyr::select(chr = 1, start = 2, end = 3, class = 4, intensity = 5)) %>% do.call('bind_rows', .) %>%
     dplyr::group_by(chr, start, end) %>%
-    dplyr::summarize(class = sum(class), intensity = mean(intensity)) %>%
-    dplyr::arrange(desc(intensity)) %>%
+    dplyr::summarize(class = sum(class), mean_intensity = mean(intensity)) %>%
     dplyr::filter(chr %in% valid_chromosomes) %>%
     dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
-    data.table::fwrite(file = query_bed, row.names=F, col.names = F, quote=F, sep='\t')
+    dplyr::arrange(desc(mean_intensity)) 
+
+    
+    # %>%
+    # data.table::fwrite(file = query_bed, row.names=F, col.names = F, quote=F, sep='\t')
+
+# what chromosomes to train on 
+test_chromosomes <- base::strsplit(opt$test_chromosomes, ',')[[1]]
+if(!all(test_chromosomes %in% ft_dt$chr)){
+    message(glue("WARNING - None of the test chromosomes are present in the data. Now trying for other chromosomes"))
+    test_chromosomes <- c('chr4', 'chr3')
+}
+
+# split into train and test batches
+train_dt <- ft_dt %>% dplyr::filter(!chr %in% test_chromosomes)
+train_dt <- train_dt[sample(nrow(train_dt)), ]
+test_dt <- ft_dt %>% dplyr::filter(chr %in% test_chromosomes) 
+test_dt <- test_dt[sample(nrow(test_dt)), ]
+# hist(train_dt$mean_intensity, breaks=100, main='Train data')
+
+# hist(test_dt$mean_intensity, breaks=100, main='Test data')
+
+# list.dt_samples <- lapply(list(train_dt, test_dt), function(each_dt){
+#     each_dt %>%
+#         dplyr::mutate(intensity_bins = cut(mean_intensity, breaks = 5, labels = FALSE)) %>%
+#         dplyr::group_by(intensity_bins) %>%
+#         dplyr::slice(sample(n(), min(400, n()))) %>%
+#         dplyr::ungroup()
+# })
+
+sampled.dt_train <- train_dt %>%
+    dplyr::mutate(bins = cut(mean_intensity, 
+        breaks = seq(min(.$mean_intensity), max(.$mean_intensity), length.out = 5), 
+        labels = FALSE, include.lowest = TRUE)) %>%
+    dplyr::group_by(bins) %>%
+    dplyr::summarize(n())
+
+# ==== train set =====
+cut_breaks <- seq(min(train_dt$mean_intensity), max(train_dt$mean_intensity), length.out = 10)
+cut_breaks <- c(-Inf, cut_breaks, Inf)
+bb <- cut(train_dt$mean_intensity, 
+        breaks = cut_breaks, 
+        labels = FALSE, include.lowest = TRUE)
+train_dt$bins <- bb
+sampled.dt_train <- train_dt %>% 
+    dplyr::group_by(bins) %>%
+    dplyr::slice(sample(n(), min(4000, n()))) %>%
+    dplyr::ungroup()
+
+# ==== test set =====
+cut_breaks <- seq(min(test_dt$mean_intensity), max(test_dt$mean_intensity), length.out = 10)
+cut_breaks <- c(-Inf, cut_breaks, Inf)
+bb <- cut(test_dt$mean_intensity, 
+        breaks = cut_breaks, 
+        labels = FALSE, include.lowest = TRUE)
+test_dt$bins <- bb
+sampled.dt_test <- test_dt %>% 
+    dplyr::group_by(bins) %>%
+    dplyr::slice(sample(n(), min(200, n()))) %>%
+    dplyr::ungroup()
+
+sampled.dt_test %>% dplyr::group_by(bins) %>% dplyr::summarize(n())
+sampled.dt_train %>% dplyr::group_by(bins) %>% dplyr::summarize(n())
 
 
 
+query_bed <- glue('{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.ALL.query.bed')
 
 ## get a union of all peaks
 set.seed(seed)
@@ -232,12 +292,6 @@ if(!file.exists(intersect_bed) || file.info(intersect_bed)$size <= 0){
     dt_merged <- dplyr::bind_rows(dt_pos, dt_neg)
     data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
 
-    test_chromosomes <- base::strsplit(opt$test_chromosomes, ',')[[1]]
-
-    if(!any(test_chromosomes %in% dt_pos$chr) || !any(test_chromosomes %in% dt_neg$chr)){
-        message(glue("WARNING - None of the test chromosomes are present in the positive set. Now trying for other chromosomes"))
-        test_chromosomes <- c('chr4', 'chr3')
-    }
 
     train_dt_pos <- dt_pos %>%
         dplyr::filter(!chr %in% test_chromosomes) %>%

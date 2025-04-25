@@ -7,19 +7,19 @@ usage:
   location: "/beagle3/haky/users/temi/projects/build_singularity/sif_files/tfxcan-v1.0.sif" # or the conda environment.yaml file
 # directories
 pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake'
-dataset: 'ENPACT_734' # give this dataset or run a name
-date: "2025-04-24" # this date will be used to create the directory structure
+dataset: 'ENPACT_AR' # give this dataset or run a name
+date: "2025-02-11" # this date will be used to create the directory structure
 
-scratch_dir: "/scratch/beagle3/temi" # large files will be saved here
+scratch_dir: "/scratch/midway3/temi" # large files will be saved here
 train_by_chromosome: # by default, we train and test on different chromosomes
   condition: True
   test: ['chr9', 'chr22'] # logically, training will the done on the other chromosomes
 
 # data information
 ## these are the peaks and motifs to be used in training the models
-models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train_retrain.yaml"
+models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.AR.yaml"
 ## these are the models to be trained
-models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train_retrain.tsv"
+models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.AR.tsv"
 # models_config: experiments/AR_Prostate/37092_sort_peaks.data.yaml
 # models_metadata: experiments/AR_Prostate/runs.tsv
 

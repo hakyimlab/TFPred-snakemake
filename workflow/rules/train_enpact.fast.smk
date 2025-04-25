@@ -16,50 +16,50 @@ def count_number_of_lines(wildcards):
         return(0)
     return(nlines)
 
-rule find_homer_motifs:
-    # input:
-    #     os.path.join(config["homer"]['motifs_database'], '{motif_file}')
-    output: 
-        #os.path.join(HOMERFILES_DIR, '{tf}', 'scanMotifsGenomeWide.{motif_file}.txt')
-        os.path.join(HOMERFILES_DIR, 'scannedMotifs', 'scanMotifsGenomeWide.{motif_file}.txt')
-    params:
-        run = run,
-        homer_cmd = HOMERSCAN, #os.path.join(config['homer']['dir'], 'bin', 'scanMotifGenomeWide.pl'),
-        genome = HOMERGENOME, #config['genome']['fasta'],
-        mfile = os.path.join(HOMERMOTIFSDATABASE, '{motif_file}'),
-        #ofile = lambda output: os.path.join(output, 'scanMotifsGenomeWide_{motif_file}.txt'),
-        jobname = '{motif_file}'
-    message: "working on {wildcards}" 
-    resources:
-        mem_mb = 10000
-    shell:
-        """
-        perl {params.homer_cmd} {params.mfile} {params.genome} > {output}
-        """
+# rule find_homer_motifs:
+#     # input:
+#     #     os.path.join(config["homer"]['motifs_database'], '{motif_file}')
+#     output: 
+#         #os.path.join(HOMERFILES_DIR, '{tf}', 'scanMotifsGenomeWide.{motif_file}.txt')
+#         os.path.join(HOMERFILES_DIR, 'scannedMotifs', 'scanMotifsGenomeWide.{motif_file}.txt')
+#     params:
+#         run = run,
+#         homer_cmd = HOMERSCAN, #os.path.join(config['homer']['dir'], 'bin', 'scanMotifGenomeWide.pl'),
+#         genome = HOMERGENOME, #config['genome']['fasta'],
+#         mfile = os.path.join(HOMERMOTIFSDATABASE, '{motif_file}'),
+#         #ofile = lambda output: os.path.join(output, 'scanMotifsGenomeWide_{motif_file}.txt'),
+#         jobname = '{motif_file}'
+#     message: "working on {wildcards}" 
+#     resources:
+#         mem_mb = 1000
+#     shell:
+#         """
+#         perl {params.homer_cmd} {params.mfile} {params.genome} > {output}
+#         """
 
-rule merge_homer_motifs:
-    input:
-        #gatherMotifFiles
-        #lambda wildcards: expand(os.path.join(HOMERFILES_DIR, wildcards.tf, 'scanMotifsGenomeWide.{motif_file}.txt'), tf = set(homer_motifs_dict.keys()), motif_file = homer_motifs_dict[wildcards.tf])
-        lambda wildcards: expand(os.path.join(HOMERFILES_DIR, 'scannedMotifs', 'scanMotifsGenomeWide.{motif_file}.txt'), tf = set(homer_motifs_dict.keys()), motif_file = homer_motifs_dict[wildcards.tf])
-    output:
-        os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt')
-    message: "working on {input}" 
-    params:
-        jobname = '{tf}',
-        run = run,
-    resources:
-        mem_mb = 10000
-    run:
-        with open(output[0], 'w') as outfile:
-            for fname in input:
-                with open(fname) as infile:
-                    for i, line in enumerate(infile):
-                        outfile.write(line)
+# rule merge_homer_motifs:
+#     input:
+#         #gatherMotifFiles
+#         #lambda wildcards: expand(os.path.join(HOMERFILES_DIR, wildcards.tf, 'scanMotifsGenomeWide.{motif_file}.txt'), tf = set(homer_motifs_dict.keys()), motif_file = homer_motifs_dict[wildcards.tf])
+#         lambda wildcards: expand(os.path.join(HOMERFILES_DIR, 'scannedMotifs', 'scanMotifsGenomeWide.{motif_file}.txt'), tf = set(homer_motifs_dict.keys()), motif_file = homer_motifs_dict[wildcards.tf])
+#     output:
+#         os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt')
+#     message: "working on {input}" 
+#     params:
+#         jobname = '{tf}',
+#         run = run,
+#     resources:
+#         mem_mb = 10000
+#     run:
+#         with open(output[0], 'w') as outfile:
+#             for fname in input:
+#                 with open(fname) as infile:
+#                     for i, line in enumerate(infile):
+#                         outfile.write(line)
 
 
 rule create_training_set:
-    input: rules.merge_homer_motifs.output
+    input: os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt') #rules.merge_homer_motifs.output
     #     lambda wildcards: os.path.join(HOMERFILES_DIR, wildcards.tf, 'merged_motif_file.txt')
     output:
         #directory(PREDICTORS_DIR)
@@ -79,7 +79,7 @@ rule create_training_set:
         # f2=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.ground_truth.txt'),
         f3=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.info.txt.gz'),
         f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt'),
-        mfile = rules.merge_homer_motifs.output,
+        mfile = os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt'),
         genome_sizes = config['genome']['chrom_sizes']
     message: "working on {wildcards}"
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.create_training_set.tsv")
@@ -208,7 +208,7 @@ rule evaluate_Enpact:
         basename=os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}'),
         nlines = count_number_of_lines
     resources:
-        mem_mb= 100000,
+        mem_mb= 4000,
         partition="caslake"
     shell:
         """

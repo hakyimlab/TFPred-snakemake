@@ -33,6 +33,7 @@ library(data.table)
 library(tidyverse)
 library(GenomicRanges)
 library(plyranges)
+library(rtracklayer)
 
 
 #  /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor AR --tissue MammaryGland --predicted_motif_file data/homer_instances/AR/merged_motif_file.txt --sorted_bedfiles_directory data/cistrome_2024-06-08/sortedbeds/AR_MammaryGland --bedlinks_directory /project/haky/data/TFXcan/cistrome/raw/human_factor' --predictors_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.predictors.txt --ground_truth_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.ground_truth.txt --info_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.info.txt.gz --peaks_files 36845_sort_peaks.narrowPeak.bed,57275_sort_peaks.narrowPeak.bed,57276_sort_peaks.narrowPeak.bed,57277_sort_peaks.narrowPeak.bed,57278_sort_peaks.narrowPeak.bed,57279_sort_peaks.narrowPeak.bed,57280_sort_peaks.narrowPeak.bed --train_by_chromosome chr9,chr22 --summary_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.summary.txt; sleep 5
@@ -86,8 +87,6 @@ tf_motifs_granges <- tf_motifs_granges[seqnames(tf_motifs_granges) %in% valid_ch
 tf_motifs_granges <- GenomicRanges::reduce(tf_motifs_granges)
 tf_motifs_granges <- keepSeqlevels(tf_motifs_granges, paste0("chr", c(1:22)), pruning.mode="coarse")
 
-
-
 # check that all of these are available in the db
 # TF_files <- list.files(glue('{opt$bedlinks_directory}'), full.names=T)
 
@@ -107,6 +106,89 @@ peaks_files <- sapply(peaks_files, function(each_file){
 # }
 
 peak_files_paths <- peaks_files[file.info(peaks_files)$size != 0]
+
+
+cnames <- c('chr', 'start', 'end', 'name', 'score', 'strand', 'signalValue', 'pValue', 'qValue', 'peakOffset')
+
+afile <- data.table::fread(each_file, col.names = cnames) %>%
+        dplyr::distinct(V1, V2, .keep_all=T)
+
+peak_grangeslist <- purrr::map(peak_files_paths, function(each_file){
+    data.table::fread(each_file) %>%
+        dplyr::distinct(V1, V2, .keep_all=T) %>%
+        dplyr::select(chr=V1, start=V2, end=V3, intensity=V7, peakOffset=V10) %>% 
+        dplyr::mutate(summitLocation = start + peakOffset, motifStart = start + peakOffset - 15, motifEnd = start + peakOffset + 15) %>% # select the chr, start and end columns
+        with(., GRanges(chr, IRanges(motifStart-1, motifEnd), strand='+', score=intensity, peakOffset=peakOffset)) %>%
+        plyranges::filter(seqnames %in% valid_chromosomes)
+}) #%>% GenomicRanges::GRangesList()
+
+GenomicRanges::pintersect(peak_grangeslist)
+
+GenomicRanges::reduce(peak_grangeslist[[1]], min.gapwidth = -14)
+    
+peak_grangeslist %>%
+    purrr::imap(~rtracklayer::export.bed(.x, con = glue::glue('/beagle3/haky/users/temi/projects/TFPred-snakemake/misc/{.y}')))
+
+cmd <- glue("bedtools intersect -c -a {query_bed} -g {opt$sorted_chrom_sizes} -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
+
+GenomicRanges::reduce()
+
+
+mergeOverlapping <- function(x, y, minfrac=0.8) {
+    x <- GenomicRanges::granges(x, use.mcols=TRUE)
+    y <- GenomicRanges::granges(y, use.mcols=TRUE)
+
+    # for those where there is an overlap, how much overlap do you have?
+    hits <- IRanges::findOverlaps(x, y) # why do you need to find overlaps first?
+    xhits <- x[queryHits(hits)]
+    yhits <- y[subjectHits(hits)]
+    frac <- width(pintersect(xhits, yhits)) / pmin(width(xhits), width(yhits))
+    # choose the maximum frac for each xhit; these ones are going to be merged.
+    merge <- frac >= minfrac
+    # average the scores
+    score <- (mcols(xhits)$score + mcols(yhits)$score) / 2
+    gr <- c(xhits[merge], yhits[merge])
+    grr <- reduce(gr, with.revmap = TRUE)
+
+    mcols(grr) <- do.call(rbind,
+                    lapply(mcols(grr)$revmap, function(i) {
+                        score = mean(mcols(gr)$score[ i ]) #, collapse = ",")
+                    }))
+    # change v1 to score
+    mcols(grr)$score <- mcols(grr)$V1
+    ngrr <- c(xhits[!merge], yhits[!merge])
+    #list(grr, ngrr)
+
+    return(list(mcols(grr)$score, mcols(ngrr)$score))
+
+
+
+    # for those where there is no overlap at all
+    # xnhits <- x[-queryHits(hits)]
+    # ynhits <- y[-subjectHits(hits)]
+    # # merge <- frac >= minfrac
+
+    # return(list(xhits[merge], yhits[merge]))
+    #c(xhits[merge], yhits[merge], xnhits, ynhits)
+}
+
+gh <- mergeOverlapping(peak_grangeslist[[1]], peak_grangeslist[[2]]) 
+hist(gh[[1]], breaks=100)
+hist(gh[[2]], breaks=100)
+
+
+
+cov.peak_grangeslist <- IRanges::coverage(peak_grangeslist)
+slice.peak_grangeslist <- IRanges::slice(cov.peak_grangeslist, lower=2, rangesOnly=T)
+covered.peak_grangeslist <- GenomicRanges::GRanges(slice.peak_grangeslist) %>% IRanges::reduce()
+
+
+each_file <- peak_files_paths[each_file_index]
+dt <- data.table::fread(each_file) %>%
+    dplyr::distinct(V1, V2, .keep_all=T) %>%
+    dplyr::select(chr=V1, start=V2, end=V3, intensity=V7, peakOffset=V10) %>% # select the chr, start and end columns
+    with(., GRanges(chr, IRanges(start, end), strand='+', intensity=intensity, peakOffset=peakOffset))
+
 
 if(length(peak_files_paths) == 0){
     print(glue('INFO - There are no valid peaks data for {opt$transcription_factor} in {opt$tissue}'))
@@ -168,7 +250,8 @@ ft_dt <- lapply(pmi_dt_list, function(x) x %>% dplyr::select(chr = 1, start = 2,
     dplyr::summarize(class = sum(class), mean_intensity = mean(intensity)) %>%
     dplyr::filter(chr %in% valid_chromosomes) %>%
     dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
-    dplyr::arrange(desc(mean_intensity)) 
+    dplyr::arrange(desc(mean_intensity)) %>%
+    dplyr::filter(!is.na(mean_intensity), !is.null(mean_intensity))
 
     
     # %>%
@@ -198,224 +281,267 @@ test_dt <- test_dt[sample(nrow(test_dt)), ]
 #         dplyr::ungroup()
 # })
 
-sampled.dt_train <- train_dt %>%
-    dplyr::mutate(bins = cut(mean_intensity, 
-        breaks = seq(min(.$mean_intensity), max(.$mean_intensity), length.out = 5), 
-        labels = FALSE, include.lowest = TRUE)) %>%
-    dplyr::group_by(bins) %>%
-    dplyr::summarize(n())
+# sampled.dt_train <- train_dt %>%
+#     dplyr::mutate(bins = cut(mean_intensity, 
+#         breaks = seq(min(.$mean_intensity), max(.$mean_intensity), length.out = 5), 
+#         labels = FALSE, include.lowest = TRUE)) %>%
+#     dplyr::group_by(bins) %>%
+#     dplyr::summarize(n())
 
 # ==== train set =====
 cut_breaks <- seq(min(train_dt$mean_intensity), max(train_dt$mean_intensity), length.out = 10)
-cut_breaks <- c(-Inf, cut_breaks, Inf)
+cut_breaks <- c(-Inf, cut_breaks)
 bb <- cut(train_dt$mean_intensity, 
         breaks = cut_breaks, 
         labels = FALSE, include.lowest = TRUE)
 train_dt$bins <- bb
+train_dt$split <- 'train'
 sampled.dt_train <- train_dt %>% 
     dplyr::group_by(bins) %>%
     dplyr::slice(sample(n(), min(4000, n()))) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    dplyr::mutate(split = 'train')
 
 # ==== test set =====
-cut_breaks <- seq(min(test_dt$mean_intensity), max(test_dt$mean_intensity), length.out = 10)
-cut_breaks <- c(-Inf, cut_breaks, Inf)
+# cut_breaks <- seq(min(test_dt$mean_intensity), max(test_dt$mean_intensity), length.out = 10)
+# cut_breaks <- c(-Inf, cut_breaks, Inf)
+# include the maximum value
+# cut_breaks_test <- replace(cut_breaks, length(cut_breaks), max(test_dt$mean_intensity))
 bb <- cut(test_dt$mean_intensity, 
         breaks = cut_breaks, 
         labels = FALSE, include.lowest = TRUE)
 test_dt$bins <- bb
+test_dt$split <- 'test'
 sampled.dt_test <- test_dt %>% 
     dplyr::group_by(bins) %>%
     dplyr::slice(sample(n(), min(200, n()))) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    dplyr::mutate(split = 'test')
 
-sampled.dt_test %>% dplyr::group_by(bins) %>% dplyr::summarize(n())
-sampled.dt_train %>% dplyr::group_by(bins) %>% dplyr::summarize(n())
+test_stats <- sampled.dt_test %>% dplyr::group_by(bins) %>% dplyr::summarize(n())
+train_stats <- sampled.dt_train %>% dplyr::group_by(bins) %>% dplyr::summarize(n())
 
+dt_merged <- dplyr::bind_rows(sampled.dt_train, sampled.dt_test) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(locus = paste(chr, start, end, sep = '_'))
+data.table::fwrite(dt_merged, glue('{opt$ground_truth_file}'), row.names=F, quote=F, col.names=T, sep='\t')
 
+# the full data
+ft_dt <- dplyr::bind_rows(train_dt, test_dt)
+data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
 
-query_bed <- glue('{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.ALL.query.bed')
+# the motifs
+dt_merged %>%
+    dplyr::select(chr, start, end) %>%
+    dplyr::mutate(motif = paste(chr, start, end, sep = '_')) %>%
+    dplyr::select(motif) %>%
+    data.table::fwrite(., glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')
+
+# generate summary statistics ======
+if(!file.exists(opt$summary_file)){
+    if(!file.exists(dirname(opt$summary_file))){
+        if(!dir.exists(dirname(opt$summary_file))){
+            dir.create(dirname(opt$summary_file), recursive = TRUE)
+        }
+    }
+    diagfile <- file(opt$summary_file, open = "a")
+    cat("## Training-test binning binding sites distribution", file = diagfile, sep = '\n')
+    cat("#### test split binding sites distribution", file = diagfile, sep = '\n')
+    capture.output(test_stats, file = diagfile, sep = '\n')
+    cat("#### train split binding sites distribution", file = diagfile, sep = '\n')
+    capture.output(train_stats, file = diagfile, sep = '\n')
+    cat("#### number of test sites", file = diagfile, sep = '\n')
+    capture.output(nrow(sampled.dt_test), file = diagfile, sep = '\n')
+    cat("#### number of train sites", file = diagfile, sep = '\n')
+    capture.output(nrow(sampled.dt_train), file = diagfile, sep = '\n')
+} else {
+    diagfile <- NULL
+}
+
+if(!is.null(opt$diagnostics_file)){
+    close(diagfile)
+}
+
+#query_bed <- glue('{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.ALL.query.bed')
 
 ## get a union of all peaks
-set.seed(seed)
-purrr::map(pmi_dt_list, function(each_dt){
-    each_dt %>%
-        filter(.[[4]] == 1) %>%
-        dplyr::select(chr, start, end) 
-}, .progress = T) %>%
-    do.call('rbind', .) %>%
-    dplyr::distinct(chr, start, end, .keep_all = FALSE) %>%
-    dplyr::filter(chr %in% valid_chromosomes) %>%
-    dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
-    data.table::fwrite(file = query_bed, row.names=F, col.names = F, quote=F, sep='\t')
+# set.seed(seed)
+# purrr::map(pmi_dt_list, function(each_dt){
+#     each_dt %>%
+#         filter(.[[4]] == 1) %>%
+#         dplyr::select(chr, start, end) 
+# }, .progress = T) %>%
+#     do.call('rbind', .) %>%
+#     dplyr::distinct(chr, start, end, .keep_all = FALSE) %>%
+#     dplyr::filter(chr %in% valid_chromosomes) %>%
+#     dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
+#     data.table::fwrite(file = query_bed, row.names=F, col.names = F, quote=F, sep='\t')
 #
-intersect_bed <- glue("{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.intersect.bed")
+# intersect_bed <- glue("{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.intersect.bed")
 
 # if(!is.null(opt$dcids)){
 #     pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
 #     pfiles <- pfiles[grepl(paste0(dcid_samples, collapse = '|'), pfiles)]
 # } else {
-pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '^peaks_\\d.sorted.bed', full.names = T)
+# pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '^peaks_\\d.sorted.bed', full.names = T)
 
 #pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
-cmd <- glue("bedtools intersect -c -a {query_bed} -g {opt$sorted_chrom_sizes} -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
-system(cmd)
-ptm <- proc.time()
-message(glue('INFO - Time to merge files: {as.vector(proc.time() - ptm)[1]} seconds'))
+# cmd <- glue("bedtools intersect -c -a {query_bed} -g {opt$sorted_chrom_sizes} -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
+# system(cmd)
+# ptm <- proc.time()
+# message(glue('INFO - Time to merge files: {as.vector(proc.time() - ptm)[1]} seconds'))
 
 
-if(!file.exists(intersect_bed) || file.info(intersect_bed)$size <= 0){
-    sapply(list(opt$ground_truth_file, opt$info_file,opt$predictors_file, opt$summary_file), file.create)
-    message(glue("WARNING - There are no peaks present after bedtools intersect."))
-} else if(file.exists(intersect_bed) && file.info(intersect_bed)$size != 0) {
+# if(!file.exists(intersect_bed) || file.info(intersect_bed)$size <= 0){
+#     sapply(list(opt$ground_truth_file, opt$info_file,opt$predictors_file, opt$summary_file), file.create)
+#     message(glue("WARNING - There are no peaks present after bedtools intersect."))
+# } else if(file.exists(intersect_bed) && file.info(intersect_bed)$size != 0) {
 
-    dt_pos <- data.table::fread(intersect_bed) %>%
-        setNames(c('chr', 'start', 'end', 'binding_counts')) %>%
-        dplyr::filter(binding_counts > 0) %>%
-        dplyr::mutate(binding_class = 1)
+#     dt_pos <- data.table::fread(intersect_bed) %>%
+#         setNames(c('chr', 'start', 'end', 'binding_counts')) %>%
+#         dplyr::filter(binding_counts > 0) %>%
+#         dplyr::mutate(binding_class = 1)
 
-    if(nrow(dt_pos) < opt$peaks_counts_threshold){
-        message(glue("WARNING - There are less than {opt$peaks_counts_threshold} peaks after intersecting with motif instances. No model will be trained for {opt$transcription_factor}_{opt$tissue}. The peaks that are intersected will still be written out, but there will be no {opt$transcription_factor}_{opt$tissue}.predictors.txt file"))
-    }
+#     if(nrow(dt_pos) < opt$peaks_counts_threshold){
+#         message(glue("WARNING - There are less than {opt$peaks_counts_threshold} peaks after intersecting with motif instances. No model will be trained for {opt$transcription_factor}_{opt$tissue}. The peaks that are intersected will still be written out, but there will be no {opt$transcription_factor}_{opt$tissue}.predictors.txt file"))
+#     }
 
-    # select negatives and merge
-    dt_neg <- purrr::map(pmi_dt_list, function(each_dt){
-        each_dt %>%
-            filter(.[[4]] == 0) %>%
-            dplyr::select(chr, start, end) 
-    }) %>%
-        do.call('rbind', .) %>%
-        dplyr::filter(chr %in% valid_chromosomes) %>%
-        dplyr::distinct(chr, start, end, .keep_all = FALSE) %>%
-        dplyr::mutate(binding_class = 0, binding_counts = 0)
+#     # select negatives and merge
+#     dt_neg <- purrr::map(pmi_dt_list, function(each_dt){
+#         each_dt %>%
+#             filter(.[[4]] == 0) %>%
+#             dplyr::select(chr, start, end) 
+#     }) %>%
+#         do.call('rbind', .) %>%
+#         dplyr::filter(chr %in% valid_chromosomes) %>%
+#         dplyr::distinct(chr, start, end, .keep_all = FALSE) %>%
+#         dplyr::mutate(binding_class = 0, binding_counts = 0)
 
-    dt_merged <- dplyr::bind_rows(dt_pos, dt_neg)
-    data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
-
-
-    train_dt_pos <- dt_pos %>%
-        dplyr::filter(!chr %in% test_chromosomes) %>%
-        dplyr::arrange(desc(binding_counts)) 
-
-    test_dt_pos <- dt_pos %>%
-        dplyr::filter(chr %in% test_chromosomes) %>%
-        dplyr::arrange(desc(binding_counts))
-
-    # select training data ===============
-    if(nrow(train_dt_pos) < (opt$num_predictors/2)){
-        npositives <- nrow(train_dt_pos)
-        nnegatives <- npositives
-    } else {
-        npositives <- ceiling(opt$num_predictors/2)
-        nnegatives <- npositives
-    }
-
-    # select test data
-    if(nrow(test_dt_pos) < 1000){
-        tpositives <- nrow(test_dt_pos)
-        tnegatives <- tpositives
-    } else {
-        tpositives <- 1000
-        tnegatives <- tpositives
-    }
-
-    ### training by splitting into chromosomes ###
-    trp_data <- train_dt_pos %>%
-        dplyr::slice_head(n=npositives)
-
-    tep_data <- test_dt_pos %>%
-        dplyr::slice_head(n=tpositives)
-
-    trn_data <- dt_neg %>%
-        dplyr::filter(!chr %in% test_chromosomes) %>%
-        dplyr::slice_sample(n=nnegatives)
-
-    ten_data <- dt_neg %>%
-        dplyr::filter(chr %in% test_chromosomes) %>%
-        dplyr::slice_sample(n=tnegatives)
-
-    set.seed(seed)
-    train_data <- rbind(trp_data, trn_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'train')
-    set.seed(seed)
-    test_data <- rbind(tep_data, ten_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'test')
-
-    set.seed(seed)
-    dt <- rbind(train_data, test_data) %>%
-        as.data.frame() %>%
-        tidyr::unite('locus', c(chr, start, end), remove=T) %>% 
-        as.data.table() %>%
-        dplyr::sample_frac(size=1)
-
-    print(glue('INFO - There are {nrow(dt)} motifs to be trained and tested on after filtering'))
-    print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(dt$binding_class), collapse=' & ')} respectively"))
+#     dt_merged <- dplyr::bind_rows(dt_pos, dt_neg)
+#     data.table::fwrite(dt_merged, glue('{opt$info_file}'), row.names=F, quote=F, col.names=T, compress='gzip', sep='\t')
 
 
-    ###
-    print(glue('INFO - Writing out files...'))
-    if(nrow(dt_pos) >= opt$peaks_counts_threshold){
-        data.table::fwrite(as.data.frame(dt[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')
-    } else {
-        file.create(opt$predictors_file)
-    }
-    data.table::fwrite(dt, glue('{opt$ground_truth_file}'), row.names=F, quote=F, col.names=T, sep='\t')
+#     train_dt_pos <- dt_pos %>%
+#         dplyr::filter(!chr %in% test_chromosomes) %>%
+#         dplyr::arrange(desc(binding_counts)) 
+
+#     test_dt_pos <- dt_pos %>%
+#         dplyr::filter(chr %in% test_chromosomes) %>%
+#         dplyr::arrange(desc(binding_counts))
+
+#     # select training data ===============
+#     if(nrow(train_dt_pos) < (opt$num_predictors/2)){
+#         npositives <- nrow(train_dt_pos)
+#         nnegatives <- npositives
+#     } else {
+#         npositives <- ceiling(opt$num_predictors/2)
+#         nnegatives <- npositives
+#     }
+
+#     # select test data
+#     if(nrow(test_dt_pos) < 1000){
+#         tpositives <- nrow(test_dt_pos)
+#         tnegatives <- tpositives
+#     } else {
+#         tpositives <- 1000
+#         tnegatives <- tpositives
+#     }
+
+#     ### training by splitting into chromosomes ###
+#     trp_data <- train_dt_pos %>%
+#         dplyr::slice_head(n=npositives)
+
+#     tep_data <- test_dt_pos %>%
+#         dplyr::slice_head(n=tpositives)
+
+#     trn_data <- dt_neg %>%
+#         dplyr::filter(!chr %in% test_chromosomes) %>%
+#         dplyr::slice_sample(n=nnegatives)
+
+#     ten_data <- dt_neg %>%
+#         dplyr::filter(chr %in% test_chromosomes) %>%
+#         dplyr::slice_sample(n=tnegatives)
+
+#     set.seed(seed)
+#     train_data <- rbind(trp_data, trn_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'train')
+#     set.seed(seed)
+#     test_data <- rbind(tep_data, ten_data) %>% dplyr::sample_frac(size = 1) %>% dplyr::mutate(split = 'test')
+
+#     set.seed(seed)
+#     dt <- rbind(train_data, test_data) %>%
+#         as.data.frame() %>%
+#         tidyr::unite('locus', c(chr, start, end), remove=T) %>% 
+#         as.data.table() %>%
+#         dplyr::sample_frac(size=1)
+
+#     print(glue('INFO - There are {nrow(dt)} motifs to be trained and tested on after filtering'))
+#     print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(dt$binding_class), collapse=' & ')} respectively"))
 
 
-    #### statistics
-    train_test_split <- dt$split %>% table()
-    train_test_class <- dt$binding_class %>% table()
-
-    train_class <- train_data %>%
-        dplyr::group_by(binding_class, chr) %>%
-        dplyr::summarise(n_loci = n()) %>%
-        tidyr::pivot_wider(id_cols = binding_class, names_from = chr, values_from = n_loci)
-
-    test_class <- test_data %>%
-        dplyr::group_by(binding_class, chr) %>%
-        dplyr::summarise(n_loci = n()) %>%
-        tidyr::pivot_wider(id_cols = binding_class, names_from = chr, values_from = n_loci)
+#     ###
+#     print(glue('INFO - Writing out files...'))
+#     if(nrow(dt_pos) >= opt$peaks_counts_threshold){
+#         data.table::fwrite(as.data.frame(dt[, 1]), glue('{opt$predictors_file}'), row.names=F, quote=F, col.names=F, sep='\t')
+#     } else {
+#         file.create(opt$predictors_file)
+#     }
+#     data.table::fwrite(dt, glue('{opt$ground_truth_file}'), row.names=F, quote=F, col.names=T, sep='\t')
 
 
-    train_counts <- train_data %>%
-        dplyr::group_by(binding_counts, chr) %>%
-        dplyr::summarise(n_loci = n()) %>%
-        tidyr::pivot_wider(id_cols = binding_counts, names_from = chr, values_from = n_loci)
+#     #### statistics
+#     train_test_split <- dt$split %>% table()
+#     train_test_class <- dt$binding_class %>% table()
 
-    test_counts <- test_data %>%
-        dplyr::group_by(binding_counts, chr) %>%
-        dplyr::summarise(n_loci = n()) %>%
-        tidyr::pivot_wider(id_cols = binding_counts, names_from = chr, values_from = n_loci)
+#     train_class <- train_data %>%
+#         dplyr::group_by(binding_class, chr) %>%
+#         dplyr::summarise(n_loci = n()) %>%
+#         tidyr::pivot_wider(id_cols = binding_class, names_from = chr, values_from = n_loci)
 
-    # generate summary statistics ======
-    if(!file.exists(opt$summary_file)){
-        if(!file.exists(dirname(opt$summary_file))){
-            if(!dir.exists(dirname(opt$summary_file))){
-                dir.create(dirname(opt$summary_file), recursive = TRUE)
-            }
-        }
+#     test_class <- test_data %>%
+#         dplyr::group_by(binding_class, chr) %>%
+#         dplyr::summarise(n_loci = n()) %>%
+#         tidyr::pivot_wider(id_cols = binding_class, names_from = chr, values_from = n_loci)
 
-        diagfile <- file(opt$summary_file, open = "a")
-        cat("## Training binding sites distribution", file = diagfile, sep = '\n')
-        cat("#### train-test split (split) binding sites distribution", file = diagfile, sep = '\n')
-        capture.output(train_test_split, file = diagfile, sep = '\n')
-        cat("#### train-test split (0s, 1s) binding sites distribution", file = diagfile, sep = '\n')
-        capture.output(train_test_class, file = diagfile, sep = '\n')
-        cat("#### training binding class distribution", file = diagfile, sep = '\n')
-        capture.output(train_class, file = diagfile, sep = '\n')
-        cat("#### test binding class distribution", file = diagfile, sep = '\n')
-        capture.output(test_class, file = diagfile, sep = '\n')
-        cat("#### training binding counts distribution", file = diagfile, sep = '\n')
-        capture.output(train_counts, file = diagfile, sep = '\n')
-        cat("#### test binding counts distribution", file = diagfile, sep = '\n')
-        capture.output(test_counts, file = diagfile, sep = '\n')
 
-    } else {
-        diagfile <- NULL
-    }
+#     train_counts <- train_data %>%
+#         dplyr::group_by(binding_counts, chr) %>%
+#         dplyr::summarise(n_loci = n()) %>%
+#         tidyr::pivot_wider(id_cols = binding_counts, names_from = chr, values_from = n_loci)
 
-    if(!is.null(opt$diagnostics_file)){
-        close(diagfile)
-    }
-}
+#     test_counts <- test_data %>%
+#         dplyr::group_by(binding_counts, chr) %>%
+#         dplyr::summarise(n_loci = n()) %>%
+#         tidyr::pivot_wider(id_cols = binding_counts, names_from = chr, values_from = n_loci)
+
+#     # generate summary statistics ======
+#     if(!file.exists(opt$summary_file)){
+#         if(!file.exists(dirname(opt$summary_file))){
+#             if(!dir.exists(dirname(opt$summary_file))){
+#                 dir.create(dirname(opt$summary_file), recursive = TRUE)
+#             }
+#         }
+
+#         diagfile <- file(opt$summary_file, open = "a")
+#         cat("## Training binding sites distribution", file = diagfile, sep = '\n')
+#         cat("#### train-test split (split) binding sites distribution", file = diagfile, sep = '\n')
+#         capture.output(train_test_split, file = diagfile, sep = '\n')
+#         cat("#### train-test split (0s, 1s) binding sites distribution", file = diagfile, sep = '\n')
+#         capture.output(train_test_class, file = diagfile, sep = '\n')
+#         cat("#### training binding class distribution", file = diagfile, sep = '\n')
+#         capture.output(train_class, file = diagfile, sep = '\n')
+#         cat("#### test binding class distribution", file = diagfile, sep = '\n')
+#         capture.output(test_class, file = diagfile, sep = '\n')
+#         cat("#### training binding counts distribution", file = diagfile, sep = '\n')
+#         capture.output(train_counts, file = diagfile, sep = '\n')
+#         cat("#### test binding counts distribution", file = diagfile, sep = '\n')
+#         capture.output(test_counts, file = diagfile, sep = '\n')
+
+#     } else {
+#         diagfile <- NULL
+#     }
+
+#     if(!is.null(opt$diagnostics_file)){
+#         close(diagfile)
+#     }
+# }
 
 
 

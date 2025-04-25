@@ -22,6 +22,14 @@ library(glue)
 library(tidyverse)
 library(data.table)
 
+# opt <- list()
+
+# opt$data_file <- 'data/ENPACT_734_2025-04-24/aggregation_folder/ENPACT_734_aggByCollect_NEUROG2_FetalLung.csv.gz' 
+# opt$ground_truth_file <-'data/ENPACT_734_2025-04-24/predictor_files/NEUROG2_FetalLung.ground_truth.txt'
+# opt$aggregation_method <- 'aggByCollect' 
+
+# --train_prepared_file data/ENPACT_734_2025-04-24/aggregation_folder/train_ENPACT_734_2025-04-24_aggByCollect.NEUROG2_FetalLung.prepared.csv.gz --test_prepared_file data/ENPACT_734_2025-04-24/aggregation_folder/test_ENPACT_734_2025-04-24_aggByCollect.NEUROG2_FetalLung.prepared.csv.gz
+
 ground_truth <- data.table::fread(opt$ground_truth_file) %>%
   dplyr::select(locus, binding_class, binding_counts, split) #%>% dplyr::rename(locus=V1, peakActivityScore=V2)
 

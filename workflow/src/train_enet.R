@@ -44,9 +44,10 @@ dt_train <- dt_train[cc, ]
 # split the data
 X_train <- dt_train[, -c(1,2,3)] |> as.matrix()
 y_train <- dt_train[, c(1,2,3)] |> as.data.frame()
-vbc <- y_train$binding_counts
+binding_counts <- y_train$binding_counts
+binding_class <- ifelse(y_train$binding_class > 0, 1, 0)
 #nbc <- (vbc - min(vbc))/(max(vbc) - min(vbc)) # min-max normalization
-nbc <- log10(1 + y_train$binding_counts)
+# nbc <- log10(1 + y_train$mean_intensity)
 
 cl <- 12 #parallel::makeCluster(5)
 print(glue('INFO - Found {parallel::detectCores()} cores but using {cl}'))
@@ -68,7 +69,7 @@ parallel::mclapply(train_methods, function(each_method){
     if(each_method == 'linear'){
 
         cv_model <- tryCatch({
-            glmnet::cv.glmnet(x=X_train, y=nbc, family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds)
+            glmnet::cv.glmnet(x=X_train, y=binding_counts, family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds)
         }, error = function(e){
             print(glue('ERROR - {e}'))
             return(NULL)
@@ -77,7 +78,7 @@ parallel::mclapply(train_methods, function(each_method){
     } else if (each_method == 'logistic'){
 
         cv_model <- tryCatch({
-            glmnet::cv.glmnet(x=X_train, y=y_train$binding_class, family = "binomial", type.measure = "auc", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds, trace.it=F)
+            glmnet::cv.glmnet(x=X_train, y=binding_class, family = "binomial", type.measure = "auc", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds, trace.it=F)
         }, error = function(e){
             print(glue('ERROR - {e}'))
             return(NULL)

@@ -29,6 +29,10 @@ library(tidyverse)
 #saveRDS(newx_list, file=opt$eval_output)
 
 models <- list()
+
+# if(is.null(opt$linear_model) || is.null(opt$logistic_model)){
+#     stop('ERROR - You need to provide both linear and logistic models')
+# }
 models[['linear']] <- readRDS(opt$linear_model)
 models[['logistic']] <- readRDS(opt$logistic_model)
 
@@ -43,7 +47,7 @@ for(i in seq_along(models)){
         df <- mat_dt[, c(1:3)] |> as.data.frame()
         df$TFPred_score <- link_pred
         df$probability <- response_pred
-        colnames(df) <- c('locus', 'binding_class', 'binding_count', 'TFPred_score', 'probability')
+        colnames(df) <- c('locus', 'binding_class', 'binding_counts', 'TFPred_score', 'probability')
         return(df)
     }, .progress=T)
 

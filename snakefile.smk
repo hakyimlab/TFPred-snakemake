@@ -146,8 +146,8 @@ onstart:
 
 rule all:
     input:
-        motifs_unavailable,
-        expand(os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt'), tf = set(TF_list)),
+        #motifs_unavailable,
+        #expand(os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt'), tf = set(TF_list)),
         expand(os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.predictors.txt'), zip, tf = TF_list, tissue=tissue_list),
         expand(os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.ground_truth.txt'), zip, tf = TF_list, tissue=tissue_list),
         expand(os.path.join(AGGREGATION_DIR, f'{runname}_{config["enformer"]["aggtype"]}_{{tf}}_{{tissue}}.csv.gz'), zip, tf=TF_list, tissue=tissue_list),

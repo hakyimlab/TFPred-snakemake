@@ -18,20 +18,22 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list=option_list))
 
 library(data.table)
-library(pROC)
+# library(pROC)
 library(stringr)
 library(foreach)
 library(glmnet)
 library(glue)
 
+# /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/compile_statistics.R --transcription_factors AR,AR,AR,AR --tissues Breast,EmbryonicKidney,MammaryGland,Prostate --path_pattern data/ENPACT_AR_2025-02-11/evaluation/{1}_{2}_2025-02-11.linear.{3}_eval.txt.gz --statistics_file data/ENPACT_AR_2025-02-11/statistics/ENPACT_AR_2025-02-11.compiled_stats.txt --model_path data/ENPACT_AR_2025-02-11/models/{1}_{2}/{1}_{2}_2025-02-11.linear.rds --weights_file_basename data/ENPACT_AR_2025-02-11/statistics/ENPACT_AR_2025-02-11.compiled_weights --training_peaks_directory data/ENPACT_AR_2025-02-11/sortedbeds
+
 # NFYA_BoneMarrow
 # opt <- list()
-# opt$transcription_factors <- 'AR,AR,CTCF,SREBF2,NFYA,ATF3'
-# opt$tissues <- 'Prostate,Breast,Breast,Blood,BoneMarrow,Blood'
-# opt$path_pattern <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/evaluation/{1}_{2}_2024-07-26.logistic.{3}_eval.txt.gz'
-# opt$statistics_file <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/misc/evaluation_statistics.txt'
-# opt$model_path <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/models/{1}_{2}/{1}_{2}_2024-07-26.logistic.rds'
-# opt$training_peaks_directory <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/sortedbeds'
+# opt$transcription_factors <- 'FOXA1,MYC,YY1,CTCF,GATA4,TAL1,SP1,MYC,MYC,VDR,CTCF,MYC,NEUROG2,CTCF,GATA2,PPARG,FOSL2,CTCF,CTCF,CTCF,CTCF,NANOG,FOXA2,ERG,REST,FOXA1,POU5F1,GATA1,FOXM1,GATA3,GATA3,CTCF,FOXA1,CTCF,CTCF,SPI1,RUNX1,CTCF,HOXB13,AR,CTCF,GATA2,E2F1,ESR1,NR3C1,ESR1,RELA,NR3C1'
+# opt$tissues <- 'MammaryGland,Breast,Blood,EmbryonicKidney,Embryo,BoneMarrow,Colon,Blood,Colon,Blood,MammaryGland,BoneMarrow,FetalLung,Liver,BoneMarrow,Adipose,Lung,Brain,Skin,UmbilicalVein,Embryo,Embryo,Skin,Prostate,Blood,Breast,Embryo,BoneMarrow,Breast,MammaryGland,Breast,Lung,Prostate,Colon,BoneMarrow,Blood,Blood,Breast,Prostate,Prostate,Blood,Prostate,Prostate,MammaryGland,Lung,Breast,Blood,Breast'
+# opt$path_pattern <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/evaluation/{1}_{2}_2025-04-24.logistic.{3}_eval.txt.gz'
+# opt$statistics_file <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/statistics/ENPACT_734_2025-04-24.compiled_stats.txt'
+# opt$model_path <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/models/{1}_{2}/{1}_{2}_2025-04-24.logistic.rds'
+# opt$training_peaks_directory <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/sortedbeds'
 
 tflist <- strsplit(opt$transcription_factors, ',')[[1]]
 tissuelist <- strsplit(opt$tissues, ',')[[1]]
@@ -45,15 +47,17 @@ qMatrix <- rbind(
     dplyr::arrange(transcription_factor, tissue, type)
 
 # register cores since I want to parallelize
-num_clusters <- 32 #- 5 # 12 - 5
+num_clusters <- 4 #- 5 # 12 - 5
 doParallel::registerDoParallel(num_clusters)
 
 cat('INFO - Registering', num_clusters, 'clusters for a parallel run\n')
 
-calculate_metrics <- function(dt, transcription_factor, tissue, type){
+
+calculate_logistic_metrics <- function(dt, transcription_factor, tissue, type){
 
     tryCatch({
         pp <- with(dt, pROC::roc(binding_class, TFPred_score, quiet = TRUE))
+        print(pp)
         pp_auc <- pp$auc |> as.numeric() |> round(2)
         pp_var <- pROC::var(pp)|> as.numeric() %>% format(digits = 2)
         pp_ci <- with(dt, pROC::ci.auc(binding_class, TFPred_score, conf.level = 0.95, quiet = T)) |> as.numeric() 
@@ -76,7 +80,12 @@ calculate_metrics <- function(dt, transcription_factor, tissue, type){
    
 }
 
-# dt <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/evaluation/ATF3_Blood_2024-07-26.logistic.train_eval.txt.gz')
+
+# calculate_logistic_metrics(dt, 'AR', 'Prostate', 'test')
+
+# dt <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/evaluation/AR_Prostate_2025-04-24.logistic.test_eval.txt.gz')
+
+
 # tt <- t.test(TFPred_score ~ binding_class, data=dt)
 # tt$p.value
 
@@ -100,7 +109,7 @@ evaluations <- foreach::foreach(i=seq_len(nrow(qMatrix)), .combine='rbind', .ino
         if(any(nrow(dt) == 0)){
             evaluations <- data.frame(assay = qi[1], context = qi[2], type = qi[3], auc = NA, var = NA, low = NA, upp = NA, ttest_pvalue=NA, num_training_files = NA, model = NA, path = NA, num_0 = NA, num_1 = NA)
         } else if (any(nrow(dt) > 0)) {
-            evaluations <- calculate_metrics(dt, qi[1], qi[2], qi[3])
+            evaluations <- calculate_logistic_metrics(dt, qi[1], qi[2], qi[3])
             evaluations <- evaluations %>% as.data.frame() %>%
                 stats::setNames(c('assay', 'context', 'type', 'auc', 'var', 'low', 'upp', 'ttest_pvalue')) %>%
                 dplyr::mutate(num_training_files = n_training_files, 
@@ -117,8 +126,10 @@ evaluations <- foreach::foreach(i=seq_len(nrow(qMatrix)), .combine='rbind', .ino
                 dplyr::summarise(n = dplyr::n()) %>%
                 tidyr::pivot_wider(names_from = binding_class, values_from = n) %>%
                 dplyr::rename('num_0' = `0`, 'num_1' = `1`)
+            evaluations$num_0 <- dist$num_0
+            evaluations$num_1 <- dist$num_1
 
-            evaluations <- cbind(evaluations, dist)
+            evaluations <- cbind(evaluations)
         }
     }
 
@@ -176,6 +187,37 @@ doParallel::stopImplicitCluster()
 
 
 
+# calculate_linear_metrics <- function(dt, transcription_factor, tissue, type){
+
+#     # remove missing values
+#     cc <- complete.cases(dt)
+#     dt <- dt[cc, ]
+
+#     tryCatch({
+#         # calculate mse
+#         #pp <- with(dt, mean((mean_intensity - TFPred_score)**2))
+#         sq_err <- with(dt, (binding_counts - TFPred_score)**2)
+#         pp_mse <- mean(sq_err) %>% round(2)
+#         pp_var <- var(sq_err) %>% format(digits = 2)
+#         pp_ci <- with(dt, stats::t.test(binding_counts, TFPred_score)$conf.int) 
+#         low <- pp_ci[1] |> round(2)
+#         upp <- pp_ci[2] |> round(2)
+
+#         # t-test
+#         #ttest <- t.test(TFPred_score ~ binding_class, data=dt)
+#         ttest_pvalue <- NA #ttest$p.value
+#         # if(ttest$p.value == 0){
+#         #     ttest_pvalue <- 'p < 2.2e-16'
+#         # } else {
+#         #     ttest_pvalue <- paste('p =', format(ttest$p.value, digits = 2))
+#         # }
+        
+#         return(cbind(transcription_factor, tissue, type, pp_mse, pp_var, low, upp, ttest_pvalue))
+#     }, error = function(e){
+#         return(cbind(transcription_factor, tissue, type, NA, NA, NA, NA, NA))
+#     })
+   
+# }
 
 
 
@@ -184,7 +226,31 @@ doParallel::stopImplicitCluster()
 
 
 
+# calculate_metrics <- function(dt, transcription_factor, tissue, type){
 
+#     tryCatch({
+#         pp <- with(dt, pROC::roc(class, TFPred_score, quiet = TRUE))
+#         pp_auc <- pp$auc |> as.numeric() |> round(2)
+#         pp_var <- pROC::var(pp)|> as.numeric() %>% format(digits = 2)
+#         pp_ci <- with(dt, pROC::ci.auc(binding_class, TFPred_score, conf.level = 0.95, quiet = T)) |> as.numeric() 
+#         low <- pp_ci[1] |> round(2)
+#         upp <- pp_ci[3] |> round(2)
+
+#         # t-test
+#         ttest <- t.test(TFPred_score ~ binding_class, data=dt)
+#         ttest_pvalue <- ttest$p.value
+#         # if(ttest$p.value == 0){
+#         #     ttest_pvalue <- 'p < 2.2e-16'
+#         # } else {
+#         #     ttest_pvalue <- paste('p =', format(ttest$p.value, digits = 2))
+#         # }
+        
+#         return(cbind(transcription_factor, tissue, type, pp_auc, pp_var, low, upp, ttest_pvalue))
+#     }, error = function(e){
+#         return(cbind(transcription_factor, tissue, type, NA, NA, NA, NA, NA))
+#     })
+   
+# }
 
 
 

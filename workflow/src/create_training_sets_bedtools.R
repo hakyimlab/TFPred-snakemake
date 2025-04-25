@@ -18,7 +18,7 @@ option_list <- list(
     make_option("--train_split", type="double", default=0.8, help='proportion to be used as train'),
     make_option("--num_predictors", type="integer", default=40000, help='proportion to be used as train'),
     make_option("--test_chromosomes", type="character", default="chr9,chr22", help='should you randomly split or train by chromosome? num_predictors is ignored if training by chromosome'),
-    make_option("--peaks_files", type="character", default=NULL, help='how many bed samples should be used: will use all if NULL, will use the top n by FRiP otherwise'),
+    make_option("--peaks_files", type="character", default=NULL, help='the peak files to be used, separated by a comma'),
     make_option("--sorted_chrom_sizes", type="character", default=NULL, help='The sorted chromosome sizes file'),
     make_option("--peaks_counts_threshold", type="integer", default=100, help='...')
 )
@@ -34,39 +34,10 @@ library(tidyverse)
 library(GenomicRanges)
 library(plyranges)
 
-
-#  /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor AR --tissue MammaryGland --predicted_motif_file data/homer_instances/AR/merged_motif_file.txt --sorted_bedfiles_directory data/cistrome_2024-06-08/sortedbeds/AR_MammaryGland --bedlinks_directory /project/haky/data/TFXcan/cistrome/raw/human_factor' --predictors_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.predictors.txt --ground_truth_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.ground_truth.txt --info_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.info.txt.gz --peaks_files 36845_sort_peaks.narrowPeak.bed,57275_sort_peaks.narrowPeak.bed,57276_sort_peaks.narrowPeak.bed,57277_sort_peaks.narrowPeak.bed,57278_sort_peaks.narrowPeak.bed,57279_sort_peaks.narrowPeak.bed,57280_sort_peaks.narrowPeak.bed --train_by_chromosome chr9,chr22 --summary_file data/cistrome_2024-06-08/predictor_files/AR_MammaryGland.summary.txt; sleep 5
-
-
-# /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor MAFF --tissue Colon --predicted_motif_file data/homer_instances/MAFF/merged_motif_file.txt --sorted_bedfiles_directory data/ENPACT_275_2024-06-08/sortedbeds/MAFF_Colon --bedlinks_directory /project/haky/data/TFXcan/cistrome/raw/human_factor --predictors_file data/ENPACT_275_2024-06-08/predictor_files/MAFF_Colon.predictors.txt --ground_truth_file data/ENPACT_275_2024-06-08/predictor_files/MAFF_Colon.ground_truth.txt --info_file data/ENPACT_275_2024-06-08/predictor_files/MAFF_Colon.info.txt.gz --peaks_files 42840_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/ENPACT_275_2024-06-08/predictor_files/MAFF_Colon.summary.txt;
-
-setwd('/beagle3/haky/users/temi/projects/TFPred-snakemake')
-opt <- list()
-opt$transcription_factor <- 'AR'
-opt$tissue <- 'Breast' 
-opt$predicted_motif_file <- glue('data/homer_instances/{opt$transcription_factor}/merged_motif_file.txt')
-opt$sorted_bedfiles_directory <- glue('data/ENPACT_275_2024-06-08/sortedbeds/{opt$transcription_factor}_{opt$tissue}')
-opt$peaks_files <- '70140_sort_peaks.narrowPeak.bed,70141_sort_peaks.narrowPeak.bed,70142_sort_peaks.narrowPeak.bed'
-opt$bedlinks_directory <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor'
-opt$predictors_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.predictors.txt')
-opt$ground_truth_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.ground_truth.txt')
-opt$info_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.info.txt.gz')
-opt$summary_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.summary.txt')
-opt$train_split <- 0.8
-opt$num_predictors <- 40000
-opt$test_chromosomes <- "chr9,chr22"
-
-
-
-# # a hacky way to deal with the "none" vs 'None'
-# if(opt$tissue == 'none'){
-#     opt$tissue <- 'None'
-# }
-
+# === check that the required files are present
 if(!dir.exists(opt$sorted_bedfiles_directory)){
     dir.create(opt$sorted_bedfiles_directory, recursive = T)
 }
-
 
 if(!file.exists(opt$predicted_motif_file)){
     print(glue('INFO - HOMER predicted motifs file cannnot be found at {dirname(opt$predicted_motif_file)}'))
@@ -86,11 +57,6 @@ tf_motifs_granges <- tf_motifs_granges[seqnames(tf_motifs_granges) %in% valid_ch
 tf_motifs_granges <- GenomicRanges::reduce(tf_motifs_granges)
 tf_motifs_granges <- keepSeqlevels(tf_motifs_granges, paste0("chr", c(1:22)), pruning.mode="coarse")
 
-
-
-# check that all of these are available in the db
-# TF_files <- list.files(glue('{opt$bedlinks_directory}'), full.names=T)
-
 if(!is.null(opt$peaks_files)){
     peaks_files <- base::strsplit(opt$peaks_files, ',')[[1]] |> sort()
 } 
@@ -102,10 +68,7 @@ peaks_files <- sapply(peaks_files, function(each_file){
     }
 })
 
-# if(!is.null(opt$dcids)){
-#     TF_files <- TF_files[grepl(paste0(dcid_samples, collapse='|'), TF_files)]
-# }
-
+# check that the peaks files are not empty; remove empty files
 peak_files_paths <- peaks_files[file.info(peaks_files)$size != 0]
 
 if(length(peak_files_paths) == 0){
@@ -113,14 +76,11 @@ if(length(peak_files_paths) == 0){
     quit(status = 1)
 }
 
-# use just 1000
-#if(length(peak_files_paths) > 600){
 print(glue('INFO - There are {length(peak_files_paths)} bedfiles for {opt$transcription_factor} and {opt$tissue}'))
-#peak_files_paths <- sample(peak_files_paths, size=600, replace=FALSE)
-#}
+
 set.seed(seed)
 pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_index){
-    each_file <- peak_files_paths[each_file_index]
+    each_file <- peak_files_paths[each_file_index] # a peak file
     dt <- data.table::fread(each_file) %>%
         dplyr::distinct(V1, V2, .keep_all=T) %>%
         dplyr::select(chr=V1, start=V2, end=V3, intensity=V7, peakOffset=V10) %>% # select the chr, start and end columns
@@ -128,10 +88,10 @@ pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_ind
     
     dt <- dt[seqnames(dt) %in% valid_chromosomes]
 
-    # find overlaps with the predicted motifs
+    # find overlaps of peaks with the predicted motifs
     overlaps <- GenomicRanges::findOverlaps(query=dt, subject=tf_motifs_granges, type='any')
 
-    # those with any overlaps are the positive ones
+    # those with an overlap are the positive ones
     positive_mt <- dt[queryHits(overlaps), ]
     positive_dt <- tf_motifs_granges[subjectHits(overlaps), ] %>% # because I only want the motifs
         as.data.frame() %>%
@@ -147,6 +107,7 @@ pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_ind
         dplyr::mutate(class = 0, intensity = 0, peakOffset = 0) %>% 
         dplyr::slice_sample(n=nrow(positive_dt))
 
+    # merge the positive and negative data
     cname <- paste('class_', each_file_index, sep='')
     iname <- paste('intensity_', each_file_index, sep='')
     data <- rbind(positive_dt, negative_dt) %>% 
@@ -165,18 +126,8 @@ pmi_dt_list <- purrr::map(.x=seq_along(peak_files_paths), function(each_file_ind
 
 query_bed <- glue('{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.ALL.query.bed')
 
-ft_dt <- lapply(pmi_dt_list, function(x) x %>% dplyr::select(chr = 1, start = 2, end = 3, class = 4, intensity = 5)) %>% do.call('bind_rows', .) %>%
-    dplyr::group_by(chr, start, end) %>%
-    dplyr::summarize(class = sum(class), intensity = mean(intensity)) %>%
-    dplyr::arrange(desc(intensity)) %>%
-    dplyr::filter(chr %in% valid_chromosomes) %>%
-    dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
-    data.table::fwrite(file = query_bed, row.names=F, col.names = F, quote=F, sep='\t')
-
-
-
-
-## get a union of all peaks
+## Now I know what motifs are overlapping with the predicted motifs as well as those not in, I will create a bed file of all the motifs
+## get a union of all motifs and save to query_bed
 set.seed(seed)
 purrr::map(pmi_dt_list, function(each_dt){
     each_dt %>%
@@ -188,14 +139,16 @@ purrr::map(pmi_dt_list, function(each_dt){
     dplyr::filter(chr %in% valid_chromosomes) %>%
     dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
     data.table::fwrite(file = query_bed, row.names=F, col.names = F, quote=F, sep='\t')
-#
+
+
+# when you do the intersection with peaks instances, you will save the results here
 intersect_bed <- glue("{opt$sorted_bedfiles_directory}/{opt$transcription_factor}_{opt$tissue}.intersect.bed")
 
 # if(!is.null(opt$dcids)){
 #     pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
 #     pfiles <- pfiles[grepl(paste0(dcid_samples, collapse = '|'), pfiles)]
 # } else {
-pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '^peaks_\\d.sorted.bed', full.names = T)
+pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '^peaks.*.sorted.bed', full.names = T) # '^peaks_\\d.sorted.bed'
 
 #pfiles <- list.files(opt$sorted_bedfiles_directory, pattern = '\\d.sorted.bed', full.names = T)
 cmd <- glue("bedtools intersect -c -a {query_bed} -g {opt$sorted_chrom_sizes} -sorted -b {paste(pfiles, collapse = ' ')} > {intersect_bed}")
@@ -295,7 +248,6 @@ if(!file.exists(intersect_bed) || file.info(intersect_bed)$size <= 0){
     print(glue('INFO - There are {nrow(dt)} motifs to be trained and tested on after filtering'))
     print(glue("INFO - Distribution of negatives and positives after filtering: {paste0(table(dt$binding_class), collapse=' & ')} respectively"))
 
-
     ###
     print(glue('INFO - Writing out files...'))
     if(nrow(dt_pos) >= opt$peaks_counts_threshold){
@@ -369,6 +321,50 @@ if(!file.exists(intersect_bed) || file.info(intersect_bed)$size <= 0){
 
 
 
+
+
+
+
+
+
+# /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/create_training_sets_bedtools.R --transcription_factor CTCF --tissue Breast --predicted_motif_file data/homer_instances/CTCF/merged_motif_file.txt --sorted_bedfiles_directory data/ENPACT_734_2025-04-24/sortedbeds/CTCF_Breast --bedlinks_directory /project2/haky/Data/TFXcan/cistrome/raw/human_factor --predictors_file data/ENPACT_734_2025-04-24/predictor_files/CTCF_Breast.predictors.txt --ground_truth_file data/ENPACT_734_2025-04-24/predictor_files/CTCF_Breast.ground_truth.txt --info_file data/ENPACT_734_2025-04-24/predictor_files/CTCF_Breast.info.txt.gz --peaks_files 2254_sort_peaks.narrowPeak.bed,2255_sort_peaks.narrowPeak.bed,6572_sort_peaks.narrowPeak.bed,6573_sort_peaks.narrowPeak.bed,6574_sort_peaks.narrowPeak.bed,6575_sort_peaks.narrowPeak.bed,6576_sort_peaks.narrowPeak.bed,38194_sort_peaks.narrowPeak.bed,38203_sort_peaks.narrowPeak.bed,45983_sort_peaks.narrowPeak.bed,45984_sort_peaks.narrowPeak.bed,45987_sort_peaks.narrowPeak.bed,45988_sort_peaks.narrowPeak.bed,45992_sort_peaks.narrowPeak.bed,45994_sort_peaks.narrowPeak.bed,45995_sort_peaks.narrowPeak.bed,46318_sort_peaks.narrowPeak.bed,55781_sort_peaks.narrowPeak.bed,55782_sort_peaks.narrowPeak.bed,55783_sort_peaks.narrowPeak.bed,63245_sort_peaks.narrowPeak.bed,64159_sort_peaks.narrowPeak.bed,71677_sort_peaks.narrowPeak.bed,71678_sort_peaks.narrowPeak.bed,71679_sort_peaks.narrowPeak.bed,71680_sort_peaks.narrowPeak.bed,73000_sort_peaks.narrowPeak.bed,73001_sort_peaks.narrowPeak.bed,73002_sort_peaks.narrowPeak.bed,76247_sort_peaks.narrowPeak.bed,76248_sort_peaks.narrowPeak.bed,76249_sort_peaks.narrowPeak.bed,76250_sort_peaks.narrowPeak.bed,82007_sort_peaks.narrowPeak.bed,83249_sort_peaks.narrowPeak.bed,83251_sort_peaks.narrowPeak.bed,83252_sort_peaks.narrowPeak.bed,83253_sort_peaks.narrowPeak.bed,83736_sort_peaks.narrowPeak.bed,83737_sort_peaks.narrowPeak.bed,83738_sort_peaks.narrowPeak.bed,83739_sort_peaks.narrowPeak.bed,83740_sort_peaks.narrowPeak.bed,83741_sort_peaks.narrowPeak.bed,83742_sort_peaks.narrowPeak.bed,84200_sort_peaks.narrowPeak.bed,86828_sort_peaks.narrowPeak.bed,87487_sort_peaks.narrowPeak.bed,87488_sort_peaks.narrowPeak.bed,87644_sort_peaks.narrowPeak.bed,87645_sort_peaks.narrowPeak.bed,87646_sort_peaks.narrowPeak.bed,87647_sort_peaks.narrowPeak.bed,87650_sort_peaks.narrowPeak.bed,87651_sort_peaks.narrowPeak.bed,88132_sort_peaks.narrowPeak.bed,88275_sort_peaks.narrowPeak.bed,88917_sort_peaks.narrowPeak.bed --test_chromosomes chr9,chr22 --summary_file data/ENPACT_734_2025-04-24/predictor_files/CTCF_Breast.summary.txt --sorted_chrom_sizes info/hg38.chrom.sizes.sorted
+
+
+# setwd('/beagle3/haky/users/temi/projects/TFPred-snakemake')
+# opt <- list()
+# opt$transcription_factor <- 'CTCF'
+# opt$tissue <- 'Breast' 
+# opt$predicted_motif_file <- glue('data/homer_instances/{opt$transcription_factor}/merged_motif_file.txt')
+# opt$sorted_bedfiles_directory <- glue('data/ENPACT_275_2025-04-24/sortedbeds/{opt$transcription_factor}_{opt$tissue}')
+# opt$peaks_files <- '2254_sort_peaks.narrowPeak.bed,2255_sort_peaks.narrowPeak.bed,6572_sort_peaks.narrowPeak.bed,6573_sort_peaks.narrowPeak.bed,6574_sort_peaks.narrowPeak.bed,6575_sort_peaks.narrowPeak.bed,6576_sort_peaks.narrowPeak.bed,38194_sort_peaks.narrowPeak.bed,38203_sort_peaks.narrowPeak.bed,45983_sort_peaks.narrowPeak.bed,45984_sort_peaks.narrowPeak.bed,45987_sort_peaks.narrowPeak.bed,45988_sort_peaks.narrowPeak.bed,45992_sort_peaks.narrowPeak.bed,45994_sort_peaks.narrowPeak.bed,45995_sort_peaks.narrowPeak.bed,46318_sort_peaks.narrowPeak.bed,55781_sort_peaks.narrowPeak.bed,55782_sort_peaks.narrowPeak.bed,55783_sort_peaks.narrowPeak.bed,63245_sort_peaks.narrowPeak.bed,64159_sort_peaks.narrowPeak.bed,71677_sort_peaks.narrowPeak.bed,71678_sort_peaks.narrowPeak.bed,71679_sort_peaks.narrowPeak.bed,71680_sort_peaks.narrowPeak.bed,73000_sort_peaks.narrowPeak.bed,73001_sort_peaks.narrowPeak.bed,73002_sort_peaks.narrowPeak.bed,76247_sort_peaks.narrowPeak.bed,76248_sort_peaks.narrowPeak.bed,76249_sort_peaks.narrowPeak.bed,76250_sort_peaks.narrowPeak.bed,82007_sort_peaks.narrowPeak.bed,83249_sort_peaks.narrowPeak.bed,83251_sort_peaks.narrowPeak.bed,83252_sort_peaks.narrowPeak.bed,83253_sort_peaks.narrowPeak.bed,83736_sort_peaks.narrowPeak.bed,83737_sort_peaks.narrowPeak.bed,83738_sort_peaks.narrowPeak.bed,83739_sort_peaks.narrowPeak.bed,83740_sort_peaks.narrowPeak.bed,83741_sort_peaks.narrowPeak.bed,83742_sort_peaks.narrowPeak.bed,84200_sort_peaks.narrowPeak.bed,86828_sort_peaks.narrowPeak.bed,87487_sort_peaks.narrowPeak.bed,87488_sort_peaks.narrowPeak.bed,87644_sort_peaks.narrowPeak.bed,87645_sort_peaks.narrowPeak.bed,87646_sort_peaks.narrowPeak.bed,87647_sort_peaks.narrowPeak.bed,87650_sort_peaks.narrowPeak.bed,87651_sort_peaks.narrowPeak.bed,88132_sort_peaks.narrowPeak.bed,88275_sort_peaks.narrowPeak.bed,88917_sort_peaks.narrowPeak.bed'
+# opt$bedlinks_directory <- '/project2/haky/Data/TFXcan/cistrome/raw/human_factor'
+# opt$predictors_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.predictors.txt')
+# opt$ground_truth_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.ground_truth.txt')
+# opt$sorted_chrom_sizes <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/info/hg38.chrom.sizes.sorted'
+# opt$info_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.info.txt.gz')
+# opt$summary_file <- glue('data/predictor_files/{opt$transcription_factor}_{opt$tissue}.summary.txt')s
+# opt$train_split <- 0.8
+# opt$num_predictors <- 40000
+# opt$test_chromosomes <- "chr9,chr22"
+
+
+
+# # a hacky way to deal with the "none" vs 'None'
+# if(opt$tissue == 'none'){
+#     opt$tissue <- 'None'
+# }
+
+
+
+
+
+# ft_dt <- lapply(pmi_dt_list, function(x) x %>% dplyr::select(chr = 1, start = 2, end = 3, class = 4, intensity = 5)) %>% do.call('bind_rows', .) %>%
+#     dplyr::group_by(chr, start, end) %>%
+#     dplyr::summarize(class = sum(class), intensity = mean(intensity)) %>%
+#     dplyr::arrange(desc(intensity)) %>%
+#     dplyr::filter(chr %in% valid_chromosomes) %>%
+#     dplyr::arrange(factor(chr, levels = valid_chromosomes), start) %>%
+#     data.table::fwrite(file = query_bed, row.names=F, col.names = F, quote=F, sep='\t')
 
 
 # ts <- data.frame(a=c(1:10, 1:10), b = c(LETTERS[1:10], LETTERS[1:10])) %>%

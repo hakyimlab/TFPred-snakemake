@@ -47,4 +47,7 @@ snakemake -s snakefile.smk --configfile config/pipeline.734.yaml --profile profi
 snakemake -s snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/simple/ -np > dryrun.out
 
 
-snakemake -s snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/simple/ -np > dryrun.out
+snakemake -s snakefile.smk --configfile minimal/pipeline.AR.yaml --profile profiles/simple/ -np > dryrun.out
+
+
+NANOG_Embryo/ ERG_Prostate/ FOXA1_Breast/ FOXA1_MammaryGland/ GATA3_Breast GATA4_Embryo FOXA1_Prostate HOXB13_Prostate 

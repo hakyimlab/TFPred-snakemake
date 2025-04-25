@@ -224,3 +224,300 @@ if(nrow(dt_pos) >= npositives){
     
 }
 ```
+
+## 
+
+```{r}
+library(glue)
+library(data.table)
+library(tidyverse)
+```
+```{r}
+dd_old <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/predictor_files'
+
+dd_new <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/predictor_files'
+```
+
+```{r}
+dt_models <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_weights.lambda.min.txt.gz') %>% colnames()
+dt_models <- dt_models[-1]
+```
+
+
+```{r}
+dt_overlaps <- purrr::map(dt_models, function(mm){
+  old <- data.table::fread(glue('{dd_old}/{mm}.ground_truth.txt')) 
+  new <- data.table::fread(glue('{dd_new}/{mm}.ground_truth.txt'))
+  true <- sum(new$locus %in% old$locus)
+  false <- sum(!new$locus %in% old$locus)
+  cbind(true, false) %>% prop.table() %>% as.data.table()
+}, .progress = TRUE) 
+
+dt_overlaps <- dt_overlaps %>%
+  do.call('rbind', .)
+
+dt_overlaps$model <- dt_models
+
+```
+
+```{r}
+retrain_models <- dt_overlaps %>%
+  setNames(c('in_old', 'not_in_old', 'model')) %>%
+  dplyr::filter(in_old < 1) %>% 
+  dplyr::arrange(desc(in_old)) %>% as.data.table() %>%
+  tidyr::separate(model, into = c('tf', 'tissue'), sep = '_', remove = F)
+```
+
+
+```{r}
+library(yaml)
+```
+
+
+```{r}
+yy <- yaml::read_yaml('/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.yaml')
+```
+
+
+```{r}
+ |> length()
+```
+
+
+```{r}
+Filter(function(x){
+  names(x)
+  #x[['peakFiles']][names(x[['peakFiles']]) %in% retrain_models$tissue]
+}, yy)
+```
+
+```{r}
+retrain_models %>% 
+  dplyr::group_by(tf) %>%
+  dplyr::tally() %>%
+  dplyr::arrange(desc(n))
+```
+
+```{r}
+
+uq <- unique(names(yy_filtered))
+fss <- lapply(uq, function(x){
+  tss <- retrain_models$tissue[retrain_models$tf == x]
+  mss <- yy_filtered[[x]][['motifFiles']]
+  pss <- yy_filtered[[x]][['peakFiles']][tss]
+  list(motifFiles = mss, peakFiles = pss)
+})
+
+names(fss) <- uq
+```
+
+```{r}
+yaml::write_yaml(fss, '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train_retrain.yaml')
+```
+
+```{r}
+# create the tsv file
+retrain_models %>%
+  dplyr::select(assay = tf, context = tissue) %>%
+  data.table::fwrite('/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train_retrain.tsv', sep = '\t', quote = F, col.names = T, row.names = F)
+```
+
+```{r}
+
+yy_filtered <- yy[retrain_models$tf]
+
+Filter(function(x){
+  names(x[['peakFiles']]) %in% retrain_models$tissue
+  #x[['peakFiles']][names(x[['peakFiles']]) %in% retrain_models$tissue]
+}, yy_filtered)
+```
+
+# Are the weights the same?
+```{r}
+old_weights <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_weights.lambda.min.txt.gz') %>%
+  dplyr::select(feature, all_of(retrain_models$model)) 
+
+retrained_weights <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/statistics/ENPACT_734_2025-04-24.compiled_weights.lambda.min.txt.gz')
+```
+
+```{r}
+oldx <- old_weights %>%
+  dplyr::select(-feature) %>%
+  as.matrix()
+
+newx <- retrained_weights %>%
+  dplyr::select(-feature) %>%
+  as.matrix()
+
+newx <- newx[, colnames(oldx)]
+```
+
+```{r}
+all.equal(oldx, newx); identical(oldx, newx)
+```
+
+# Create the new weights file that includes all TF_tissue pairs
+```{r}
+retrained_weights <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/statistics/ENPACT_734_2025-04-24.compiled_weights.lambda.min.txt.gz')
+
+other_weights <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_weights.lambda.min.txt.gz') %>%
+  dplyr::select(feature, !all_of(retrain_models$model))
+
+dplyr::full_join(retrained_weights, other_weights, by = 'feature') %>%
+  dplyr::select(feature, everything()) %>%
+  data.table::fwrite('/beagle3/haky/users/temi/projects/Enpact/data/enpact/weights/ENPACT_734_2025-04-24.compiled_weights.lambda.min.txt.gz', sep = '\t', quote = F, col.names = T, row.names = F, compress = 'gzip')
+```
+
+
+```{r}
+retrained_weights <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/statistics/ENPACT_734_2025-04-24.compiled_weights.lambda.1se.txt.gz')
+
+other_weights <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_weights.lambda.1se.txt.gz') %>%
+  dplyr::select(feature, !all_of(retrain_models$model))
+
+dplyr::full_join(retrained_weights, other_weights, by = 'feature') %>%
+  dplyr::select(feature, everything()) %>%
+  data.table::fwrite('/beagle3/haky/users/temi/projects/Enpact/data/enpact/weights/ENPACT_734_2025-04-24.compiled_weights.lambda.1se.txt.gz', sep = '\t', quote = F, col.names = T, row.names = F, compress = 'gzip')
+```
+
+
+```{r}
+retrained_stats <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2025-04-24/statistics/ENPACT_734_2025-04-24.compiled_stats.txt')
+
+other_stats <- data.table::fread('/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_stats.txt') %>%
+  dplyr::filter(!model %in% retrained_stats$model)
+
+dplyr::bind_rows(retrained_stats, other_stats) %>%
+  data.table::fwrite('/beagle3/haky/users/temi/projects/Enpact/data/enpact/weights/ENPACT_734_2025-04-24.compiled_stats.txt', sep = '\t', quote = F, col.names = T, row.names = F)
+```
+
+
+### Calculate enpact scores using these weights
+
+
+```{r}
+eur_individuals <- data.table::fread('/beagle3/haky/users/temi/projects/TFXcan-snakemake/metadata/EUR_individuals.1KG.txt', header = F)
+enpact_features_directory <- '/beagle3/haky/users/temi/projects/TFXcan-snakemake/data/prostate_cancer_risk_2024-09-30/aggregated_predictions/prostate_cancer_risk'
+individual_enpact_features <- glue::glue("{enpact_features_directory}/{eur_individuals$V1}_aggByCollect_prostate_cancer_risk.csv.gz") |> as.vector()
+names(individual_enpact_features) <- eur_individuals$V1
+individual_enpact_features <- individual_enpact_features[file.exists(individual_enpact_features)]
+
+length(individual_enpact_features)
+```
+
+
+```{r}
+
+```
+```{r}
+output_directory <- '/beagle3/haky/users/temi/projects/Enpact/misc/reruns/enpact_predictions'
+output_files <- glue::glue("{output_directory}/{names(individual_enpact_features)}.enpact_predictions.tsv.gz") |> as.vector()
+```
+
+
+```{r}
+data.frame(unname(individual_enpact_features), output_files) |> View()
+```
+
+## Merge the 48 TFXcan models with the 734 ENPACT models
+
+### Filter based on the performance of the models and valid tissues
+
+```{r}
+# these weird tissues should be removed 
+weird_tissues <- c("endometrioidadenocarcinoma", "HCT116", "HeLacontaminant", "Headandneck", "LNCaPcells", 'PeritonealEffusion')
+#performance_file <- '/beagle3/haky/users/temi/projects/TFPred-snakemake/data/ENPACT_734_2024-07-26/statistics/ENPACT_734_2024-07-26.compiled_stats.txt'
+performance_file <- '/beagle3/haky/users/temi/projects/Enpact/data/enpact/weights/ENPACT_734_2025-04-24.compiled_stats.txt'
+performance <- data.table::fread(performance_file) %>%
+    dplyr::filter(type == 'test') %>%
+    dplyr::filter((!is.na(auc) & auc >= 0.7) & !context %in% weird_tissues)
+dim(performance)
+```
+
+
+```{r}
+old_tfxcan <- data.table::fread('/beagle3/haky/users/temi/projects/TFXcan-snakemake/data/prostate_cancer_risk_2024-09-30/important/prostate_cancer_risk.enpactScores.2024-09-30.spredixcan.complete.txt') %>%
+  dplyr::select(-c(gene_name)) %>%
+  dplyr::rename(tfbs = gene)
+
+new_tfxcan <- data.table::fread('/beagle3/haky/users/temi/projects/pipelines/snp-enpact-snakemake/data/prostate_cancer_risk_2025-04-25/output/prostate_cancer_risk.enpactScores.2025-04-25.spredixcan.txt')
+```
+
+```{r}
+temp_tfxcan <- new_tfxcan %>% tidyr::separate(tfbs, into = c('tf', 'tissue', 'chrom', 'start', 'end'), sep = '_', remove = F)
+
+temp_tfxcan %>% dplyr::filter(tf == 'ESR1', tissue == 'Breast')
+```
+
+```{r}
+other_tfxcan <- old_tfxcan %>%
+  dplyr::filter(!tfbs %in% new_tfxcan$tfbs)
+```
+
+
+```{r}
+sum(new_tfxcan$tfbs %in% old_tfxcan$tfbs)
+```
+
+
+```{r}
+retrained_tfxcan <- dplyr::bind_rows(new_tfxcan, other_tfxcan) 
+```
+
+```{r}
+dt <- retrained_tfxcan %>%
+  tidyr::separate(tfbs, into = c('tf', 'tissue', 'chrom', 'start', 'end'), sep = '_', remove = F) %>%
+  dplyr::mutate(tf_tissue = paste(tf, tissue, sep = '_'), locus = paste(chrom, start, sep = ':'))
+```
+
+
+
+
+```{r}
+left_out <- performance %>%
+    dplyr::filter(!model %in% dt$tf_tissue)
+
+ss_left_out <- purrr::map(left_out$model, function(x){
+    ff <- glue::glue('/beagle3/haky/users/temi/projects/TFXcan-snakemake/data/prostate_cancer_risk_2024-09-30/summaryTFXcan.temp/{x}/prostate_cancer_risk/prostate_cancer_risk.enpactScores.spredixcan.csv')
+    ss <- data.table::fread(ff) %>%
+        dplyr::select(-gene_name) %>%
+        dplyr::rename(tfbs = gene) %>%
+        tidyr::separate_wider_delim(tfbs, names = c('tf', 'tissue', 'chrom', 'start', 'end'), delim = '_', cols_remove = FALSE) %>%
+        dplyr::mutate(across(c(start, end), as.numeric), tf_tissue = paste0(tf, '_', tissue), locus = paste(chrom, start, sep = ':'))
+        #dplyr::select(locus, tf, tissue, tf_tissue, chrom, start, end, zscore, pvalue)
+    ss
+}) %>% dplyr::bind_rows()
+```
+
+```{r}
+dt <- rbind(dt, ss_left_out) %>% as.data.table() %>% dplyr::relocate(locus, tf_tissue, .after = tfbs)
+```
+
+```{r}
+dt %>% dplyr::pull(tf_tissue) %>% unique() %>% length()
+```
+
+
+```{r}
+dt %>%
+  data.table::fwrite('/beagle3/haky/users/temi/projects/Enpact/misc/reruns/prca_tfxcan/prostate_cancer_risk.enpactScores.2025-04-25.complete.spredixcan.txt', 
+    sep = '\t', quote = F, col.names = T, row.names = F)
+```
+
+```{r}
+retrained_tfxcan %>%
+  tidyr::separate(tfbs, into = c('tf', 'tissue', 'chrom', 'start', 'end'), sep = '_', remove = F) %>%
+  dplyr::group_by(chrom, start, end) %>%
+  dplyr::tally() %>%
+  dplyr::arrange(desc(n)) %>%
+  View()
+```
+
+```{r}
+retrained_tfxcan %>%
+  tidyr::separate(tfbs, into = c('tf', 'tissue', 'chrom', 'start', 'end'), sep = '_', remove = F) %>%
+  dplyr::group_by(tf, tissue) %>%
+  dplyr::tally() %>%
+  dplyr::arrange(desc(n)) %>%
+  View()
+```

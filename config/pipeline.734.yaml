@@ -17,9 +17,9 @@ train_by_chromosome: # by default, we train and test on different chromosomes
 
 # data information
 ## these are the peaks and motifs to be used in training the models
-models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train_retrain.yaml"
+models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.yaml"
 ## these are the models to be trained
-models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train_retrain.tsv"
+models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.tsv"
 # models_config: experiments/AR_Prostate/37092_sort_peaks.data.yaml
 # models_metadata: experiments/AR_Prostate/runs.tsv
 

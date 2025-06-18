@@ -1,4 +1,0 @@
-assay,context
-VDR,Prostate
-CDX2,Colon
-VDR,Colon

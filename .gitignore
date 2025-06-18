@@ -10,3 +10,4 @@ misc/*
 slurm_logs/*
 files/*
 software/conda_envs/*
+old/*

@@ -149,26 +149,26 @@ models_weights <- foreach::foreach(i=seq_len(nrow(models_mtdt)), .combine='rbind
     mtdt <- models_mtdt[i, ] |> unlist()
     mpath <- mtdt[2]; model <- mtdt[1]
     model <- readRDS(mpath)
-    weights <- coef(model, s = 'lambda.1se')[-1] #|> as.data.frame() |> setNames(model)
+    weights <- coef(model, s = 'lambda.1se') #|> as.data.frame() |> setNames(model)
     return(weights)
 } %>% t() %>% as.data.frame() %>% 
     setNames(models_mtdt$model) %>% 
-    dplyr::mutate(feature = paste0('f_', seq_len(nrow(.)))) %>% dplyr::relocate(feature)
+   dplyr::mutate(feature = c('intercept', paste0('f_', seq_len(nrow(.)-1)))) %>% dplyr::relocate(feature)
 
-data.table::fwrite(models_weights, file=glue("{opt$weights_file}.lambda.1se.txt.gz"), sep='\t', row.names=F, col.names=T, quote=F, compress = 'gzip')
+data.table::fwrite(models_weights, file=glue("{opt$weights_file_basename}.lambda.1se.txt.gz"), sep='\t', row.names=F, col.names=T, quote=F, compress = 'gzip')
 
 
 models_weights <- foreach::foreach(i=seq_len(nrow(models_mtdt)), .combine='rbind', .inorder=T) %do% {
     mtdt <- models_mtdt[i, ] |> unlist()
     mpath <- mtdt[2]; model <- mtdt[1]
     model <- readRDS(mpath)
-    weights <- coef(model, s = 'lambda.min')[-1] #|> as.data.frame() |> setNames(model)
+    weights <- coef(model, s = 'lambda.min') #|> as.data.frame() |> setNames(model)
     return(weights)
 } %>% t() %>% as.data.frame() %>% 
     setNames(models_mtdt$model) %>% 
-    dplyr::mutate(feature = paste0('f_', seq_len(nrow(.)))) %>% dplyr::relocate(feature)
+    dplyr::mutate(feature = c('intercept', paste0('f_', seq_len(nrow(.)-1)))) %>% dplyr::relocate(feature)
 
-data.table::fwrite(models_weights, file=glue("{opt$weights_file}.lambda.min.txt.gz"), sep='\t', row.names=F, col.names=T, quote=F, compress = 'gzip')
+data.table::fwrite(models_weights, file=glue("{opt$weights_file_basename}.lambda.min.txt.gz"), sep='\t', row.names=F, col.names=T, quote=F, compress = 'gzip')
 
 doParallel::stopImplicitCluster()
 # m <- readRDS('/project/haky/users/temi/Enpact-figures/data/aggByCollect_AR_Prostate.logistic.rds')

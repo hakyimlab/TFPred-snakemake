@@ -1,7 +1,7 @@
 # Author: Temi
 # Date: Thursday July 27 2023
 # Description: script used to create enformer predict parameters file
-# Usage: Rscript create_training_sets.R [OPTIONS]
+# Usage: Rscript create_enformer_config.R [OPTIONS]
 
 suppressPackageStartupMessages(library("optparse"))
 
@@ -9,7 +9,7 @@ option_list <- list(
     make_option("--transcription_factor", help='A transcription factor e.g. AR'),
     make_option("--tissue", help='A tissue e.g. Breast'),
     make_option("--dataset", help="The name of the dataset"),
-    make_option("--base_directives", help='A yaml file containing directives for enformer; will be used to create a json file for the enformer predict pipeline'),
+    make_option("--base_directives", help='A yaml file containing directives for enformer; will be used to create a json file for the enformer predict pipeline. This file should be available.'),
     make_option("--project_directory", help='A project directory for enformer predict'),
 	make_option("--predictors_file", help='predictor file containing the intervals to predict on'),
     make_option("--model", help='enformer model'),

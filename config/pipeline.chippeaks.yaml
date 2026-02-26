@@ -3,10 +3,9 @@
 usage:
   offline: True # i.e you have donwloa
   software: "conda" # or conda
-  location: "/beagle3/haky/users/temi/projects/build_singularity/sif_files/tfxcan-v1.0.sif" # or the conda environment.yaml file
+  location: "" # or the conda environment.yaml file
 # directories
-pipeline_dir: '/beagle3/haky/users/temi/projects/TFPred-snakemake'
-dataset: 'ENPACT_MINIMAL' # give this dataset or run a name
+dataset: 'ENPACT_CHIPPEAKS' # give this dataset or run a name
 date: "2026-01-02" # this date will be used to create the directory structure
 
 # training type
@@ -20,9 +19,9 @@ train_by_chromosome: # by default, we train and test on different chromosomes
 
 # data information
 ## these are the peaks and motifs to be used in training the models
-models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.minimal.yaml"
+models_config: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.chippeaks.yaml"
 ## these are the models to be trained
-models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.minimal.tsv"
+models_metadata: "/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.chippeaks.tsv"
 
 # genome information
 genome:

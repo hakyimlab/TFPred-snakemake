@@ -92,6 +92,9 @@ These contain analysis codes for the pipeline. They are not part of the pipeline
 
 ## To-do and Updates
 
+Jan 2026
+- [X] Included a way to train on ChIP-seq data only
+
 Wed Sep 18 2024
 - [X] Verify that snakemake + singularity works when using the fast option for the pipeline.
 - [ ] Verify that snakemake + singularity works when using the slow option for the pipeline.

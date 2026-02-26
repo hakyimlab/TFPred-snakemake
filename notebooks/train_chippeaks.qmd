@@ -1,0 +1,80 @@
+---
+title: "Prepare Enpact models to train"
+author: "Temi"
+date: "2026-01-04"
+---
+
+```{r}
+library(data.table)
+library(magrittr)
+library(yaml)
+library(glue)
+library(dplyr)
+library(fpeek)
+```
+
+
+```{r}
+peaks_dir <- '/project2/haky/Data/TFXcan/cistrome/raw'
+```
+
+```{r}
+# data.table::fread('/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt') %>% dplyr::filter(Factor == 'AR', Tissue_type == 'Prostate')
+```
+
+```{r}
+mt <- data.table::fread('/project2/haky/Data/TFXcan/cistrome/raw/human_factor_full_QC.txt') %>%
+    dplyr::filter(Tissue_type != 'None', !is.na(PeaksUnionDHSRatio), FRiP > 0.01) %>%
+    dplyr::filter(!grepl('-', Factor, fixed = T)) %>% dplyr::filter(!grepl('/', Factor, fixed = T)) %>% dplyr::filter(!Tissue_type %in% c("Adherent HeLa cells", 'HCT116', 'LNCaP cells', 'Malignant rhabdoid tumor', 'meningioma', 'Snap-frozen tissue', 'HeLa contaminant', 'Haematopoietic and lymphoid', "Schlemm's canal"))
+```
+
+```{r}
+unique(mt$Factor) |> sort()
+```
+
+```{r}
+unique(mt$Tissue_type) |> sort()
+```
+
+
+```{r}
+unique(mt$Factor)[grepl('.', unique(mt$Factor), fixed = T)]
+```
+
+```{r}
+idt <- mt %>%
+    dplyr::group_by(Factor, Tissue_type) %>%
+    dplyr::group_split() 
+
+ldt <- list()
+
+for(i in seq_along(idt)){
+    fdt <- idt[[i]]
+    tissuename <- unique(fdt$Tissue_type)
+    tissuename <- gsub(' ', '', tissuename)
+    tfname <- unique(fdt$Factor)
+    dcids <- fdt$DCid
+
+    if(!tfname %in% names(ldt)){
+        ldt[[as.name(tfname)]] <- list()
+        ldt[[as.name(tfname)]][['peakFiles']] <- list()
+        ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
+        
+    } else {
+        ldt[[as.name(tfname)]][['peakFiles']][[as.name(tissuename)]] <-  paste0(dcids, '_sort_peaks.narrowPeak.bed')
+    }
+}
+
+yaml::write_yaml(ldt, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.chippeaks.yaml')
+
+
+mtdt <- sapply(gsub('.peakFiles.', '_', names(rapply(ldt, function(x) head(x, 1)))), base::strsplit, '_') %>% lapply(., as.data.table) |> unname() %>% do.call('cbind', .) %>% t() %>% as.data.frame() %>% select(V1, V2)
+colnames(mtdt) <- c('assay', 'context')
+
+data.table::fwrite(mtdt, file = '/beagle3/haky/users/temi/projects/TFPred-snakemake/metadata/enpact_models_to_train.chippeaks.tsv', sep = '\t', row.names =F, col.names =T, quote = F)
+```
+
+
+```{r}
+"Schlemm'scanal" %in% mtdt$context
+```

@@ -19,7 +19,7 @@ def count_number_of_lines(wildcards):
 
 
 rule create_training_set:
-    input: os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt') #rules.merge_homer_motifs.output
+    #input: os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt') #rules.merge_homer_motifs.output
     #     lambda wildcards: os.path.join(HOMERFILES_DIR, wildcards.tf, 'merged_motif_file.txt')
     output:
         #directory(PREDICTORS_DIR)
@@ -39,7 +39,7 @@ rule create_training_set:
         # f2=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.ground_truth.txt'),
         f3=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.info.txt.gz'),
         f4=os.path.join(PREDICTORS_DIR, '{tf}_{tissue}.summary.txt'),
-        mfile = os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt'),
+        #mfile = os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt'),
         genome_sizes = config['genome']['chrom_sizes']
     message: "working on {wildcards}"
     benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.create_training_set.tsv")
@@ -54,7 +54,7 @@ rule create_training_set:
     threads: 8
     shell:
         """
-        {params.rscript} workflow/src/create_motif_chippeaks_training_sets.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --predicted_motif_file {params.mfile} --sorted_bedfiles_directory {params.sortedbeds_dir} --bedlinks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4} --sorted_chrom_sizes {params.genome_sizes}
+        {params.rscript} workflow/src/create_chippeaks_training_sets.R --transcription_factor {wildcards.tf} --tissue {wildcards.tissue} --output_directory {params.sortedbeds_dir} --peaks_directory {params.bedfiles_dir} --predictors_file {output.f1} --ground_truth_file {output.f2} --info_file {params.f3} --peaks_files {params.peaks_files} --test_chromosomes {params.test_chromosomes} --summary_file {params.f4} --sorted_chrom_sizes {params.genome_sizes}
         """
 
 rule aggregate_epigenomes:
@@ -107,7 +107,7 @@ rule prepare_training_data:
         nlines = count_number_of_lines
     resources:
         mem_mb=24000,
-        partition="bigmem",
+        partition="caslake",
     shell:
         """
         if [[ {params.nlines} -lt 100 ]]; then
@@ -137,11 +137,12 @@ rule train_Enpact_weights:
         mem_mb = helpers.get_mem_mb_allocations,
         partition = helpers.get_cluster_allocation,
         cpu_task=12,
-        mem_cpu=12
+        mem_cpu=8,
+        time="06:00:00"
     shell:
         """
         if [[ {params.nlines} -lt 100 ]]; then
-            touch {output.mlogistic} && touch {output.mlinear}
+            touch {output.mlogistic}
         else
             {params.rscript} workflow/src/train_enet.R --train_data_file {input} --rds_file {params.basename} --nfolds {params.nfolds}; sleep 12
         fi
@@ -179,10 +180,31 @@ rule evaluate_Enpact:
         fi
         """
 
+# rule prepare_to_collect_performance_metrics:
+#     input: expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list)
+#     output: os.path.join(STATISTICS_DIR, f'{run}.statistics.input.txt')
+#     message: "working on {wildcards}"
+#     params:
+#         run = run,
+#         jobname = run,
+#         output_file = os.path.join(STATISTICS_DIR, f'{run}.statistics.input.txt')
+#     resources:
+#         partition="caslake",
+#         time="00:30:00",
+#         mem_cpu=4,
+#         cpu_task=4
+#     #benchmark: os.path.join(f"data/{run}/benchmark/{{tf}}_{{tissue}}.prepare_to_collect_performance_metrics.tsv")
+#     run:
+#         with open(params.output_file, 'w') as outfile:
+#             for fname in input:
+#                 outfile.write(fname + "\n")
+
 rule compile_statistics:
     input: 
         f1 = expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.train_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list),
         f2 = expand(os.path.join(MODELS_EVAL_DIR, f'{{tf}}_{{tissue}}_{config["date"]}.logistic.test_eval.txt.gz'), zip, tf = TF_list, tissue = tissue_list)
+        # f1 = expand('{tf}', tf = TF_list),
+        # f2 = expand('{tissue}', tissue = tissue_list)
     output:
         compiled_statistics = os.path.join(STATISTICS_DIR, f'{run}.compiled_stats.txt'),
         compiled_weights_lambda_1se = os.path.join(STATISTICS_DIR, f'{run}.compiled_weights.lambda.1se.txt.gz'),
@@ -193,18 +215,20 @@ rule compile_statistics:
         run = run,
         jobname = run,
         rscript = RSCRIPT,
+        # input_f1 = ','.join(TF_list),
+        # input_f2 = ','.join(tissue_list),
         path_pattern = lambda wildcards: os.path.join(MODELS_EVAL_DIR, f'{{1}}_{{2}}_{config["date"]}.logistic.{{3}}_eval.txt.gz'),
         model_path = lambda wildcards: os.path.join(MODELS_DIR, f'{{1}}_{{2}}', f'{{1}}_{{2}}_{config["date"]}.logistic.rds'),
         training_peaks_directory = SORTEDBEDS_DIR,
         compiled_weights_basename = os.path.join(STATISTICS_DIR, f'{run}.compiled_weights'),
-        mdata = config['models_metadata']
+        meta_input = config["models_metadata"]
     resources:
         mem_mb= 100000,
         partition="caslake",
         time="06:00:00"
     shell:
         """
-            {params.rscript} workflow/src/compile_statistics.R --models_list {params.mdata} --path_pattern {params.path_pattern} --statistics_file {output.compiled_statistics} --model_path {params.model_path} --weights_file_basename {params.compiled_weights_basename} --training_peaks_directory {params.training_peaks_directory} 
+            {params.rscript} workflow/src/compile_statistics.R --models_list {params.meta_input} --path_pattern {params.path_pattern} --statistics_file {output.compiled_statistics} --model_path {params.model_path} --weights_file_basename {params.compiled_weights_basename} --training_peaks_directory {params.training_peaks_directory} 
         """
 
 # rule onsuccess_statistics:
@@ -227,47 +251,3 @@ rule compile_statistics:
 # onsuccess:
 #     print("SUCCESS - Workflow finished, no error")
 #     shell(f"snakemake -s ./snakefile.smk --configfile minimal/pipeline.minimal.yaml --profile profiles/simple/ --report reports/report.html")
-
-
-
-
-# rule find_homer_motifs:
-#     # input:
-#     #     os.path.join(config["homer"]['motifs_database'], '{motif_file}')
-#     output: 
-#         #os.path.join(HOMERFILES_DIR, '{tf}', 'scanMotifsGenomeWide.{motif_file}.txt')
-#         os.path.join(HOMERFILES_DIR, 'scannedMotifs', 'scanMotifsGenomeWide.{motif_file}.txt')
-#     params:
-#         run = run,
-#         homer_cmd = HOMERSCAN, #os.path.join(config['homer']['dir'], 'bin', 'scanMotifGenomeWide.pl'),
-#         genome = HOMERGENOME, #config['genome']['fasta'],
-#         mfile = os.path.join(HOMERMOTIFSDATABASE, '{motif_file}'),
-#         #ofile = lambda output: os.path.join(output, 'scanMotifsGenomeWide_{motif_file}.txt'),
-#         jobname = '{motif_file}'
-#     message: "working on {wildcards}" 
-#     resources:
-#         mem_mb = 1000
-#     shell:
-#         """
-#         perl {params.homer_cmd} {params.mfile} {params.genome} > {output}
-#         """
-
-# rule merge_homer_motifs:
-#     input:
-#         #gatherMotifFiles
-#         #lambda wildcards: expand(os.path.join(HOMERFILES_DIR, wildcards.tf, 'scanMotifsGenomeWide.{motif_file}.txt'), tf = set(homer_motifs_dict.keys()), motif_file = homer_motifs_dict[wildcards.tf])
-#         lambda wildcards: expand(os.path.join(HOMERFILES_DIR, 'scannedMotifs', 'scanMotifsGenomeWide.{motif_file}.txt'), tf = set(homer_motifs_dict.keys()), motif_file = homer_motifs_dict[wildcards.tf])
-#     output:
-#         os.path.join(HOMERFILES_DIR, '{tf}', 'merged_motif_file.txt')
-#     message: "working on {input}" 
-#     params:
-#         jobname = '{tf}',
-#         run = run,
-#     resources:
-#         mem_mb = 10000
-#     run:
-#         with open(output[0], 'w') as outfile:
-#             for fname in input:
-#                 with open(fname) as infile:
-#                     for i, line in enumerate(infile):
-#                         outfile.write(line)

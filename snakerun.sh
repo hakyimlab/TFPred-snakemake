@@ -51,3 +51,12 @@ snakemake -s snakefile.smk --configfile minimal/pipeline.AR.yaml --profile profi
 
 
 NANOG_Embryo/ ERG_Prostate/ FOXA1_Breast/ FOXA1_MammaryGland/ GATA3_Breast GATA4_Embryo FOXA1_Prostate HOXB13_Prostate 
+
+
+
+
+
+screen
+conda activate /beagle3/haky/users/shared_software/TFXcan-pipeline-tools
+export PATH=$PATH:/beagle3/haky/users/temi/software/homer/bin
+snakemake -s snakefile.smk --configfile config/pipeline.minimal.yaml --profile profiles/simple/ -np > dryrun.out

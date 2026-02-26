@@ -1,6 +1,6 @@
 # Author: Temi
 # Date: Thursday July 27 2023
-# Description: script to train elastic net TFPred models
+# Description: script to train elastic net Enpact models
 # Usage: Rscript train_enet.R [options]
 
 suppressPackageStartupMessages(library("optparse"))
@@ -13,14 +13,7 @@ option_list <- list(
 
 opt <- parse_args(OptionParser(option_list=option_list))
 
-# opt <- list()
-
-# bpath <- '/beagle3/haky/users/temi/projects/TFPred-snakemake'
-# opt$train_data_file <- file.path(bpath, 'data/ENPACT_5_2024-06-12/aggregation_folder/train_ENPACT_5_2024-06-12_aggByCollect.ARNTL_Bone.prepared.csv.gz')
-# opt$rds_file <- file.path(bpath, 'output/models/cistrome_AR_Breast_2023-08-10/aggByCollect_AR_Breast')
-# opt$nfolds <- 5
-
-# /beagle3/haky/users/shared_software/TFXcan-pipeline-tools/bin/Rscript workflow/src/train_enet.R --train_data_file data/ENPACT_5_2024-06-12/aggregation_folder/train_ENPACT_5_2024-06-12_aggByCollect.ARNTL_Bone.prepared.csv.gz --rds_file data/ENPACT_5_2024-06-12/models/ARNTL_Bone/ARNTL_Bone_2024-06-12 --nfolds 5
+print(opt)
 
 library(glue)
 library(R.utils)
@@ -32,22 +25,32 @@ library(parallel)
 seed <- 2023
 if(file.exists(opt$train_data_file)){
     print(glue('INFO - Reading train data...'))
-    dt_train <- data.table::fread(opt$train_data_file)
+    dt_train <- tryCatch({
+        read.csv(gzfile(opt$train_data_file))
+    }, error = function(err){
+        print(err)
+    }, warning = function(war){
+        print(warnings())
+        print(war)
+    })
+
 } else {
     stop(glue('ERROR - Training data cannot be found.'))
+    quit(-1)
 }
+
+print(dt_train[1:5, 1:5])
+print(dim(dt_train))
+
+# quit(-1)
 
 # remove missing values
 cc <- complete.cases(dt_train)
 dt_train <- dt_train[cc, ]
 
 # split the data
-X_train <- dt_train[, -c(1,2,3)] |> as.matrix()
-y_train <- dt_train[, c(1,2,3)] |> as.data.frame()
-binding_counts <- y_train$binding_counts
-binding_class <- ifelse(y_train$binding_class > 0, 1, 0)
-#nbc <- (vbc - min(vbc))/(max(vbc) - min(vbc)) # min-max normalization
-# nbc <- log10(1 + y_train$mean_intensity)
+X_train <- dt_train |> dplyr::select(starts_with("f_")) |> as.matrix()
+y_train <- dt_train |> dplyr::select(!starts_with("f_")) |> as.data.frame()
 
 cl <- 12 #parallel::makeCluster(5)
 print(glue('INFO - Found {parallel::detectCores()} cores but using {cl}'))
@@ -57,41 +60,12 @@ set.seed(seed)
 doParallel::registerDoParallel(cl)
 print(glue('INFO - training enet model'))
 
-train_methods <- c('linear', 'logistic')
+cv_model <- glmnet::cv.glmnet(x=X_train, y=y_train$binding_class, family = "binomial", type.measure = "auc", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds, trace.it=F)
 
-parallel::mclapply(train_methods, function(each_method){
+print(cv_model)
 
-    cl <- 6 #parallel::makeCluster(5)
-    doParallel::registerDoParallel(cl)
-
-    print(glue('INFO - Starting to build {each_method} enet model'))
-
-    if(each_method == 'linear'){
-
-        cv_model <- tryCatch({
-            glmnet::cv.glmnet(x=X_train, y=binding_counts, family = "gaussian", type.measure = "mse", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds)
-        }, error = function(e){
-            print(glue('ERROR - {e}'))
-            return(NULL)
-        })
-        save_name <- paste0(opt$rds_file, '.linear.rds', sep='') #gsub('.rds', '.linear.rds', opt$rds_file)
-    } else if (each_method == 'logistic'){
-
-        cv_model <- tryCatch({
-            glmnet::cv.glmnet(x=X_train, y=binding_class, family = "binomial", type.measure = "auc", alpha = 0.5, keep=T, parallel=T, nfolds=opt$nfolds, trace.it=F)
-        }, error = function(e){
-            print(glue('ERROR - {e}'))
-            return(NULL)
-        })
-        save_name <-  paste0(opt$rds_file, '.logistic.rds', sep='') #gsub('.rds', '.logistic.rds', opt$rds_file)
-    }
-    print(cv_model)
-    print(glue('INFO - Saving `{save_name}`'))
-    #rds_file <- glue('{model_file_basename}.{each_method}.rds')
-    saveRDS(cv_model, file=save_name)
-    doParallel::stopImplicitCluster()
-
-}, mc.cores=2)
-
+save_name <-  paste0(opt$rds_file, '.logistic.rds', sep='')
+print(glue('INFO - Saving the model to `{save_name}`'))
+saveRDS(cv_model, file=save_name)
 print(glue('INFO - Finished with model training and saving'))
 doParallel::stopImplicitCluster()
